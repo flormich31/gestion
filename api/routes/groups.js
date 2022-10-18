@@ -16,4 +16,18 @@ router.get("/", function (req, res, next) {
   });
 });
 
+router.post("/", function (req, res, next) {
+  const sql = `
+  INSERT INTO \`groups\`
+  (id, author_id, name, code, created_at) values (5,1,'Grupo DIFERENTE', 102, '2022-11-19 14:31:20');
+  `;
+  global.dbConnection.query(sql, [], (err, regs) => {
+    if (err) {
+      res.send("Error creando nuevo grupo");
+    } else {
+      res.json({ groups: regs });
+    }
+  });
+});
+
 module.exports = router;

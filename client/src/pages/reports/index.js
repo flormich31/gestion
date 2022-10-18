@@ -25,8 +25,8 @@ import { useHistory } from "react-router-dom";
 const mdTheme = createTheme();
 
 export default function Activities() {
-  function createData(name, uses, percent, updated_at) {
-    return { name, uses, percent, updated_at };
+  function createData(name, group, activity, time, attemps, updated_at) {
+    return { name, group, activity, time, attemps, updated_at };
   }
 
   const history = useHistory();
@@ -36,12 +36,46 @@ export default function Activities() {
   };
 
   const rows = [
-    createData("Maria Gonzalez", "4to grado", 1, "20/11/2022 12:34hs"),
-    createData("Jose Pereira", "4to grado", 1, "19/11/2022 09:15"),
-    createData("Pedro Arguello", "5to grado", 2, "14/11/2022 07:40hs"),
-    createData("Natalia Sanchez", "5to grado", 2, "15/11/2022 16:02hs"),
-    createData("Sebastian Miranda", "5to grado", 2, "16/11/2022 08:50hs"),
-    createData("Jimena Lopez", "6to grado", 1, "21/11/2022 10:23hs"),
+    createData(
+      "Maria Gonzalez",
+      "4to grado",
+      "Leer oraciones",
+      "0:04 min",
+      1,
+      "20/11/2022 12:34hs"
+    ),
+    createData(
+      "Jose Pereira",
+      "4to grado",
+      "Leer oraciones",
+      "0:00 min",
+      0,
+      ""
+    ),
+    createData(
+      "Pedro Arguello",
+      "5to grado",
+      "Leer oraciones",
+      "0:04 min",
+      2,
+      "14/11/2022 07:40hs"
+    ),
+    createData(
+      "Pedro Arguello",
+      "5to grado",
+      "Unir con flechas",
+      "0:00 min",
+      0,
+      ""
+    ),
+    createData(
+      "Sebastian Miranda",
+      "5to grado",
+      "Leer oraciones",
+      "0:04 min",
+      2,
+      "16/11/2022 08:50hs"
+    ),
   ];
   return (
     <ThemeProvider theme={mdTheme}>
@@ -93,6 +127,12 @@ export default function Activities() {
                           <b>Actividades</b>
                         </TableCell>
                         <TableCell align="right">
+                          <b>Tiempo transcurrido</b>
+                        </TableCell>
+                        <TableCell align="right">
+                          <b>Nº de intentos</b>
+                        </TableCell>
+                        <TableCell align="right">
                           <b>Última modificación</b>
                         </TableCell>
                       </TableRow>
@@ -108,8 +148,10 @@ export default function Activities() {
                           <TableCell component="th" scope="row">
                             {row.name}
                           </TableCell>
-                          <TableCell align="right">{row.uses}</TableCell>
-                          <TableCell align="right">{row.percent}</TableCell>
+                          <TableCell align="right">{row.group}</TableCell>
+                          <TableCell align="right">{row.activity}</TableCell>
+                          <TableCell align="center">{row.time}</TableCell>
+                          <TableCell align="center">{row.attemps}</TableCell>
                           <TableCell align="right">{row.updated_at}</TableCell>
                         </TableRow>
                       ))}

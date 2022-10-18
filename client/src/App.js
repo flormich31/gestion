@@ -9,6 +9,7 @@ import ActivityEditor from "./pages/activity-editor";
 import ActivityEditorRead from "./pages/activity-editor-read";
 import Reports from "./pages/reports";
 import Profile from "./pages/profile";
+import GroupCreate from "./pages/group-create";
 
 export default function App() {
   document.title = "ABC Aprendiendo juntos";
@@ -24,6 +25,9 @@ export default function App() {
           </Route>
           <Route path="/groups">
             <Groups />
+          </Route>
+          <Route path="/group-create">
+            <GroupCreate />
           </Route>
           <Route path="/groups-A">
             <GroupsA />

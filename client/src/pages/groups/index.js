@@ -32,8 +32,8 @@ function DashboardContent() {
   const handleGroupASelect = (event) => {
     history.push("/groups-A");
   };
-  const handlePress = (event) => {
-    alert("click en ADD GROUPS");
+  const handlePressNew = (event) => {
+    history.push("/group-create");
   };
 
   const handleClick5 = (event) => {
@@ -47,24 +47,20 @@ function DashboardContent() {
     alert("Código: 2022");
   };
 
-
   React.useEffect(() => {
-
     var config = {
       method: "get",
       url: "http://localhost:9000/groups",
       headers: {},
     };
     axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
-
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -84,7 +80,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <AddButton onPress={handlePress} />
+          <AddButton onPress={handlePressNew} />
 
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={4}>

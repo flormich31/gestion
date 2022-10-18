@@ -12,6 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import { deepOrange } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
+import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 const mdTheme = createTheme();
 
@@ -42,23 +43,31 @@ export default function Profile() {
                     p: 3,
                     display: "flex",
                     flexDirection: "column",
-                    height: 200,
+                    height: 130,
                   }}
                 >
                   <Stack direction="columns" spacing={2}>
-                    <Avatar
-                      sx={{ bgcolor: deepOrange[300], width: 60, height: 60 }}
-                    >
-                      LQ
-                    </Avatar>
-                    <Typography variant="h4" component="div">
-                      Laura Quintos
-                    </Typography>
+                    <div>
+                      <ListItem>
+                        <Avatar
+                          sx={{
+                            bgcolor: deepOrange[300],
+                            width: 60,
+                            height: 60,
+                          }}
+                        >
+                          LQ
+                        </Avatar>
+                        <ListItemIcon />
+                        <ListItemText
+                          disableTypography
+                          primary={
+                            <Typography variant="h4">Laura Quintos</Typography>
+                          }
+                        />
+                      </ListItem>
+                    </div>
                   </Stack>
-                  <Typography variant="h4" component="div">
-                    Laura Quintos
-                  </Typography>
-                  Docente
                 </Paper>
               </Grid>
 

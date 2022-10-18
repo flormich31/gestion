@@ -80,12 +80,12 @@ class ActivityRead extends React.Component {
                     onSelectPictograma={this.handleOnSelectPictograma}
                   ></PictoBar>
                 </Grid>
-                <Grid item xs={4} md={4} lg={4}>
+                <Grid item xs={5} md={4} lg={5}>
                   <Paper>
                     <ImageList
-                      sx={{ width: 360, height: 360, "padding-left": "5px" }}
+                      sx={{ width: 340, height: 340, "padding-left": "5px" }}
                       cols={3}
-                      rowHeight={100}
+                      rowHeight={90}
                     >
                       {this.state.itemData.map((item, index) => (
                         <ImageListItem

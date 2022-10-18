@@ -14,7 +14,6 @@ import List from "@mui/material/List";
 import { MainListItems, SecondaryListItems } from "./listItems";
 import { useHistory } from "react-router-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Alert } from "@mui/material";
 
 export default function AppBar() {
   const history = useHistory();
@@ -105,6 +104,7 @@ export default function AppBar() {
                 <Switch>
                   <Route path="/home">Inicio</Route>
                   <Route path="/groups">Grupos</Route>
+                  <Route path="/group-create">Crear grupo</Route>
                   <Route path="/groups-A">Grupo A - 4to - Cuarto grado</Route>
                   <Route path="/activities">Actividades</Route>
                   <Route path="/activity-editor">Editor de actividades</Route>
