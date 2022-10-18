@@ -102,7 +102,7 @@ export default function AppBar() {
             <Router>
               <div>
                 <Switch>
-                  <Route path="/home">Página principal</Route>
+                  <Route path="/home">Inicio</Route>
                   <Route path="/groups">Grupo</Route>
                   <Route path="/groups-A">Grupo A - 4to - Cuarto grado</Route>
                   <Route path="/profile">Mi perfil</Route>

@@ -20,7 +20,7 @@ export const MainListItems = () => {
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
-        <ListItemText primary="Home" />
+        <ListItemText primary="Inicio" />
       </ListItem>
       <ListItem button onClick={() => goto("/groups")}>
         <ListItemIcon>

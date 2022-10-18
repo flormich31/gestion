@@ -103,7 +103,7 @@ export default function AppBar() {
             <Router>
               <div>
                 <Switch>
-                  <Route path="/home">Home</Route>
+                  <Route path="/home">Inicio</Route>
                   <Route path="/groups">Grupos</Route>
                   <Route path="/groups-A">Grupo A - 4to - Cuarto grado</Route>
                   <Route path="/activities">Actividades</Route>

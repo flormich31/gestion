@@ -67,22 +67,7 @@ export default function Home() {
                 ></Paper>
               </Grid>
 
-              <Grid item xs={6}>
-                <Paper
-                  sx={{
-                    p: 3,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 490,
-                  }}
-                >
-                  <Typography variant="h5" component="div" align="center">
-                    ¡Bienvenido Estudiante!
-                  </Typography>
-                  <Divider variant="subheader" sx={{ pt: 1 }} />
-                +0.</Paper>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Paper
                   sx={{
                     p: 3,
@@ -92,12 +77,12 @@ export default function Home() {
                   }}
                 >
                   <Grid item xs={8} sx={{ p: 2, align: "center" }}>
-                    <Card sx={{ maxWidth: 400 }}>
+                    <Card sx={{ maxWidth: 250 }}>
                       <CardMedia
                         component="img"
-                        height="210"
-                        image="/assets/images/cuarto.png"
-                        alt="Cuarto image"
+                        height="100"
+                        image="/assets/images/bienvenido.png"
+                        alt="Bienvenido image"
                       />
                       <CardContent>
                         <Typography
@@ -106,7 +91,7 @@ export default function Home() {
                           component="div"
                           align="center"
                         >
-                          4to - Cuarto grado
+                          Únete al grupo <br />
                         </Typography>
                       </CardContent>
                       <CardActions>

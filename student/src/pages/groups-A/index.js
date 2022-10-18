@@ -88,7 +88,7 @@ function DashboardContent() {
                   }}
                 >
                   <Typography variant="h4" component="div">
-                    Alumnos
+                    Docente
                   </Typography>
                   <Divider variant="subheader" />
                   <br />
@@ -97,14 +97,7 @@ function DashboardContent() {
                       <ListItemIcon>
                         <AccountCircleIcon color="secondary" />
                       </ListItemIcon>
-                      <ListItemText primary="Maria Gonzalez" />
-                    </ListItem>
-
-                    <ListItem>
-                      <ListItemIcon>
-                        <AccountCircleIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary="Jose Pereira" />
+                      <ListItemText primary="Laura Quintos" />
                     </ListItem>
                   </div>
                 </Paper>
@@ -121,7 +114,7 @@ function DashboardContent() {
                   }}
                 >
                   <Typography variant="h4" component="div">
-                    Actividades a realizar
+                    Actividades
                   </Typography>
                   <Divider variant="subheader" />
                   <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
