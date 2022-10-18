@@ -1,4 +1,4 @@
-# gamificacion
+# ABC Aprendiendo juntos 
 Introduccion sobre el proyecto
 ## Comandos para iniciar por primera vez
 
