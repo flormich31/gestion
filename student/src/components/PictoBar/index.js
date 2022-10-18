@@ -1,21 +1,11 @@
 import * as React from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import { PictoListItems } from "./PictoListItems";
 import { useHistory } from "react-router-dom";
-import {
-  FormControl,
-  Input,
-  InputAdornment,
-  InputLabel,
-  ListItem,
-} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { ListItem } from "@mui/material";
 
 export default function PictoBar({ onSelectPictograma }) {
   const history = useHistory();
@@ -77,28 +67,12 @@ export default function PictoBar({ onSelectPictograma }) {
   return (
     <div>
       <Drawer variant="permanent" open={open}>
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            px: [1],
-            padding: "5px",
-          }}
-        >
-          <Typography variante="h5" align="left" padding={2}>
-            <h1>Actividad: Leer oraciones</h1>
-            <h2>Ordena las imagenes segun la oración:</h2>
-            <h3>"El niño habla con la abuela"</h3>
-          </Typography>
-        </Toolbar>
-        <Divider />
         <List>
           <ListItem></ListItem>
         </List>
         <List>
           <PictoListItems onSelectPictograma={onSelectPictograma} />
         </List>
-        <Divider />
       </Drawer>
     </div>
   );

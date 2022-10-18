@@ -76,7 +76,7 @@ export default function Home() {
                     height: 490,
                   }}
                 >
-                  <Grid item xs={8} sx={{ p: 2, align: "center" }}>
+                  <Grid item xs={12} sx={{ p: 2, align: "center" }}>
                     <Card sx={{ maxWidth: 250 }}>
                       <CardMedia
                         component="img"
@@ -91,7 +91,7 @@ export default function Home() {
                           component="div"
                           align="center"
                         >
-                          Únete al grupo <br />
+                          Únete al grupo con el código de acceso
                         </Typography>
                       </CardContent>
                       <CardActions>

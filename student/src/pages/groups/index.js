@@ -53,8 +53,8 @@ function DashboardContent() {
                   <CardMedia
                     component="img"
                     height="250"
-                    image="/assets/images/cuarto.png"
-                    alt="Cuarto image"
+                    image="/assets/images/bienvenido.png"
+                    alt="Bienvenido image"
                   />
                   <CardContent>
                     <Typography
@@ -63,7 +63,7 @@ function DashboardContent() {
                       component="div"
                       align="center"
                     >
-                      4to - Cuarto grado
+                      Únete al grupo
                     </Typography>
                   </CardContent>
                   <CardActions>

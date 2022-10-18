@@ -4,7 +4,7 @@ var router = express.Router();
 router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
-    FROM groups
+    FROM \`groups\`
     WHERE deleted_at IS NULL
   `;
   global.dbConnection.query(sql, [], (err, regs) => {

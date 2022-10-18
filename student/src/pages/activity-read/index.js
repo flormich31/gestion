@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
-import { Button, ImageList, ImageListItem } from "@mui/material";
+import { Button, ImageList, ImageListItem, Typography } from "@mui/material";
 import PictoBar from "../../components/PictoBar";
 
 const mdTheme = createTheme();
@@ -57,17 +57,35 @@ class ActivityRead extends React.Component {
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Paper
+                    sx={{
+                      p: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: 140,
+                    }}
+                  >
+                    <Typography variante="h5">
+                      <h1>Actividad: Leer oraciones</h1>
+                      <h4>
+                        Ordena las imagenes segun la oración: "El niño habla con
+                        la abuela"
+                      </h4>
+                    </Typography>
+                  </Paper>
+                </Grid>
                 <Grid item xs={4} md={4} lg={4}>
                   <PictoBar
                     onSelectPictograma={this.handleOnSelectPictograma}
                   ></PictoBar>
                 </Grid>
-                <Grid item xs={12}>
-                  <div>
+                <Grid item xs={4} md={4} lg={4}>
+                  <Paper>
                     <ImageList
-                      sx={{ width: 400, height: 200, "padding-left": "5px" }}
+                      sx={{ width: 360, height: 360, "padding-left": "5px" }}
                       cols={3}
-                      rowHeight={130}
+                      rowHeight={100}
                     >
                       {this.state.itemData.map((item, index) => (
                         <ImageListItem
@@ -87,7 +105,7 @@ class ActivityRead extends React.Component {
                         </ImageListItem>
                       ))}
                     </ImageList>
-                  </div>
+                  </Paper>
                   <Button
                     type="submit"
                     variant="contained"

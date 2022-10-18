@@ -97,7 +97,12 @@ function DashboardContent() {
                       <ListItemIcon>
                         <AccountCircleIcon color="secondary" />
                       </ListItemIcon>
-                      <ListItemText primary="Laura Quintos" />
+                      <ListItemText
+                        disableTypography
+                        primary={
+                          <Typography variant="h6">Maria Gonzalez</Typography>
+                        }
+                      />
                     </ListItem>
                   </div>
                 </Paper>

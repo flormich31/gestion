@@ -14,8 +14,8 @@ var testAPIRouter = require("./routes/testAPI");
 var mysql = require("mysql");
 var dbConnection = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "root123",
+  user: "sistemax",
+  password: "Clave123!",
   database: "sistema",
 });
 
