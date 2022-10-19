@@ -6,12 +6,32 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import AppBar from "../../components/AppBar";
+import axios from "axios";
 import Copyright from "../../components/Copyright";
 import { Button, TextField } from "@mui/material";
 
 const mdTheme = createTheme();
 
 export default function GroupCreate() {
+  // var variableName = "";
+
+  var config;
+  React.useEffect(() => {
+    config = {
+      method: "post",
+      url: "http://localhost:9000/groups",
+      body: "variableName",
+    };
+  }, []);
+  const handleSubmit = (event) => {
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
@@ -38,25 +58,17 @@ export default function GroupCreate() {
                     margin="normal"
                     required
                     fullWidth
-                    id="namedb"
+                    id="variableName"
                     label="Nombre del grupo"
-                    name="namedb"
+                    name="variableName"
                     autoFocus
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="code"
-                    label="Código de acceso"
-                    type="text"
-                    id="code"
                   />
 
                   <Button
                     type="submit"
                     variant="contained"
                     sx={{ mt: 1, mb: 1 }}
+                    onClick={handleSubmit}
                   >
                     Crear
                   </Button>

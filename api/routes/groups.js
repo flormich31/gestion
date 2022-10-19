@@ -16,14 +16,57 @@ router.get("/", function (req, res, next) {
   });
 });
 
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 router.post("/", function (req, res, next) {
+  const codigo = makeid(5);
+  console.log(codigo);
+  console.log(req.body);
   const sql = `
   INSERT INTO \`groups\`
-  (id, author_id, name, code, created_at) values (5,1,'Grupo DIFERENTE', 102, '2022-11-19 14:31:20');
+  ( author_id, name, code, created_at) values (1,'${req.body.name}', '${codigo}', now());
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
       res.send("Error creando nuevo grupo");
+    } else {
+      res.json({ groups: regs });
+    }
+  });
+});
+
+router.put("/", function (req, res, next) {
+  const sql = `
+  UPDATE \`groups\`
+  SET name='Grupo SUPER Pro'
+  WHERE id=2;
+  `;
+  global.dbConnection.query(sql, [], (err, regs) => {
+    if (err) {
+      res.send("Error editando grupo");
+    } else {
+      res.json({ groups: regs });
+    }
+  });
+});
+
+router.delete("/", function (req, res, next) {
+  const sql = `
+  DELETE FROM \`groups\`
+  WHERE id=8;
+  `;
+  global.dbConnection.query(sql, [], (err, regs) => {
+    if (err) {
+      res.send("Error eliminando grupo");
     } else {
       res.json({ groups: regs });
     }
