@@ -9,27 +9,38 @@ import AppBar from "../../components/AppBar";
 import axios from "axios";
 import Copyright from "../../components/Copyright";
 import { Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const mdTheme = createTheme();
 
 export default function GroupCreate() {
-  // var variableName = "";
+  const history = useHistory();
+  const handleGroups = (event) => {
+    history.push("/groups");
+  };
 
-  var config;
-  React.useEffect(() => {
-    config = {
-      method: "post",
-      url: "http://localhost:9000/groups",
-      body: "variableName",
+  const [name, setName] = React.useState("");
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [data, setData] = useState(null);
+
+  const handleSubmit = () => {
+    setLoading(true);
+    setIsError(false);
+    const data = {
+      name: name,
     };
-  }, []);
-  const handleSubmit = (event) => {
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
+    axios
+      .post("http://localhost:9000/groups", data)
+      .then((res) => {
+        setData(res.data);
+        setName("");
+        setLoading(false);
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((err) => {
+        setLoading(false);
+        setIsError(true);
       });
   };
   return (
@@ -58,19 +69,26 @@ export default function GroupCreate() {
                     margin="normal"
                     required
                     fullWidth
-                    id="variableName"
+                    id="name"
                     label="Nombre del grupo"
-                    name="variableName"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     autoFocus
                   />
+                  {isError && (
+                    <small className="mt-3 d-inline-block text-danger">
+                      Something went wrong. Please try again later.
+                    </small>
+                  )}
 
                   <Button
                     type="submit"
                     variant="contained"
                     sx={{ mt: 1, mb: 1 }}
                     onClick={handleSubmit}
+                    disabled={loading}
                   >
-                    Crear
+                    {loading ? "Loading..." : "Crear"}
                   </Button>
                 </Box>
               </Grid>
