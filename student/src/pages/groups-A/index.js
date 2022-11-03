@@ -100,7 +100,7 @@ function DashboardContent() {
                       <ListItemText
                         disableTypography
                         primary={
-                          <Typography variant="h6">Maria Gonzalez</Typography>
+                          <Typography variant="h6">Laura Quintos</Typography>
                         }
                       />
                     </ListItem>

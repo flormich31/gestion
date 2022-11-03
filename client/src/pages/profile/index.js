@@ -102,7 +102,7 @@ export default function Profile() {
                   <Typography variant="h4" component="div">
                     Grupos
                   </Typography>
-                  <h5>5to GRADO - 6to GRADO -7mo GRADO</h5>
+                  <h5>4to GRADO - 5to GRADO - 6to GRADO</h5>
                 </Paper>
               </Grid>
             </Grid>

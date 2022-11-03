@@ -33,6 +33,7 @@ class DashboardContent extends React.Component {
     this.state = {
       groups: [],
     };
+    //this.deleteGroup = this.deleteGroup.bind(this)
   }
   componentDidMount() {
     let _this = this;
@@ -118,7 +119,7 @@ class DashboardContent extends React.Component {
                       </CardContent>
                       <CardActions>
                         <Button size="small">Abrir</Button>
-                        <Button size="small">Ver código</Button>
+                        <Button size="small">Borrar</Button>
                       </CardActions>
                     </Card>
                   </Grid>

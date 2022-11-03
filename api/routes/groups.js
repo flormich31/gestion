@@ -45,10 +45,11 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/", function (req, res, next) {
+  console.log(req.body);
   const sql = `
   UPDATE \`groups\`
   SET name='Grupo SUPER Pro'
-  WHERE id=2;
+  WHERE id='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
@@ -62,7 +63,7 @@ router.put("/", function (req, res, next) {
 router.delete("/", function (req, res, next) {
   const sql = `
   DELETE FROM \`groups\`
-  WHERE id=8;
+  WHERE id=59;
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
