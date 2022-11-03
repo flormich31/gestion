@@ -23,6 +23,7 @@ import {
   Typography,
 } from "@mui/material";
 //import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router";
 
 const mdTheme = createTheme();
 
@@ -33,8 +34,8 @@ class DashboardContent extends React.Component {
     this.state = {
       groups: [],
     };
-    //this.deleteGroup = this.deleteGroup.bind(this)
   }
+
   componentDidMount() {
     let _this = this;
     var config = {
@@ -52,6 +53,16 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   }
+
+  redirectHandlerOpen = () => {
+    this.setState({ redirect: true });
+    this.renderRedirectOpen();
+  };
+  renderRedirectOpen = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/groups-A" />;
+    }
+  };
 
   render() {
     return (
@@ -118,7 +129,10 @@ class DashboardContent extends React.Component {
                         </Typography>
                       </CardContent>
                       <CardActions>
-                        <Button size="small">Abrir</Button>
+                        <Button size="small" onClick={this.redirectHandlerOpen}>
+                          Abrir
+                        </Button>
+                        {this.renderRedirectOpen()}
                         <Button size="small">Borrar</Button>
                       </CardActions>
                     </Card>
