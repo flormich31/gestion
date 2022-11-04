@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 //import { useHistory } from "react-router-dom";
 import { Redirect } from "react-router";
+import ButtonCreateGroup from "../../components/ButtonCreateGroup";
 
 const mdTheme = createTheme();
 
@@ -83,7 +84,7 @@ class DashboardContent extends React.Component {
             }}
           >
             <Toolbar />
-            <AddButton />
+            <ButtonCreateGroup />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={4}>
