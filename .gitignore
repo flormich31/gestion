@@ -104,3 +104,4 @@ dist
 .tern-port
 /client/package-lock.json
 /api/package-lock.json
+teacher/package-lock.json
