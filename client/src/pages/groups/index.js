@@ -38,6 +38,10 @@ class DashboardContent extends React.Component {
   }
 
   componentDidMount() {
+    this.getGroups();
+  }
+
+  getGroups = () => {
     let _this = this;
     var config = {
       method: "get",
@@ -53,8 +57,7 @@ class DashboardContent extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  }
-
+  };
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
@@ -63,6 +66,21 @@ class DashboardContent extends React.Component {
     if (this.state.redirect) {
       return <Redirect to="/groups-A" />;
     }
+  };
+  handleRemove = (id) => {
+    let _this = this;
+    var config = {
+      method: "delete",
+      url: "http://localhost:9000/groups/" + id,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        _this.getGroups();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   render() {
@@ -134,7 +152,14 @@ class DashboardContent extends React.Component {
                           Abrir
                         </Button>
                         {this.renderRedirectOpen()}
-                        <Button size="small">Borrar</Button>
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            this.handleRemove(item.id);
+                          }}
+                        >
+                          Borrar
+                        </Button>
                       </CardActions>
                     </Card>
                   </Grid>

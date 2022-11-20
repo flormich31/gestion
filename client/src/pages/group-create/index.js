@@ -37,6 +37,7 @@ export default function GroupCreate() {
         setData(res.data);
         setName("");
         setLoading(false);
+        history.push("/groups");
       })
       .catch((err) => {
         setLoading(false);

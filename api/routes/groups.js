@@ -60,12 +60,13 @@ router.put("/", function (req, res, next) {
   });
 });
 
-router.delete("/", function (req, res, next) {
+router.delete("/:id", function (req, res, next) {
   const sql = `
   DELETE FROM \`groups\`
-  WHERE id=59;
+  WHERE id = ?
   `;
-  global.dbConnection.query(sql, [], (err, regs) => {
+  console.log("Delete id > " + req.params.id);
+  global.dbConnection.query(sql, [req.params.id], (err, regs) => {
     if (err) {
       res.send("Error eliminando grupo");
     } else {
