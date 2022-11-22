@@ -10,6 +10,7 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import { Button, ImageList, ImageListItem, Typography } from "@mui/material";
 import PictoBar from "../../components/PictoBar";
+import { Redirect } from "react-router";
 
 const mdTheme = createTheme();
 
@@ -34,7 +35,15 @@ class ActivityRead extends React.Component {
       this.setState(this.state);
     };
   }
-
+  redirectHandlerOpen = () => {
+    this.setState({ redirect: true });
+    this.renderRedirectOpen();
+  };
+  renderRedirectOpen = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/groups-A" />;
+    }
+  };
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -110,9 +119,11 @@ class ActivityRead extends React.Component {
                     type="submit"
                     variant="contained"
                     sx={{ mt: 1, mb: 1 }}
+                    onClick={this.redirectHandlerOpen}
                   >
                     Enviar
                   </Button>
+                  {this.renderRedirectOpen()}
                 </Grid>
               </Grid>
               <Copyright sx={{ pt: 4 }} />
