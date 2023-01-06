@@ -7,16 +7,16 @@ var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var groupsRouter = require("./routes/groups");
+var groupsRouter = require("./routes/productos");
 var testAPIRouter = require("./routes/testAPI");
 
 /* Conexión a mysql */
 var mysql = require("mysql");
 var dbConnection = mysql.createConnection({
   host: "localhost",
-  user: "sistemax",
+  user: "root",
   password: "Clave123!",
-  database: "sistema",
+  database: "gestion",
 });
 
 dbConnection.connect(function (err) {

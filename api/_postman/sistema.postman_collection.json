@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "196d29df-275f-4739-85b6-18b7832c5828",
-		"name": "sistema",
+		"name": "gestion",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "7812228"
 	},
@@ -31,35 +31,35 @@
 			]
 		},
 		{
-			"name": "grupos",
+			"name": "productos",
 			"item": [
 				{
-					"name": "groups",
+					"name": "productos",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9000/groups",
+							"raw": "http://localhost:9000/productos",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"groups"
+								"productos"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "groups",
+					"name": "productos",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"grupo nuevo\"\r\n}",
+							"raw": "{\r\n    \"name\": \"producto nuevo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -67,7 +67,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9000/groups",
+							"raw": "http://localhost:9000/productos",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -81,13 +81,13 @@
 					"response": []
 				},
 				{
-					"name": "groups/{id}",
+					"name": "productos/{id}",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"grupo nuevo editado\"\r\n}",
+							"raw": "{\r\n    \"name\": \"producto nuevo editado\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -95,14 +95,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9000/groups/1",
+							"raw": "http://localhost:9000/productos/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"groups",
+								"productos",
 								"1"
 							]
 						}
@@ -110,13 +110,13 @@
 					"response": []
 				},
 				{
-					"name": "groups/{id}",
+					"name": "productos/{id}",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"grupo nuevo editado\"\r\n}",
+							"raw": "{\r\n    \"name\": \"producto nuevo editado\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,14 +124,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9000/groups/1",
+							"raw": "http://localhost:9000/gproductosroups/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9000",
 							"path": [
-								"groups",
+								"productos",
 								"1"
 							]
 						}
