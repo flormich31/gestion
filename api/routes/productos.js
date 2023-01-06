@@ -27,7 +27,7 @@ function makeid(length) {
   return result;
 }
 
-router.post("/", function (req, res, next) {
+/* router.post("/", function (req, res, next) {
   const codigo = makeid(5);
   console.log(codigo);
   console.log(req.body);
@@ -73,6 +73,6 @@ router.delete("/:id", function (req, res, next) {
       res.json({ groups: regs });
     }
   });
-});
+}); */
 
 module.exports = router;
