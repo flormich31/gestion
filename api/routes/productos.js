@@ -5,10 +5,11 @@ router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
     FROM \`productos\`
-    WHERE deleted_at IS NULL
+    WHERE FechaEliminacion IS NULL
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
+      console.log(err);
       res.send("Error recuperando productos");
     } else {
       res.json({ productos: regs });

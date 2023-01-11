@@ -68,6 +68,7 @@ export default function Productos() {
     };
     axios(config)
     .then(function (response) {
+      console.log(response);
       console.log(JSON.stringify(response.data));
     })
     .catch(function (error) {

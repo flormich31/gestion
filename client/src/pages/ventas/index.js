@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { Redirect } from "react-router";
 import ButtonCreateGroup from "../../components/ButtonCreateGroup";
-import DataTableProd from "../../components/DataTableProd";
+import DataTableVenta from "../../components/DataTableVenta";
 import TextField from '@mui/material/TextField';
 import NativeSelect from '@mui/material/NativeSelect';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -30,16 +30,16 @@ const mdTheme = createTheme();
 
 
 class DashboardContent extends React.Component {
-  constructor(props) {
+  /* constructor(props) {
     super(props);
 
     this.state = {
-      groups: [],
+      productos: [],
     };
   }
 
   componentDidMount() {
-    this.getGroups();
+    this.getProductos();
   }
 
   getGroups = () => {
@@ -72,7 +72,7 @@ class DashboardContent extends React.Component {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/groups/" + id,
+      url: "http://localhost:9000/productos/" + id,
       headers: {},
     };
     axios(config)
@@ -82,7 +82,7 @@ class DashboardContent extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  };
+  }; */
 
   render() {
     return (
@@ -287,7 +287,7 @@ class DashboardContent extends React.Component {
                 </Paper>
               </Grid>
 
-              <Grid m={0} pt={2}><DataTableProd /></Grid>
+              <Grid m={0} pt={2}><DataTableVenta /></Grid>
              
               <Copyright sx={{ pt: 4 }} />
             </Container>
