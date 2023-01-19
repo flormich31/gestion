@@ -7,7 +7,8 @@ var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var groupsRouter = require("./routes/productos");
+var productosRouter = require("./routes/productos");
+var clientesRouter = require("./routes/clientes");
 var testAPIRouter = require("./routes/testAPI");
 
 /* Conexión a mysql */
@@ -44,7 +45,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/productos", groupsRouter);
+app.use("/productos", productosRouter);
+app.use("/clientes", clientesRouter);
 app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler

@@ -5,64 +5,96 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import AddButton from "../../components/AddButton";
-import { useHistory } from "react-router-dom";
-
+import {
+  Paper,
+  Typography,
+} from "@mui/material";
+import { Redirect } from "react-router";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 const mdTheme = createTheme();
 
-export default function Activities() {
-  function createData(name, domicilio, codigopostal, telefono, cuit) {
-    return { name, domicilio, codigopostal, telefono, cuit };
+
+class Clientes extends React.Component {
+
+   constructor(props) {
+    super(props);
+
+    this.state = {
+      clientes: [],
+    };
   }
 
-  const history = useHistory();
-
-  const handlePress = (event) => {
-    history.push("/activity-editor");
+  componentDidMount() {
+    this.getClientes();
   }
 
-  const rows = [
-    createData("Ana", 159, 6.0, "15/08/2021 12:34hs"),
-    createData("Laura", 159, 16.0, "15/08/2021 12:34hs"),
-    createData("Celeste", 159, 6.0, "15/08/2021 12:34hs"),
-    
-  ];
-  return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <AddButton onPress={handlePress} />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12} lg={12}>
+  getClientes = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/clientes",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  redirectHandlerOpen = () => {
+    this.setState({ redirect: true });
+    this.renderRedirectOpen();
+  };
+ 
+  renderRedirectOpen = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/groups-A" />;
+    }
+  };
+
+  render() {
+    return (
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar />
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            
+              <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid item xs={12} md={12} lg={12} >
               <Paper
                   sx={{
                     p: 3,
@@ -86,44 +118,65 @@ export default function Activities() {
                 </FormControl>
                 </Paper>
               </Grid>
+
               <Grid item xs={12} md={12} lg={12}>
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell align="right">Domicilio</TableCell>
-                        <TableCell align="right">Codigo Postal</TableCell>
-                        <TableCell align="right">Telefono</TableCell>
-                        <TableCell align="right">CUIT</TableCell>
+                <Paper elevation={23}>
+                <div style={{ height: 400, width: '100%', alignContent: "center"}}>
+                  
+                  <Table sx={{ minWidth: 650  }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell bgcolor="pink" > <b>Nombre</b></TableCell>
+                      <TableCell bgcolor="pink" ><b>CUIT</b></TableCell>
+                      <TableCell bgcolor="pink" > <b>Domicilio</b></TableCell>
+                      <TableCell bgcolor="pink" > <b>Celular</b></TableCell>
+                      <TableCell bgcolor="pink" > <b>Email</b></TableCell>
+                      <TableCell bgcolor="pink" > <b>Codigo Postal</b></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.clientes.map((item, index) => (
+                      <TableRow
+                        key={item.Nombre}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {item.Nombre}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {item.Cuit}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {item.Domicilio}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {item.Celular}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {item.Email}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {item.CodigoPostal}
+                        </TableCell>
+                       
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.map((row) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.domicilio}</TableCell>
-                          <TableCell align="right">{row.codigopostal}</TableCell>
-                          <TableCell align="right">{row.telefono}</TableCell>
-                          <TableCell align="right">{row.cuit}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                    ))}
+                  </TableBody>
+                </Table>
+                </div>
+                </Paper>
               </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
+              
+              
+             </Grid>
+              <Copyright sx={{ pt: 4 }} />
+            </Container>
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  }
 }
+
+export default Clientes;
+

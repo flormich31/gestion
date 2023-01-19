@@ -59,11 +59,27 @@ export default function Proveedores() {
 
   const history = useHistory();
 
+ /*  React.useEffect(() => {
+
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/productos",
+      headers: {},
+    };
+    axios(config)
+    .then(function (response) {
+      console.log(response);
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+  }, []); */
+  
   const handlePress = (event) => {
     history.push("/activity-editor");
-  }
-
-    ;
+  };
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>

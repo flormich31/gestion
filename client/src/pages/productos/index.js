@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import axios from "axios";
@@ -14,15 +13,196 @@ import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import AddButton from "../../components/AddButton";
-import { useHistory } from "react-router-dom";
+import {
+  Paper,
+  Typography,
+} from "@mui/material";
+import { Redirect } from "react-router";
+import DataTableVenta from "../../components/DataTableVenta";
+import TextField from '@mui/material/TextField';
+import NativeSelect from '@mui/material/NativeSelect';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { DataGrid } from '@mui/x-data-grid';
-
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 const mdTheme = createTheme();
 
 
+class DashboardContent extends React.Component {
 
-const columns = [
+   constructor(props) {
+    super(props);
+
+    this.state = {
+      productos: [],
+    };
+  }
+
+  componentDidMount() {
+    this.getProductos();
+  }
+
+  getProductos = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/productos",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+ /*  componentDidUpdate (){
+    this.getProductosBus();
+  }; */
+  redirectHandlerOpen = () => {
+    this.setState({ redirect: true });
+    this.renderRedirectOpen();
+  };
+ /*  getProductosBus = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/productos",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }; */
+  renderRedirectOpen = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/groups-A" />;
+    }
+  };
+  /* handleRemove = (id) => {
+    let _this = this;
+    var config = {
+      method: "delete",
+      url: "http://localhost:9000/productos/" + id,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        _this.getGroups();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };  */
+
+  render() {
+    return (
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar />
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            
+              <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid item xs={12} md={12} lg={12} >
+              <Paper
+                  sx={{
+                    p: 3,
+                    display: "flex",
+                    flexDirection: "column",
+                    height: 100,
+                  }}
+                >
+                <FormControl variant="standard">
+                  <InputLabel htmlFor="input-with-icon-adornment">
+                    Buscar
+                  </InputLabel>
+                  <Input
+                    id="input-with-icon-adornment"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} md={12} lg={12}>
+                <Paper elevation={23}>
+                <div style={{ height: 400, width: '100%', alignContent: "center"}}>
+                  
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell bgcolor="pink" > <b>Descripcion del producto</b></TableCell>
+                      <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                      
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {this.state.productos.map((item, index) => (
+                      <TableRow
+                        key={item.Costo}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {item.Detalle}
+                        </TableCell>
+                        <TableCell align="right">{item.Costo}</TableCell>
+                       
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                </div>
+                </Paper>
+              </Grid>
+              
+              
+             </Grid>
+              <Copyright sx={{ pt: 4 }} />
+            </Container>
+          </Box>
+        </Box>
+      </ThemeProvider>
+    );
+  }
+}
+
+export default DashboardContent;
+
+
+/* const columns = [
   { field: 'id', headerName: 'Codigo', width: 90, },
   { field: 'name', headerName: 'Nombre', width: 130 },
   { field: 'mark', headerName: 'Marca', width: 130 },
@@ -146,4 +326,4 @@ export default function Productos() {
       </Box>
     </ThemeProvider>
   );
-}
+} */

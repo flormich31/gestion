@@ -95,8 +95,8 @@ class DashboardContent extends React.Component {
             sx={{
               backgroundColor: (theme) =>
                 theme.palette.mode === "light"
-                  ? theme.palette.grey[500]
-                  : theme.palette.grey[500],
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
               flexGrow: 1,
               height: "100vh",
               overflow: "auto",
@@ -109,7 +109,7 @@ class DashboardContent extends React.Component {
             
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6} >
-                  <Paper
+                  <Paper elevation={10}
                     sx={{
                       p: 3,
                       display: "flex",
@@ -220,7 +220,7 @@ class DashboardContent extends React.Component {
                 </Grid>
 
                 <Grid item xs={6}  >
-                  <Paper
+                  <Paper elevation={10}
                     sx={{
                       p: 3,
                       display: "flex",
@@ -259,7 +259,7 @@ class DashboardContent extends React.Component {
               </Grid>
 
               <Grid m={0} pt={2}>
-                <Paper
+                <Paper elevation={10} 
                   sx={{
                     p: 3,
                     display: "flex",
@@ -287,7 +287,7 @@ class DashboardContent extends React.Component {
                 </Paper>
               </Grid>
 
-              <Grid m={0} pt={2}><DataTableVenta /></Grid>
+              <Grid m={0} pt={2}><Paper elevation={10} ><DataTableVenta /></Paper></Grid>
              
               <Copyright sx={{ pt: 4 }} />
             </Container>
