@@ -4,10 +4,10 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { useHistory } from "react-router-dom";
 
-export default function ButtonCreateGroup() {
+export default function ButtonCreateProduct() {
   const history = useHistory();
   const handlePressNew = (event) => {
-    history.push("/group-create");
+    history.push("/productoNuevo");
   };
   return (
     <Container

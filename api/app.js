@@ -9,6 +9,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var productosRouter = require("./routes/productos");
 var clientesRouter = require("./routes/clientes");
+var proveedoresRouter = require("./routes/proveedores");
 var testAPIRouter = require("./routes/testAPI");
 
 /* Conexión a mysql */
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/productos", productosRouter);
+app.use("/proveedores", proveedoresRouter);
 app.use("/clientes", clientesRouter);
 app.use("/testAPI", testAPIRouter);
 

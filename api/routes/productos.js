@@ -17,34 +17,24 @@ router.get("/", function (req, res, next) {
   });
 });
 
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
-/* router.post("/", function (req, res, next) {
-  const codigo = makeid(5);
-  console.log(codigo);
+router.post("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  INSERT INTO \`groups\`
-  ( author_id, name, code, created_at) values (1,'${req.body.name}', '${codigo}', now());
+  INSERT INTO \`productos\`
+  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values ('${req.body.id}','${req.body.detalle}', '${req.body.categoriaId}','${req.body.marcaId}','${req.body.costo}','${req.body.proveedorId}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
-      res.send("Error creando nuevo grupo");
+      res.send("Error creando nuevo producto");
     } else {
-      res.json({ groups: regs });
+      res.json({ productos: regs });
     }
   });
 });
 
+/* 
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `

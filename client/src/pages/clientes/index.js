@@ -24,6 +24,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import AddButton from "../../components/AddButton";
 const mdTheme = createTheme();
 
 
@@ -167,7 +168,7 @@ class Clientes extends React.Component {
                 </Paper>
               </Grid>
               
-              
+              <AddButton/>
              </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>

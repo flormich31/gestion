@@ -20,7 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Redirect } from "react-router";
-import ButtonCreateGroup from "../../components/ButtonCreateGroup";
+import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import DataTableVenta from "../../components/DataTableVenta";
 import TextField from '@mui/material/TextField';
 import NativeSelect from '@mui/material/NativeSelect';
