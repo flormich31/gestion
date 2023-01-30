@@ -8,6 +8,8 @@ var cors = require("cors");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var productosRouter = require("./routes/productos");
+var categoriasRouter = require("./routes/categorias");
+var marcasRouter = require("./routes/marcas"); 
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
 var testAPIRouter = require("./routes/testAPI");
@@ -47,8 +49,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/productos", productosRouter);
-app.use("/proveedores", proveedoresRouter);
+app.use("/categorias", categoriasRouter);
+app.use("/marcas", marcasRouter);
 app.use("/clientes", clientesRouter);
+app.use("/proveedores", proveedoresRouter);
 app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler

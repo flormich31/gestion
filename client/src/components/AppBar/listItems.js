@@ -11,6 +11,8 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ListIcon from '@mui/icons-material/List';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { useHistory } from "react-router-dom";
 
 export const MainListItems = () => {
@@ -38,6 +40,18 @@ export const MainListItems = () => {
           <TaskIcon />
         </ListItemIcon>
         <ListItemText primary="Productos" />
+      </ListItem>
+      <ListItem onClick={() => goto("/categorias")}>
+        <ListItemIcon>
+          <ListIcon />
+        </ListItemIcon>
+        <ListItemText primary="Categorias" />
+      </ListItem>
+      <ListItem onClick={() => goto("/marcas")}>
+        <ListItemIcon>
+          <LocalActivityIcon />
+        </ListItemIcon>
+        <ListItemText primary="Marcas" />
       </ListItem>
       <ListItem onClick={() => goto("/clientes")}>
         <ListItemIcon>

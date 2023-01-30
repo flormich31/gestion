@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Home from "./pages/home";
 import Ventas from "./pages/ventas";
+import Marcas from "./pages/marcas";
+import Categorias from "./pages/categorias";
 import Clientes from "./pages/clientes";
 import Proveedores from "./pages/Proveedores";
 import Reports from "./pages/reports";
@@ -31,11 +33,17 @@ export default function App() {
             <Route path="/productoNuevo">
             <ProductoNuevo />
           </Route>
-          <Route path="/proveedores">
-            <Proveedores />
+          <Route path="/categorias">
+            <Categorias />
+          </Route>
+          <Route path="/marcas">
+            <Marcas />
           </Route>
           <Route path="/clientes">
             <Clientes />
+          </Route>
+          <Route path="/proveedores">
+            <Proveedores />
           </Route>
           <Route path="/reports">
             <Reports />

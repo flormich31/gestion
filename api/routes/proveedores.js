@@ -17,31 +17,7 @@ router.get("/", function (req, res, next) {
   });
 });
 
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
- router.post("/", function (req, res, next) {
-  console.log(req.body);
-  const sql = `
-  INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values (1,'${req.body.detalle}', '${codigo}', now());
-  `;
-  global.dbConnection.query(sql, [], (err, regs) => {
-    if (err) {
-      res.send("Error creando nuevo producto");
-    } else {
-      res.json({ groups: regs });
-    }
-  });
-});
 
 /* router.put("/", function (req, res, next) {
   console.log(req.body);

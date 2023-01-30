@@ -4,49 +4,61 @@ var router = express.Router();
 router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
-    FROM \`productos\`
+    FROM \`categorias\`
     WHERE FechaEliminacion IS NULL
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
       console.log(err);
-      res.send("Error recuperando productos");
+      res.send("Error recuperando categorias");
     } else {
-      res.json({ productos: regs });
+      res.json({ categorias: regs });
     }
   });
 });
 
+function makeid(length) {
+    var result = "";
+    var characters =
+      "0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
 
 router.post("/", function (req, res, next) {
-  console.log(req.body);
+  const codigo = makeid(5);
+  console.log(codigo);
+  console.log(req.body);;
   const sql = `
-  INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values ('${req.body.id}','${req.body.detalle}', '${req.body.categoriaId}','${req.body.marcaId}','${req.body.costo}','${req.body.proveedorId}');
+  INSERT INTO \`categorias\`
+  ( IdCategoria, Categoria) values ('${codigo}','${req.body.categoria}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error creando nuevo producto");
+      res.send("Error creando nueva categoria");
     } else {
-      res.json({ productos: regs });
+      res.json({ categorias: regs });
     }
   });
 });
 
-router.delete("/:IdProducto", function (req, res, next) {
+router.delete("/:IdCategoria", function (req, res, next) {
   console.log("Request",req.params.IdProducto);
   const sql = `
-  DELETE FROM \`productos\`
-  WHERE IdProducto = ?
+  DELETE FROM \`categorias\`
+  WHERE IdCategoria = ?
   `;
-  //console.log("Delete IdProducto > " + req.params.IdProducto);
-  global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {
+  //console.log("Delete IdCategoria > " + req.params.IdCategoria);
+  global.dbConnection.query(sql, [req.params.IdCategoria], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error eliminando producto");
+      res.send("Error eliminando categoria");
     } else {
-      res.json({ productos: regs });
+      res.json({ categorias: regs });
     }
   });
 });

@@ -42,25 +42,25 @@ import { pink } from '@mui/material/colors';
 const mdTheme = createTheme();
 
 
-class Productos extends React.Component {
+class Marcas extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      productos: [],
+      marcas: [],
     };
   }
 
   componentDidMount() {
-    this.getProductos();
+    this.getMarcas();
   }
 
-  getProductos = () => {
+  getMarcas = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/productos",
+      url: "http://localhost:9000/marcas",
       headers: {},
     };
     axios(config)
@@ -72,44 +72,29 @@ class Productos extends React.Component {
         console.log(error);
       });
   };
-
+/* 
   handleChangeId = event => {
     console.log(event.target.value);
     this.setState({ id: event.target.value });
     console.log(event.target.value);
   }
-  handleChangeDetalle = event => {
-    this.setState({ detalle: event.target.value });
-  }
-  handleChangeCategoria = event => {
-    this.setState({ categoriaId: event.target.value });
-  }
   handleChangeMarca = event => {
-    this.setState({ marcaId: event.target.value });
+    this.setState({ marca: event.target.value });
   }
-  handleChangeCosto = event => {
-    this.setState({ costo: event.target.value });
-  }
-  handleChangeProveedor = event => {
-    this.setState({ proveedorId: event.target.value });
-  }
-
+  
   handleSubmit = event => {
     event.preventDefault();
     let _this = this;
 
-    axios.post("http://localhost:9000/productos", {
+    axios.post("http://localhost:9000/marcas", {
       id: this.state.id,
-      detalle: this.state.detalle,
-      categoriaId: 1,
-      marcaId: 1,
-      costo: this.state.costo,
-      proveedorId: 1
+      marca: this.state.marca,
+     
     })
       .then((res) => {
         console.log(res);
         console.log(res.data);
-        _this.getProductos();
+        _this.getMarcas();
       })
       .catch((err) => {
         console.log(err);
@@ -121,12 +106,12 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "put",
-      url: "http://localhost:9000/productos/${IdProducto}",
+      url: "http://localhost:9000/marcas/${IdProducto}",
       headers: {},
     }
     axios(config)
       .then(function (response) {
-        _this.getProductos();
+        _this.getMarcas();
         console.log(response);
       })
       .catch(function (error) {
@@ -134,22 +119,22 @@ class Productos extends React.Component {
       });
   }
 
-  handleRemove = (IdProducto) => {
+  handleRemove = (id) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/productos/" + IdProducto,
+      url: "http://localhost:9000/marcas/" + id,
       headers: {},
     };
     axios(config)
       .then(function (response) {
-        _this.getProductos();
+        _this.getMarcas();
         console.log(response);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }
+  } */
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
@@ -183,7 +168,7 @@ class Productos extends React.Component {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-                {/* Editor de productos */}
+                {/* Editor de categorias */}
                 <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
@@ -192,71 +177,25 @@ class Productos extends React.Component {
                       flexDirection: "column",
 
                     }}>
-                    {/* Editor de productos */}
+                    {/* Editor de categorias */}
                     <Typography variant="h8" component="div">
-                      <b>Editor de productos</b>
+                      <b>Editor de marcas</b>
                     </Typography>
 
 
                     <Box component="form" noValidate sx={{ mt: 1 }}>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="id"
-                          label="ID del producto"
-                          size="small"
-                          value={this.state.id}
-                          onChange={this.handleChangeId}
-                        />
-                      </FormControl>
                       <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
                           fullWidth
-                          id="detalle"
-                          label="Nombre del producto"
+                          id="marca"
+                          label="Nombre de la marca"
                           size="small"
-                          value={this.state.detalle}
-                          onChange={this.handleChangeDetalle}
+                          /* value={this.state.marca}
+                          onChange={this.handleChangeMarca} */
                         />
-                      </FormControl>
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit} >
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="costo"
-                          label="Costo del producto"
-                          size="small"
-                          value={this.state.costo}
-                          onChange={this.handleChangeCosto}
-                        />
-                      </FormControl>
-                      <br />
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-                        <FormHelperText>Categoria</FormHelperText>
-                        <select  value={this.state.categoriaId} onChange={this.handleChangeCategoria}>
-                          {this.state.productos.map((item, index) => (
-                            <option value={this.state.Categoria_Id} >{item.Categoria_Id}</option>
-                          ))}
-                        </select>
-                        <FormHelperText>Marca</FormHelperText>
-                        <select>
-                          {this.state.productos.map((item, index) => (
-                            <option value={item.Marca_Id}>{item.Marca_Id}</option>
-                          ))}
-                        </select>
-
-                        <FormHelperText>Proveedor</FormHelperText>
-                        <select>
-                          {this.state.productos.map((item, index) => (
-                            <option value={item.Proveedor_Id}>{item.Proveedor_Id}</option>
-                          ))}
-                        </select>
                       </FormControl>
                       <br />
                       <Button
@@ -264,14 +203,13 @@ class Productos extends React.Component {
                         variant="contained"
                         sx={{ mt: 1, mb: 1 }}
                         size="small"
-                        onClick={this.handleSubmit}
+                       /*  onClick={this.handleSubmit} */
                       >
                         {"Guardar"}
                       </Button>
                     </Box>
                   </Paper>
                 </Grid>
-                <ButtonCreateProduct />
 
                 <Grid item xs={12} md={12} lg={12} >
                   <Paper
@@ -307,28 +245,24 @@ class Productos extends React.Component {
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                           <TableRow>
-                            <TableCell bgcolor="pink" > <b>Descripcion del producto</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Marca</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Categoria</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
+                            <TableCell bgcolor="pink" align="right"><b>Marcas</b></TableCell>
                             <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {this.state.productos.map((item, index) => (
+                          {this.state.marcas.map((item, index) => (
                             <TableRow
-                              key={item.Costo}
+                              key={item.id}
                               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                               <TableCell component="th" scope="row">
-                                {item.Detalle}
+                                {item.IdMarca}
                               </TableCell>
-                              <TableCell align="right">{item.Marca_Id}</TableCell>
-                              <TableCell align="right">{item.Categoria_Id}</TableCell>
-                              <TableCell align="right">{item.Costo}</TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                this.handleRemove(item.IdProducto);
-                              }} /></TableCell>
+                              <TableCell align="right">{item.Marca}</TableCell>
+                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} /* onClick={() => {
+                                this.handleRemove(item.IdMarca);
+                              }} */ /></TableCell>
 
                             </TableRow>
                           ))}
@@ -349,4 +283,4 @@ class Productos extends React.Component {
   }
 }
 
-export default Productos;
+export default Marcas;

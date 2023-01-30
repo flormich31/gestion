@@ -4,19 +4,19 @@ var router = express.Router();
 router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
-    FROM \`productos\`
+    FROM \`marcas\`
     WHERE FechaEliminacion IS NULL
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
       console.log(err);
-      res.send("Error recuperando productos");
+      res.send("Error recuperando marcas");
     } else {
-      res.json({ productos: regs });
+      res.json({ marcas: regs });
     }
   });
 });
-
+/* 
 
 router.post("/", function (req, res, next) {
   console.log(req.body);
@@ -69,5 +69,5 @@ router.put("/", function (req, res, next) {
 });
 
  
-
+ */
 module.exports = router;

@@ -105,14 +105,11 @@ export default function AppBar() {
                   <Route path="/home">Inicio</Route>
                   <Route path="/ventas">Ventas</Route>
                   <Route path="/productos">Productos</Route>
+                  <Route path="/categorias">Categorias</Route>
+                  <Route path="/marcas">Marcas</Route>
                   <Route path="/clientes">Clientes</Route>
                   <Route path="/proveedores">Proveedores</Route>
-                  <Route path="/group-create">Crear grupo</Route>
-                  <Route path="/groups-A">Grupo A - 4to - Cuarto grado</Route>
-                  
-                  <Route path="/activity-editor-read">
-                    Editor de actividad: Leer oraciones
-                  </Route>
+                 
                   <Route path="/reports">Informes</Route>
                   <Route path="/profile">Mi perfil</Route>
                 </Switch>
