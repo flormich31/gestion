@@ -33,25 +33,25 @@ import { pink } from '@mui/material/colors';
 const mdTheme = createTheme();
 
 
-class Clientes extends React.Component {
+class Vendedores extends React.Component {
 
    constructor(props) {
     super(props);
 
     this.state = {
-      clientes: [],
+      vendedores: [],
     };
   }
 
   componentDidMount() {
-    this.getClientes();
+    this.getVendedores();
   }
 
-  getClientes = () => {
+  getVendedores = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/clientes",
+      url: "http://localhost:9000/vendedores",
       headers: {},
     };
     axios(config)
@@ -67,9 +67,6 @@ class Clientes extends React.Component {
 
   handleChangeNombre = event => {
     this.setState({ nombre: event.target.value });
-  }
-  handleChangeCuit = event => {
-    this.setState({ cuit: event.target.value });
   }
   handleChangeDomicilio = event => {
     this.setState({ domicilio: event.target.value });
@@ -89,9 +86,8 @@ class Clientes extends React.Component {
     event.preventDefault();
     let _this = this;
 
-    axios.post("http://localhost:9000/clientes", {
+    axios.post("http://localhost:9000/vendedores", {
       nombre: this.state.nombre,
-      cuit: this.state.cuit,
       domicilio: this.state.domicilio,
       celular: this.state.celular,
       email: this.state.email,
@@ -100,7 +96,7 @@ class Clientes extends React.Component {
       .then((res) => {
         console.log(res);
         console.log(res.data);
-        _this.getClientes();
+        _this.getVendedores();
       })
       .catch((err) => {
         console.log(err);
@@ -108,16 +104,16 @@ class Clientes extends React.Component {
     this.setState({});
   }
   // This is the put request
-  handleEdit = (IdProducto) => {
+  handleEdit = (IdVendedor) => {
     let _this = this;
     var config = {
       method: "put",
-      url: "http://localhost:9000/productos/${IdProducto}",
+      url: "http://localhost:9000/vendedores/${IdVendedor}",
       headers: {},
     }
     axios(config)
       .then(function (response) {
-        _this.getClientes();
+        _this.getVendedores();
         console.log(response);
       })
       .catch(function (error) {
@@ -125,16 +121,16 @@ class Clientes extends React.Component {
       });
   }
 
-  handleRemove = (IdCliente) => {
+  handleRemove = (IdVendedor) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/clientes/" + IdCliente,
+      url: "http://localhost:9000/vendedores/" + IdVendedor,
       headers: {},
     };
     axios(config)
       .then(function (response) {
-        _this.getClientes();
+        _this.getVendedores();
         console.log(response);
       })
       .catch(function (error) {
@@ -178,7 +174,7 @@ class Clientes extends React.Component {
             
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               
-              {/* Editor de clientes */}
+              {/* Editor de vendedores */}
               <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
@@ -188,7 +184,7 @@ class Clientes extends React.Component {
                     }}>
                     
                     <Typography variant="h8" component="div">
-                      <b>Editor de clientes</b>
+                      <b>Editor de vendedores</b>
                     </Typography>
 
                     <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -198,23 +194,11 @@ class Clientes extends React.Component {
                           margin="normal"
                           required
                           fullWidth
-                          id="categoria"
-                          label="Nombre del cliente"
+                          id="vendedor"
+                          label="Nombre del vendedor"
                           size="small"
                           value={this.state.nombre}
                           onChange={this.handleChangeNombre}
-                        />
-                      </FormControl>
-                      <FormControl variant="filled" sx={{ m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="cuit"
-                          label="CUIT"
-                          size="small"
-                          value={this.state.cuit}
-                          onChange={this.handleChangeCuit}
                         />
                       </FormControl>
                       <FormControl variant="filled" sx={{m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
@@ -315,7 +299,6 @@ class Clientes extends React.Component {
                   <TableHead>
                     <TableRow>
                       <TableCell bgcolor="pink" > <b>Nombre</b></TableCell>
-                      <TableCell bgcolor="pink" ><b>CUIT</b></TableCell>
                       <TableCell bgcolor="pink" > <b>Domicilio</b></TableCell>
                       <TableCell bgcolor="pink" > <b>Celular</b></TableCell>
                       <TableCell bgcolor="pink" > <b>Email</b></TableCell>
@@ -324,7 +307,7 @@ class Clientes extends React.Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                  {this.state.clientes.map((item, index) => (
+                  {this.state.vendedores.map((item, index) => (
                       <TableRow
                         key={item.Nombre}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -333,22 +316,19 @@ class Clientes extends React.Component {
                           {item.Nombre}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {item.Cuit}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
                           {item.Domicilio}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {item.Celular}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {item.Email}
+                          {item.Correo}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {item.CodigoPostal}
                         </TableCell>
                         <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                this.handleRemove(item.IdCliente);
+                                this.handleRemove(item.IdVendedor);
                               }} /></TableCell>
                       </TableRow>
                     ))}
@@ -369,5 +349,5 @@ class Clientes extends React.Component {
   }
 }
 
-export default Clientes;
+export default Vendedores;
 

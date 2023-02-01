@@ -4,15 +4,16 @@ var router = express.Router();
 router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
-    FROM \`proveedores\`
+    FROM \`vendedores\`
     WHERE FechaEliminacion IS NULL
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
       console.log(err);
-      res.send("Error recuperando proveedores");
+      res.send("Error recuperando vendedores");
     } else {
-      res.json({ proveedores: regs });
+      res.json({ vendedores: regs });
     }
   });
 });
@@ -34,15 +35,15 @@ router.post("/", function (req, res, next) {
   console.log(codigo);
   console.log(req.body);
   const sql = `
-  INSERT INTO \`proveedores\`
-  ( IdProveedor, RazonSocial, Domicilio, Web) values ('${codigo}','${req.body.razonSocial}', '${req.body.domicilio}', '${req.body.web}');
+  INSERT INTO \`vendedores\`
+  ( IdVendedor, Nombre, Domicilio, CodigoPostal,Celular,Correo) values ('${codigo}','${req.body.nombre}', '${req.body.domicilio}', '${req.body.codigoPostal}','${req.body.celular}','${req.body.email}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(req.body);
+    console.log(sql);
     if (err) {
-      res.send("Error creando nuevo proveedor");
+      res.send("Error creando nuevo vendedor");
     } else {
-      res.json({ proveedores: regs });
+      res.json({ vendedores: regs });
     }
   });
 });
@@ -63,17 +64,17 @@ router.put("/", function (req, res, next) {
   });
 });
 
-router.delete("/:IdProveedor", function (req, res, next) {
+router.delete("/:IdVendedor", function (req, res, next) {
   const sql = `
-  DELETE FROM \`proveedores\`
-  WHERE IdProveedor = ?
+  DELETE FROM \`vendedores\`
+  WHERE IdVendedor = ?
   `;
-  console.log("Delete IdProveedor > " + req.params.IdProveedor);
-  global.dbConnection.query(sql, [req.params.IdProveedor], (err, regs) => {
+  console.log("Delete IdVendedor > " + req.params.IdVendedor);
+  global.dbConnection.query(sql, [req.params.IdVendedor], (err, regs) => {
     if (err) {
-      res.send("Error eliminando proveedor");
+      res.send("Error eliminando vendedor");
     } else {
-      res.json({ proveedores: regs });
+      res.json({ vendedores: regs });
     }
   });
 });

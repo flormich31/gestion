@@ -72,7 +72,7 @@ class Marcas extends React.Component {
         console.log(error);
       });
   };
-/* 
+
   handleChangeId = event => {
     console.log(event.target.value);
     this.setState({ id: event.target.value });
@@ -87,9 +87,7 @@ class Marcas extends React.Component {
     let _this = this;
 
     axios.post("http://localhost:9000/marcas", {
-      id: this.state.id,
       marca: this.state.marca,
-     
     })
       .then((res) => {
         console.log(res);
@@ -102,7 +100,7 @@ class Marcas extends React.Component {
     this.setState({});
   }
   // This is the put request
-  handleEdit = (IdProducto) => {
+  handleEdit = (IdMarca) => {
     let _this = this;
     var config = {
       method: "put",
@@ -119,11 +117,11 @@ class Marcas extends React.Component {
       });
   }
 
-  handleRemove = (id) => {
+  handleRemove = (IdMarca) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/marcas/" + id,
+      url: "http://localhost:9000/marcas/" + IdMarca,
       headers: {},
     };
     axios(config)
@@ -134,7 +132,7 @@ class Marcas extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  } */
+  } 
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
@@ -193,8 +191,8 @@ class Marcas extends React.Component {
                           id="marca"
                           label="Nombre de la marca"
                           size="small"
-                          /* value={this.state.marca}
-                          onChange={this.handleChangeMarca} */
+                          value={this.state.marca}
+                          onChange={this.handleChangeMarca}
                         />
                       </FormControl>
                       <br />
@@ -203,7 +201,7 @@ class Marcas extends React.Component {
                         variant="contained"
                         sx={{ mt: 1, mb: 1 }}
                         size="small"
-                       /*  onClick={this.handleSubmit} */
+                       onClick={this.handleSubmit}
                       >
                         {"Guardar"}
                       </Button>
@@ -260,9 +258,9 @@ class Marcas extends React.Component {
                                 {item.IdMarca}
                               </TableCell>
                               <TableCell align="right">{item.Marca}</TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} /* onClick={() => {
+                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
                                 this.handleRemove(item.IdMarca);
-                              }} */ /></TableCell>
+                              }} /></TableCell>
 
                             </TableRow>
                           ))}

@@ -15,9 +15,9 @@ router.get("/", function (req, res, next) {
     console.log(req.body);
     if (err) {
       console.log(err);
-      res.send("Error recuperando productos");
+      res.send("Error recuperando ventas");
     } else {
-      res.json({ productos: regs });
+      res.json({ ventas: regs });
     }
   });
 });

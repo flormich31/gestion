@@ -67,15 +67,16 @@ router.delete("/:IdCategoria", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`productos\`
-  SET detalle='${req.body.IdProducto}'
-  WHERE IdProducto='${req.body.IdProducto}';
+  UPDATE \`categorias\`
+  SET Categoria='${req.body.categoria}'
+  WHERE IdCategoria='${req.body.IdCategoria}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
-      res.send("Error editando producto");
+      res.send("Error editando categoria");
     } else {
-      res.json({ productos: regs });
+      res.json({ categorias: regs });
     }
   });
 });

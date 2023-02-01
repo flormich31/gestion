@@ -11,6 +11,7 @@ import Reports from "./pages/reports";
 import Profile from "./pages/profile";
 import Productos from "./pages/productos";
 import ProductoNuevo from "./pages/productoNuevo";
+import Vendedores from "./pages/vendedores";
 
 export default function App() {
   document.title = "Diva Forever";
@@ -44,6 +45,9 @@ export default function App() {
           </Route>
           <Route path="/proveedores">
             <Proveedores />
+          </Route>
+          <Route path="/vendedores">
+            <Vendedores />
           </Route>
           <Route path="/reports">
             <Reports />

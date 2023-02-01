@@ -15,6 +15,7 @@ import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import {
   Paper,
@@ -38,6 +39,7 @@ import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 const mdTheme = createTheme();
 
@@ -49,11 +51,17 @@ class Productos extends React.Component {
 
     this.state = {
       productos: [],
+      categorias: [],
+      marcas: [],
+      proveedores: [],
     };
   }
 
   componentDidMount() {
     this.getProductos();
+    this.getTodasCategorias();
+    this.getTodasMarcas();
+    this.getTodosProveedores();
   }
 
   getProductos = () => {
@@ -61,6 +69,55 @@ class Productos extends React.Component {
     var config = {
       method: "get",
       url: "http://localhost:9000/productos",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  getTodasCategorias = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/categorias",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  getTodasMarcas = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/marcas",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  getTodosProveedores = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/proveedores",
       headers: {},
     };
     axios(config)
@@ -82,16 +139,16 @@ class Productos extends React.Component {
     this.setState({ detalle: event.target.value });
   }
   handleChangeCategoria = event => {
-    this.setState({ categoriaId: event.target.value });
+    this.setState({ IdCategoria: event.target.value });
   }
   handleChangeMarca = event => {
-    this.setState({ marcaId: event.target.value });
+    this.setState({ IdMarca: event.target.value });
   }
   handleChangeCosto = event => {
     this.setState({ costo: event.target.value });
   }
   handleChangeProveedor = event => {
-    this.setState({ proveedorId: event.target.value });
+    this.setState({ IdProveedor: event.target.value });
   }
 
   handleSubmit = event => {
@@ -101,10 +158,10 @@ class Productos extends React.Component {
     axios.post("http://localhost:9000/productos", {
       id: this.state.id,
       detalle: this.state.detalle,
-      categoriaId: 1,
-      marcaId: 1,
+      IdCategoria: this.state.IdCategoria,
+      IdMarca: this.state.IdMarca,
       costo: this.state.costo,
-      proveedorId: 1
+      IdProveedor: this.state.IdProveedor
     })
       .then((res) => {
         console.log(res);
@@ -237,27 +294,57 @@ class Productos extends React.Component {
                         />
                       </FormControl>
                       <br />
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
                         <FormHelperText>Categoria</FormHelperText>
-                        <select  value={this.state.categoriaId} onChange={this.handleChangeCategoria}>
-                          {this.state.productos.map((item, index) => (
-                            <option value={this.state.Categoria_Id} >{item.Categoria_Id}</option>
-                          ))}
-                        </select>
-                        <FormHelperText>Marca</FormHelperText>
-                        <select>
-                          {this.state.productos.map((item, index) => (
-                            <option value={item.Marca_Id}>{item.Marca_Id}</option>
-                          ))}
-                        </select>
+                        <select
+                          name="categorias"
+                          value={this.state.IdCategoria}
+                          onChange={this.handleChangeCategoria}>
 
-                        <FormHelperText>Proveedor</FormHelperText>
-                        <select>
-                          {this.state.productos.map((item, index) => (
-                            <option value={item.Proveedor_Id}>{item.Proveedor_Id}</option>
+                          {this.state.categorias.map((item, index) => (
+                            <option
+                              key={item}
+                              value={item.IdCategoria}
+                            >{item.Categoria}
+                            </option>
                           ))}
                         </select>
                       </FormControl>
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
+                        <FormHelperText>Marca</FormHelperText>
+                        <select
+                          name="marcas"
+                          value={this.state.IdMarca}
+                          onChange={this.handleChangeMarca}>
+
+                          {this.state.marcas.map((item, index) => (
+                            <option key={item}
+                              value={item.IdMarca}>
+                              {item.Marca}
+                            </option>
+                          ))}
+                        </select>
+                      </FormControl>
+
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
+                        <FormHelperText>Proveedores</FormHelperText>
+                        <select
+                          name="proveedores"
+                          value={this.state.IdProveedor}
+                          onChange={this.handleChangeProveedor}
+                          input={<OutlinedInput label="proveedores" />}
+                        >
+
+                          {this.state.proveedores.map((item, index) => (
+                            <option
+                              key={item}
+                              value={item.IdProveedor}>
+                              {item.RazonSocial}
+                            </option>
+                          ))}
+                        </select>
+                      </FormControl>
+
                       <br />
                       <Button
                         type="submit"
@@ -307,6 +394,7 @@ class Productos extends React.Component {
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                           <TableRow>
+                            <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
                             <TableCell bgcolor="pink" > <b>Descripcion del producto</b></TableCell>
                             <TableCell bgcolor="pink" align="right"><b>Marca</b></TableCell>
                             <TableCell bgcolor="pink" align="right"><b>Categoria</b></TableCell>
@@ -320,15 +408,19 @@ class Productos extends React.Component {
                               key={item.Costo}
                               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
+                              <TableCell align="left" component="th" scope="row">
+                                {item.IdProducto}
+                              </TableCell>
                               <TableCell component="th" scope="row">
                                 {item.Detalle}
                               </TableCell>
-                              <TableCell align="right">{item.Marca_Id}</TableCell>
-                              <TableCell align="right">{item.Categoria_Id}</TableCell>
+                              <TableCell align="right">{item.marca}</TableCell>
+                              <TableCell align="right">{item.categoria}</TableCell>
                               <TableCell align="right">{item.Costo}</TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                this.handleRemove(item.IdProducto);
-                              }} /></TableCell>
+                              <TableCell align="right">
+                                <EditIcon sx={{ color: pink[200] }} />
+                                <DeleteIcon sx={{ color: pink[600] }} onClick={() => { this.handleRemove(item.IdProducto); }} />
+                              </TableCell>
 
                             </TableRow>
                           ))}

@@ -16,35 +16,47 @@ router.get("/", function (req, res, next) {
     }
   });
 });
-/* 
+ 
+function makeid(length) {
+    var result = "";
+    var characters =
+      "0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
 
 router.post("/", function (req, res, next) {
-  console.log(req.body);
+    const codigo = makeid(5);
+    console.log(codigo);
+    console.log(req.body);
   const sql = `
-  INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values ('${req.body.id}','${req.body.detalle}', '${req.body.categoriaId}','${req.body.marcaId}','${req.body.costo}','${req.body.proveedorId}');
+  INSERT INTO \`marcas\`
+  ( IdMarca, Marca) values ('${codigo}','${req.body.marca}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error creando nuevo producto");
+      res.send("Error creando nuevo marca");
     } else {
-      res.json({ productos: regs });
+      res.json({ marca: regs });
     }
   });
 });
 
-router.delete("/:IdProducto", function (req, res, next) {
-  console.log("Request",req.params.IdProducto);
+router.delete("/:IdMarca", function (req, res, next) {
+  console.log("Request",req.params.IdMarca);
   const sql = `
-  DELETE FROM \`productos\`
-  WHERE IdProducto = ?
+  DELETE FROM \`marcas\`
+  WHERE IdMarca = ?
   `;
-  //console.log("Delete IdProducto > " + req.params.IdProducto);
-  global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {
+  console.log("Delete IdMarca > " + req.params.IdMarca);
+  global.dbConnection.query(sql, [req.params.IdMarca], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error eliminando producto");
+      res.send("Error eliminando marca");
     } else {
       res.json({ productos: regs });
     }
@@ -69,5 +81,5 @@ router.put("/", function (req, res, next) {
 });
 
  
- */
+ 
 module.exports = router;

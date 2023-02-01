@@ -13,6 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ListIcon from '@mui/icons-material/List';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import { useHistory } from "react-router-dom";
 
 export const MainListItems = () => {
@@ -64,6 +65,12 @@ export const MainListItems = () => {
           <StorefrontIcon />
         </ListItemIcon>
         <ListItemText primary="Proveedores" />
+      </ListItem>
+      <ListItem onClick={() => goto("/vendedores")}>
+        <ListItemIcon>
+          <AssignmentIndIcon />
+        </ListItemIcon>
+        <ListItemText primary="Vendedores" />
       </ListItem>
       <ListItem  onClick={() => goto("/reports")}>
         <ListItemIcon>
