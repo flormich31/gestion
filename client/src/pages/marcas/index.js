@@ -124,14 +124,16 @@ class Marcas extends React.Component {
       url: "http://localhost:9000/marcas/" + IdMarca,
       headers: {},
     };
-    axios(config)
+    if (window.confirm("¿Realmente desea borrar esta marca?")) {
+      axios(config)
       .then(function (response) {
-        _this.getMarcas();
-        console.log(response);
+          _this.getMarcas();
+          console.log(response);
       })
       .catch(function (error) {
-        console.log(error);
+          console.log(error);
       });
+  } 
   } 
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });

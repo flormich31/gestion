@@ -198,14 +198,16 @@ class Productos extends React.Component {
       url: "http://localhost:9000/productos/" + IdProducto,
       headers: {},
     };
-    axios(config)
+    if (window.confirm("¿Realmente desea borrar este producto?")) {
+      axios(config)
       .then(function (response) {
-        _this.getProductos();
-        console.log(response);
+          _this.getProductos();
+          console.log(response);
       })
       .catch(function (error) {
-        console.log(error);
+          console.log(error);
       });
+  } 
   }
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });

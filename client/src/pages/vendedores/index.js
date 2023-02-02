@@ -128,14 +128,16 @@ class Vendedores extends React.Component {
       url: "http://localhost:9000/vendedores/" + IdVendedor,
       headers: {},
     };
-    axios(config)
+    if (window.confirm("¿Realmente desea borrar este vendedor?")) {
+      axios(config)
       .then(function (response) {
-        _this.getVendedores();
-        console.log(response);
+          _this.getVendedores();
+          console.log(response);
       })
       .catch(function (error) {
-        console.log(error);
+          console.log(error);
       });
+  } 
   }
 
   redirectHandlerOpen = () => {

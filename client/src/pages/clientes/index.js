@@ -132,14 +132,16 @@ class Clientes extends React.Component {
       url: "http://localhost:9000/clientes/" + IdCliente,
       headers: {},
     };
-    axios(config)
+    if (window.confirm("¿Realmente desea borrar este cliente?")) {
+      axios(config)
       .then(function (response) {
-        _this.getClientes();
-        console.log(response);
+          _this.getClientes();
+          console.log(response);
       })
       .catch(function (error) {
-        console.log(error);
+          console.log(error);
       });
+  } 
   }
 
   redirectHandlerOpen = () => {

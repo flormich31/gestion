@@ -20,6 +20,7 @@ import {
     Paper,
     Button,
     Typography,
+    Alert,
 } from "@mui/material";
 import { Redirect } from "react-router";
 import DataTableVenta from "../../components/DataTableVenta";
@@ -38,6 +39,12 @@ import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 const mdTheme = createTheme();
 
@@ -95,32 +102,34 @@ class Categorias extends React.Component {
                 console.log(res);
                 console.log(res.data);
                 _this.getCategorias();
+                event.target.value = null;
             })
             .catch((err) => {
                 console.log(err);
             });
         this.setState({});
     }
-    // This is the put request
-    handleEdit = () => {
-       
-    }
+
 
     handleRemove = (IdCategoria) => {
+
         let _this = this;
         var config = {
             method: "delete",
             url: "http://localhost:9000/categorias/" + IdCategoria,
             headers: {},
         };
-        axios(config)
-            .then(function (response) {
-                _this.getCategorias();
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if (window.confirm("¿Realmente desea borrar esta categoría?")) {
+            axios(config)
+                .then(function (response) {
+                    _this.getCategorias();
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
     }
     redirectHandlerOpen = () => {
         this.setState({ redirect: true });
@@ -133,6 +142,7 @@ class Categorias extends React.Component {
     };
 
     render() {
+        const alert = this.props.alert;
         return (
             <ThemeProvider theme={mdTheme}>
                 <Box sx={{ display: "flex" }}>
@@ -247,14 +257,23 @@ class Categorias extends React.Component {
                                                                 {item.IdCategoria}
                                                             </TableCell>
                                                             <TableCell align="right">{item.Categoria}</TableCell>
-                                                            <TableCell align="right"><EditIcon sx={{ color: pink[200] }} onClick={() => {
-                                                                this.handleEdit(item.IdCategoria);
-                                                            }}/><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                                                this.handleRemove(item.IdCategoria);
-                                                            }} /></TableCell>
+                                                            <TableCell align="right" >
+                                                                <EditIcon
+                                                                    sx={{ color: pink[200] }}
+                                                                    key={item.Categoria}
+                                                                //onClick={}
+                                                                />
+                                                                <DeleteIcon
+                                                                    sx={{ color: pink[600] }}
+                                                                    onClick={() => { this.handleRemove(item.IdCategoria); }}
+                                                                />
+                                                            </TableCell>
 
                                                         </TableRow>
+
                                                     ))}
+                                                    <button onClick={this.previousPage}>PreviousPage</button>
+                                                    <button onClick={this.nextPage}>Next Page</button>
                                                 </TableBody>
                                             </Table>
 

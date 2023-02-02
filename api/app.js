@@ -13,6 +13,7 @@ var marcasRouter = require("./routes/marcas");
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
 var vendedoresRouter = require("./routes/vendedores");
+var formaPagoRouter = require("./routes/formaPago");
 var testAPIRouter = require("./routes/testAPI");
 
 /* Conexión a mysql */
@@ -55,6 +56,7 @@ app.use("/marcas", marcasRouter);
 app.use("/clientes", clientesRouter);
 app.use("/proveedores", proveedoresRouter);
 app.use("/vendedores", vendedoresRouter);
+app.use("/formaPago", formaPagoRouter);
 app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler

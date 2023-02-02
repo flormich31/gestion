@@ -30,35 +30,54 @@ const mdTheme = createTheme();
 
 
 class DashboardContent extends React.Component {
-  /* constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
-      productos: [],
+      vendedores: [],
+      formaPago: [],
     };
   }
 
   componentDidMount() {
-    this.getProductos();
+    this.getVendedores();
+    this.getFormaPago();
   }
 
-  getGroups = () => {
+  getVendedores = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/groups",
+      url: "http://localhost:9000/vendedores",
       headers: {},
     };
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-
         _this.setState(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  getFormaPago = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: "http://localhost:9000/formaPago",
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
@@ -82,7 +101,7 @@ class DashboardContent extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  }; */
+  }; 
 
   render() {
     return (
@@ -151,15 +170,15 @@ class DashboardContent extends React.Component {
                           Vendedor
                         </InputLabel>
                         <NativeSelect
-                          defaultValue={30}
                           inputProps={{
-                            name: 'age',
+                            name: 'vendedores',
                             id: 'uncontrolled-native',
                           }}
-                        >
-                          <option value={10}>Alu</option>
-                          <option value={20}>Georgi</option>
-                          <option value={30}>Ceci</option>
+                        >{this.state.vendedores.map((item, index) => (
+                          <option  key={item}
+                          value={item.IdVendedor}>
+                          {item.Nombre}</option>
+                          ))}
                         </NativeSelect>
                       </FormControl>
 
@@ -168,15 +187,15 @@ class DashboardContent extends React.Component {
                           Forma de pago
                         </InputLabel>
                         <NativeSelect
-                          defaultValue={30}
                           inputProps={{
-                            name: 'age',
+                            name: 'formaPago',
                             id: 'uncontrolled-native',
                           }}
-                        >
-                          <option value={10}>Efectivo</option>
-                          <option value={20}>Debito</option>
-                          <option value={30}>Credito</option>
+                        >{this.state.formaPago.map((item, index) => (
+                          <option  key={item}
+                          value={item.IdFormaPago}>
+                          {item.FormaPago}</option>
+                          ))}
                         </NativeSelect>
                       </FormControl>
                     </Grid>

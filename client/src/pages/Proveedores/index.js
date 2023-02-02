@@ -102,14 +102,16 @@ class Proveedores extends React.Component {
       url: "http://localhost:9000/proveedores/" + IdProveedor,
       headers: {},
     };
-    axios(config)
+    if (window.confirm("¿Realmente desea borrar este proveedor?")) {
+      axios(config)
       .then(function (response) {
-        _this.getProveedores();
-        console.log(response);
+          _this.getProveedores();
+          console.log(response);
       })
       .catch(function (error) {
-        console.log(error);
+          console.log(error);
       });
+  } 
   }
 
   redirectHandlerOpen = () => {
@@ -273,7 +275,10 @@ class Proveedores extends React.Component {
                               <TableCell component="th" scope="row">
                                 {item.Web}
                               </TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
+                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} />
+                              <DeleteIcon 
+                              sx={{ color: pink[600] }} 
+                              onClick={() => {
                                 this.handleRemove(item.IdProveedor);
                               }} /></TableCell>
 
