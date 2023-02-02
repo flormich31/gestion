@@ -171,7 +171,12 @@ class Productos extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    this.setState({});
+      this.setState({ id: "" }); 
+      this.setState({ detalle: "" }); 
+      this.setState({ costo: "" }); 
+      this.setState({ IdCategoria: "" }); 
+      this.setState({ IdMarca: "" }); 
+      this.setState({ IdProveedor: "" }); 
   }
   // This is the put request
   handleEdit = (IdProducto) => {

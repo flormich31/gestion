@@ -101,7 +101,11 @@ class Vendedores extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    this.setState({});
+      this.setState({ nombre: "" }); 
+      this.setState({ domicilio: "" }); 
+      this.setState({ celular: "" }); 
+      this.setState({ email: "" }); 
+      this.setState({ codigoPostal: "" }); 
   }
   // This is the put request
   handleEdit = (IdVendedor) => {

@@ -105,7 +105,13 @@ class Clientes extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    this.setState({});
+      this.setState({ nombre: "" }); 
+      this.setState({ cuit: "" }); 
+      this.setState({ domicilio: "" }); 
+      this.setState({ celular: "" }); 
+      this.setState({ email: "" }); 
+      this.setState({ codigoPostal: "" });
+
   }
   // This is the put request
   handleEdit = (IdProducto) => {

@@ -97,7 +97,7 @@ class Marcas extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    this.setState({});
+      this.setState({ marca: "" }); 
   }
   // This is the put request
   handleEdit = (IdMarca) => {

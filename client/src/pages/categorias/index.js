@@ -107,9 +107,8 @@ class Categorias extends React.Component {
             .catch((err) => {
                 console.log(err);
             });
-        this.setState({});
+            this.setState({ categoria: "" }); 
     }
-
 
     handleRemove = (IdCategoria) => {
 
@@ -128,9 +127,7 @@ class Categorias extends React.Component {
                 .catch(function (error) {
                     console.log(error);
                 });
-        }
-
-    }
+        }}
     redirectHandlerOpen = () => {
         this.setState({ redirect: true });
         this.renderRedirectOpen();
@@ -178,7 +175,6 @@ class Categorias extends React.Component {
                                         <Typography variant="h8" component="div">
                                             <b>Editor de categorias</b>
                                         </Typography>
-
 
                                         <Box component="form" noValidate sx={{ mt: 1 }}>
 

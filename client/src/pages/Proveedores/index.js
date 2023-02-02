@@ -92,7 +92,9 @@ class Proveedores extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    this.setState({});
+      this.setState({ razonSocial: "" }); 
+      this.setState({ domicilio: "" }); 
+      this.setState({ web: "" }); 
   }
 
   handleRemove = (IdProveedor) => {
