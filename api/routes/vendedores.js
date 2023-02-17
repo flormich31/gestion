@@ -5,7 +5,8 @@ router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
     FROM \`vendedores\`
-    WHERE FechaEliminacion IS NULL
+    WHERE FechaEliminacion IS NULL 
+    ORDER BY Nombre ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -51,15 +52,20 @@ router.post("/", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`groups\`
-  SET name='Grupo SUPER Pro'
-  WHERE id='${req.body.id}';
+  UPDATE \`vendedores\`
+  SET Nombre='${req.body.nombre}',
+  Domicilio='${req.body.domicilio}',
+  CodigoPostal='${req.body.codigoPostal}',
+  Celular='${req.body.celular}',
+  Correo='${req.body.email}'
+  WHERE IdVendedor='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
-      res.send("Error editando grupo");
+      res.send("Error editando vendedor");
     } else {
-      res.json({ groups: regs });
+      res.json({ vendedores: regs });
     }
   });
 });

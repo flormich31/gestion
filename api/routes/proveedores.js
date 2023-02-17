@@ -6,6 +6,7 @@ router.get("/", function (req, res, next) {
     SELECT *
     FROM \`proveedores\`
     WHERE FechaEliminacion IS NULL
+    ORDER BY RazonSocial ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
@@ -50,15 +51,15 @@ router.post("/", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`groups\`
-  SET name='Grupo SUPER Pro'
-  WHERE id='${req.body.id}';
+  UPDATE \`proveedores\`
+  SET RazonSocial='Grupo SUPER Pro'
+  WHERE IdProveedor='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
-      res.send("Error editando grupo");
+      res.send("Error editando proveedor");
     } else {
-      res.json({ groups: regs });
+      res.json({ proveedores: regs });
     }
   });
 });

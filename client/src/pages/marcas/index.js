@@ -38,6 +38,7 @@ import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
+import Modal from '@mui/material/Modal';
 
 const mdTheme = createTheme();
 
@@ -49,6 +50,9 @@ class Marcas extends React.Component {
 
     this.state = {
       marcas: [],
+      open: false,
+      idedit: '',
+      marcaedit: '',
     };
   }
 
@@ -81,7 +85,12 @@ class Marcas extends React.Component {
   handleChangeMarca = event => {
     this.setState({ marca: event.target.value });
   }
-  
+  //Para editar una marca
+
+  handleChangeEditMarca = event => {
+    this.setState({ marcaedit: event.target.value });
+}
+
   handleSubmit = event => {
     event.preventDefault();
     let _this = this;
@@ -97,17 +106,27 @@ class Marcas extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-      this.setState({ marca: "" }); 
+    this.setState({ marca: "" });
   }
+  //Mostrar ventana editar
+  showModal = (IdMarca, Marca, event) => {
+    this.setState({ open: true })
+    this.setState({ idedit: IdMarca });
+    this.setState({ marcaedit: Marca });
+    console.log(IdMarca);
+    console.log(this.state.idedit);
+    console.log(this.state.marcaedit);
+  }
+
+
   // This is the put request
-  handleEdit = (IdMarca) => {
+  handleEdit = event => {
     let _this = this;
-    var config = {
-      method: "put",
-      url: "http://localhost:9000/marcas/${IdProducto}",
-      headers: {},
-    }
-    axios(config)
+
+    axios.put("http://localhost:9000/marcas", {
+      id: this.state.idedit,
+      marca: this.state.marcaedit,
+    })
       .then(function (response) {
         _this.getMarcas();
         console.log(response);
@@ -115,6 +134,9 @@ class Marcas extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
+    this.setState({ idedit: "" });
+    this.setState({ marcaedit: "" });
+    this.setState({ open: false });
   }
 
   handleRemove = (IdMarca) => {
@@ -126,15 +148,15 @@ class Marcas extends React.Component {
     };
     if (window.confirm("¿Realmente desea borrar esta marca?")) {
       axios(config)
-      .then(function (response) {
+        .then(function (response) {
           _this.getMarcas();
           console.log(response);
-      })
-      .catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
-      });
-  } 
-  } 
+        });
+    }
+  }
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
@@ -168,7 +190,7 @@ class Marcas extends React.Component {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-                {/* Editor de categorias */}
+                {/* Creador de marcas */}
                 <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
@@ -177,9 +199,9 @@ class Marcas extends React.Component {
                       flexDirection: "column",
 
                     }}>
-                    {/* Editor de categorias */}
+
                     <Typography variant="h8" component="div">
-                      <b>Editor de marcas</b>
+                      <b>Crear nueva marca</b>
                     </Typography>
 
 
@@ -203,7 +225,7 @@ class Marcas extends React.Component {
                         variant="contained"
                         sx={{ mt: 1, mb: 1 }}
                         size="small"
-                       onClick={this.handleSubmit}
+                        onClick={this.handleSubmit}
                       >
                         {"Guardar"}
                       </Button>
@@ -246,8 +268,8 @@ class Marcas extends React.Component {
                         <TableHead>
                           <TableRow>
                             <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Marcas</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
+                            <TableCell bgcolor="pink" align="left"><b>Marcas</b></TableCell>
+                            <TableCell bgcolor="pink" align="left"><b>Acciones</b></TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -259,13 +281,60 @@ class Marcas extends React.Component {
                               <TableCell component="th" scope="row">
                                 {item.IdMarca}
                               </TableCell>
-                              <TableCell align="right">{item.Marca}</TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                this.handleRemove(item.IdMarca);
-                              }} /></TableCell>
+                              <TableCell align="left">{item.Marca}</TableCell>
+                              <TableCell align="left">
+                                <EditIcon sx={{ color: pink[200] }}
+                                  key={item.IdMarca}
+                                  value={this.state.idedit}
+                                  onClick={() => { this.showModal(item.IdMarca, item.Marca); }}
+                                />
+                                <DeleteIcon sx={{ color: pink[600] }}
+                                  onClick={() => { this.handleRemove(item.IdMarca); }} />
+                              </TableCell>
 
                             </TableRow>
                           ))}
+                          <Modal open={this.state.open} onClose={this.hideModal}>
+                            <Box sx={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: 400,
+                              bgcolor: 'background.paper',
+                              border: '2px solid #<000',
+                              boxShadow: 24,
+                              p: 4,
+                            }}>
+                              <Typography id="modal-modal-title" variant="h6" component="h2">
+                                <b>Ingrese el nombre de la marca que desea modificar</b>
+                              </Typography>
+                              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                Codigo: {this.state.idedit}
+                              </Typography>
+
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="marcaedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.marcaedit}
+                                  onChange={this.handleChangeEditMarca}
+                                />
+                              </FormControl>
+                              <Button
+                                sx={{ mt: 2, left: '5%', }}
+                                margin variant="contained"
+                                onClick={this.handleEdit}>EDITAR
+                              </Button>
+                              <Button
+                                sx={{ mt: 2, left: '30%', }}
+                                variant="outlined"
+                                color="error"
+                                onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                            </Box>
+
+                          </Modal>
                         </TableBody>
                       </Table>
 

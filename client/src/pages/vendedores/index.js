@@ -26,20 +26,28 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import AddButton from "../../components/AddButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
+import Modal from '@mui/material/Modal';
+
 const mdTheme = createTheme();
 
 
 class Vendedores extends React.Component {
 
-   constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       vendedores: [],
+      open: false,
+      idedit: '',
+      nombredit: '',
+      domicilioedit: '',
+      celuedit: '',
+      emailedit: '',
+      cpedit: '',
     };
   }
 
@@ -80,7 +88,7 @@ class Vendedores extends React.Component {
   handleChangeCodigoPostal = event => {
     this.setState({ codigoPostal: event.target.value });
   }
- 
+
 
   handleSubmit = event => {
     event.preventDefault();
@@ -101,29 +109,76 @@ class Vendedores extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-      this.setState({ nombre: "" }); 
-      this.setState({ domicilio: "" }); 
-      this.setState({ celular: "" }); 
-      this.setState({ email: "" }); 
-      this.setState({ codigoPostal: "" }); 
+    this.setState({ nombre: "" });
+    this.setState({ domicilio: "" });
+    this.setState({ celular: "" });
+    this.setState({ email: "" });
+    this.setState({ codigoPostal: "" });
   }
+
+//Para editar un vendedor
+showModal = (IdVendedor, Nombre, Domicilio, CodigoPostal,Celular,Correo) => {
+  this.setState({ open: true })
+  this.setState({ idedit: IdVendedor});
+  this.setState({ nombredit: Nombre });
+  this.setState({ domicilioedit: Domicilio });
+  this.setState({ cpedit: CodigoPostal });
+  this.setState({ celuedit: Celular });
+  this.setState({ emailedit: Correo });
+  console.log(IdVendedor);
+  console.log(this.state.idedit);
+  console.log(this.state.nombredit);
+}
+//Para editar un vendedor
+handleChangeIdE = event => {
+  this.setState({ idedit: event.target.value });
+}
+handleChangeNombreE = event => {
+  this.setState({ nombredit: event.target.value });
+}
+handleChangeDomicilioE = event => {
+  this.setState({ domicilioedit: event.target.value });
+}
+handleChangeCpE = event => {
+  this.setState({ cpedit: event.target.value });
+}
+handleChangeCeluE = event => {
+  this.setState({ celuedit: event.target.value });
+}
+handleChangeEmailE = event => {
+  this.setState({ emailedit: event.target.value });
+}
+
+
+
   // This is the put request
-  handleEdit = (IdVendedor) => {
+  handleEdit = event => {
     let _this = this;
-    var config = {
-      method: "put",
-      url: "http://localhost:9000/vendedores/${IdVendedor}",
-      headers: {},
-    }
-    axios(config)
-      .then(function (response) {
-        _this.getVendedores();
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+
+    axios.put("http://localhost:9000/vendedores", {
+      id: this.state.idedit,
+      nombre: this.state.nombredit,
+      domicilio: this.state.domicilioedit,
+      celular: this.state.celuedit,
+      email: this.state.emailedit,
+      codigoPostal: this.state.cpedit
+    })
+    .then(function (response) {
+      _this.getVendedores();
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  this.setState({ idedit: "" });
+  this.setState({ nombredit: "" });
+  this.setState({ domicilioedit: "" });
+  this.setState({ celuedit: "" });
+  this.setState({ emailedit: "" });
+  this.setState({ cpedit: "" });
+  this.setState({ open: false });
+}
+
 
   handleRemove = (IdVendedor) => {
     let _this = this;
@@ -134,21 +189,21 @@ class Vendedores extends React.Component {
     };
     if (window.confirm("¿Realmente desea borrar este vendedor?")) {
       axios(config)
-      .then(function (response) {
+        .then(function (response) {
           _this.getVendedores();
           console.log(response);
-      })
-      .catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
-      });
-  } 
+        });
+    }
   }
 
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
     this.renderRedirectOpen();
   };
- 
+
   renderRedirectOpen = () => {
     if (this.state.redirect) {
       return <Redirect to="/groups-A" />;
@@ -174,28 +229,28 @@ class Vendedores extends React.Component {
             }}
           >
             <Toolbar />
-            
+
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            
+
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              
-              {/* Editor de vendedores */}
-              <Grid item xs={12} >
+
+                {/* Editor de vendedores */}
+                <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
                       p: 3,
                       display: "flex",
                       flexDirection: "column",
                     }}>
-                    
+
                     <Typography variant="h8" component="div">
                       <b>Editor de vendedores</b>
                     </Typography>
 
                     <Box component="form" noValidate sx={{ mt: 1 }}>
 
-                      <FormControl variant="filled" sx={{ m:0.5,minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -207,7 +262,7 @@ class Vendedores extends React.Component {
                           onChange={this.handleChangeNombre}
                         />
                       </FormControl>
-                      <FormControl variant="filled" sx={{m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -218,8 +273,8 @@ class Vendedores extends React.Component {
                           value={this.state.domicilio}
                           onChange={this.handleChangeDomicilio}
                         />
-                         </FormControl>
-                        <FormControl variant="filled" sx={{ m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      </FormControl>
+                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -230,9 +285,9 @@ class Vendedores extends React.Component {
                           value={this.state.celular}
                           onChange={this.handleChangeCelular}
                         />
-                        
+
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -244,7 +299,7 @@ class Vendedores extends React.Component {
                           onChange={this.handleChangeEmail}
                         />
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m:0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -256,8 +311,8 @@ class Vendedores extends React.Component {
                           onChange={this.handleChangeCodigoPostal}
                         />
                       </FormControl>
-                      
-                      
+
+
                       <br />
                       <Button
                         type="submit"
@@ -271,81 +326,165 @@ class Vendedores extends React.Component {
                     </Box>
                   </Paper>
                 </Grid>
-              
-              <Grid item xs={12} md={12} lg={12} >
-              <Paper
-                  sx={{
-                    p: 3,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 100,
-                  }}
-                >
-                <FormControl variant="standard">
-                  <InputLabel htmlFor="input-with-icon-adornment">
-                    Buscar
-                  </InputLabel>
-                  <Input
-                    id="input-with-icon-adornment"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-                </Paper>
-              </Grid>
 
-              <Grid item xs={12} md={12} lg={12}>
-                <Paper elevation={23}>
-                <div style={{ height: 400, width: '100%', alignContent: "center"}}>
-                  
-                  <Table sx={{ minWidth: 650  }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell bgcolor="pink" > <b>Nombre</b></TableCell>
-                      <TableCell bgcolor="pink" > <b>Domicilio</b></TableCell>
-                      <TableCell bgcolor="pink" > <b>Celular</b></TableCell>
-                      <TableCell bgcolor="pink" > <b>Email</b></TableCell>
-                      <TableCell bgcolor="pink" > <b>Codigo Postal</b></TableCell>
-                      <TableCell bgcolor="pink" > <b>Acciones</b></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  {this.state.vendedores.map((item, index) => (
-                      <TableRow
-                        key={item.Nombre}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {item.Nombre}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {item.Domicilio}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {item.Celular}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {item.Correo}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {item.CodigoPostal}
-                        </TableCell>
-                        <TableCell align="right"><EditIcon sx={{ color: pink[200] }} /><DeleteIcon sx={{ color: pink[600] }} onClick={() => {
-                                this.handleRemove(item.IdVendedor);
-                              }} /></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                </div>
-                </Paper>
+                <Grid item xs={12} md={12} lg={12} >
+                  <Paper
+                    sx={{
+                      p: 3,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: 100,
+                    }}
+                  >
+                    <FormControl variant="standard">
+                      <InputLabel htmlFor="input-with-icon-adornment">
+                        Buscar
+                      </InputLabel>
+                      <Input
+                        id="input-with-icon-adornment"
+                        startAdornment={
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12}>
+                  <Paper elevation={23}>
+                    <div style={{ height: 400, width: '100%', alignContent: "center" }}>
+
+                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell bgcolor="pink" > <b>Nombre</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Domicilio</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Celular</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Email</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Codigo Postal</b></TableCell>
+                            <TableCell bgcolor="pink" > <b>Acciones</b></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {this.state.vendedores.map((item, index) => (
+                            <TableRow
+                              key={item.Nombre}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {item.Nombre}
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {item.Domicilio}
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {item.Celular}
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {item.Correo}
+                              </TableCell>
+                              <TableCell component="th" scope="row" align="center">
+                                {item.CodigoPostal}
+                              </TableCell>
+                              <TableCell align="center">
+                                <EditIcon
+                                 sx={{ color: pink[200] }}
+                                 key={item.IdVendedor}
+                                 value={this.state.IdVendedor}
+                                 onClick={() => { this.showModal(item.IdVendedor, item.Nombre, item.Domicilio, item.CodigoPostal, item.Celular, item.Correo); }}
+                                />
+                                <DeleteIcon sx={{ color: pink[600] }}
+                                  onClick={() => { this.handleRemove(item.IdVendedor); }} />
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                          <Modal open={this.state.open} onClose={this.hideModal}>
+                            <Box sx={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: 400,
+                              bgcolor: 'background.paper',
+                              border: '2px solid #<000',
+                              boxShadow: 24,
+                              p: 4,
+                            }}>
+                              <Typography id="modal-modal-title" variant="h6" component="h2">
+                                <b>Editor de vendedores</b>
+                              </Typography>
+                              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                Codigo: {this.state.idedit}
+                              </Typography>
+
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="nombredit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.nombredit}
+                                  onChange={this.handleChangeNombreE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="domicilioedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.domicilioedit}
+                                  onChange={this.handleChangeDomicilioE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="cpedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.cpedit}
+                                  onChange={this.handleChangeCpE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="emailedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.emailedit}
+                                  onChange={this.handleChangeEmailE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="celuedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.celuedit}
+                                  onChange={this.handleChangeCeluE}
+                                />
+                              </FormControl>
+                              <Button
+                                sx={{ mt: 2, left: '5%', }}
+                                margin variant="contained"
+                                onClick={this.handleEdit}>EDITAR
+                              </Button>
+                              <Button
+                                sx={{ mt: 2, left: '30%', }}
+                                variant="outlined"
+                                color="error"
+                                onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                            </Box>
+
+                          </Modal>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </Paper>
+                </Grid>
+
+             
               </Grid>
-              
-              <AddButton/>
-             </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>

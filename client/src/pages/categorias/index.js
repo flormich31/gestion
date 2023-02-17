@@ -9,42 +9,23 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import axios from "axios";
 import FormControl from "@mui/material/FormControl";
-import SearchBox from "../../components/SearchBox";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import Select from '@mui/material/Select';
-import FormHelperText from '@mui/material/FormHelperText';
 import {
     Paper,
     Button,
     Typography,
-    Alert,
 } from "@mui/material";
-import { Redirect } from "react-router";
-import DataTableVenta from "../../components/DataTableVenta";
 import TextField from '@mui/material/TextField';
-import NativeSelect from '@mui/material/NativeSelect';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { DataGrid } from '@mui/x-data-grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import ButtonCreateProduct from "../../components/ButtonCreateProduct";
-import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
+import Modal from '@mui/material/Modal';
 
 const mdTheme = createTheme();
 
@@ -56,6 +37,11 @@ class Categorias extends React.Component {
 
         this.state = {
             categorias: [],
+            busqueda: [],
+            open: false,
+            edit: [],
+            idedit: '',
+            catedit: '',
         };
     }
 
@@ -81,12 +67,16 @@ class Categorias extends React.Component {
     };
 
     handleChangeId = event => {
-        console.log(event.target.value);
         this.setState({ id: event.target.value });
-        console.log(event.target.value);
     }
     handleChangeCategoria = event => {
         this.setState({ categoria: event.target.value });
+    }
+
+  //Para editar una categoria
+
+    handleChangeEditCategoria = event => {
+        this.setState({ catedit: event.target.value });
     }
 
     handleSubmit = event => {
@@ -102,16 +92,61 @@ class Categorias extends React.Component {
                 console.log(res);
                 console.log(res.data);
                 _this.getCategorias();
-                event.target.value = null;
             })
             .catch((err) => {
                 console.log(err);
             });
-            this.setState({ categoria: "" }); 
+        this.setState({ categoria: "" });
+    }
+
+    handleChangeSearch = event => {
+        this.setState({ busqueda: event.target.value });
+        console.log(event.target.value);
+    }
+
+    showModal = (IdCategoria, Categoria, event) => {
+        this.setState({ open: true })
+        this.setState({ idedit: IdCategoria });
+        this.setState({ catedit: Categoria });
+        console.log(IdCategoria);
+        console.log(this.state.idedit);
+        console.log(this.state.catedit);
+    }
+
+    handleClickSearch = (busqueda) => {
+        let _this = this;
+        axios.get("http://localhost:9000/categorias", + busqueda,)
+            .then((res) => {
+                console.log(res);
+                console.log(res.data);
+                _this.getCategorias();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+  // This is the put request
+    handleEdit = event => {
+        let _this = this;
+
+        axios.put("http://localhost:9000/categorias", {
+            id: this.state.idedit,
+            categoria: this.state.catedit,
+        })
+            .then(function (response) {
+                _this.getCategorias();
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        this.setState({ idedit: "" });
+        this.setState({ catedit: "" });
+        this.setState({ open: false });
     }
 
     handleRemove = (IdCategoria) => {
-
         let _this = this;
         var config = {
             method: "delete",
@@ -127,19 +162,10 @@ class Categorias extends React.Component {
                 .catch(function (error) {
                     console.log(error);
                 });
-        }}
-    redirectHandlerOpen = () => {
-        this.setState({ redirect: true });
-        this.renderRedirectOpen();
-    };
-    renderRedirectOpen = () => {
-        if (this.state.redirect) {
-            return <Redirect to="/productoNuevo" />;
         }
-    };
+    }
 
     render() {
-        const alert = this.props.alert;
         return (
             <ThemeProvider theme={mdTheme}>
                 <Box sx={{ display: "flex" }}>
@@ -169,16 +195,15 @@ class Categorias extends React.Component {
                                             p: 3,
                                             display: "flex",
                                             flexDirection: "column",
-
                                         }}>
-                                        {/* Editor de categorias */}
                                         <Typography variant="h8" component="div">
-                                            <b>Editor de categorias</b>
+                                            <b>Crear nueva categoria</b>
                                         </Typography>
 
                                         <Box component="form" noValidate sx={{ mt: 1 }}>
 
-                                            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                                            <FormControl variant="filled" sx={{ minWidth: 120 }} onSubmit={this.handleSubmit} >
+
                                                 <TextField
                                                     margin="normal"
                                                     required
@@ -194,31 +219,32 @@ class Categorias extends React.Component {
                                             <Button
                                                 type="submit"
                                                 variant="contained"
-                                                sx={{ mt: 1, mb: 1 }}
+                                                sx={{ mt: 1 }}
                                                 size="small"
                                                 onClick={this.handleSubmit}
                                             >
-                                                {"Guardar"}
+                                                {"Crear"}
                                             </Button>
                                         </Box>
                                     </Paper>
                                 </Grid>
-
-                                <Grid item xs={12} md={12} lg={12} >
+                                {/* BUSCADOR */}
+                                <Grid item xs={12}  >
                                     <Paper
                                         sx={{
-
+                                            p: 3,
                                             display: "flex",
                                             flexDirection: "column",
-                                            height: 40,
-                                            elevation: 100,
+
                                         }}
                                     >
-                                        {/* BUSCADOR */}
-                                        <FormControl variant="standard" >
+                                        <FormControl variant="standard" onSubmit={this.handleSubmit}>
                                             <TextField
-                                                id="input-with-icon-adornment"
+                                                id="busqueda"
                                                 size="small"
+                                                name="form"
+                                                value={this.state.busqueda}
+                                                onChange={this.handleChangeSearch}
                                                 InputProps={{
                                                     startAdornment: (
                                                         <InputAdornment position="start" >
@@ -227,6 +253,15 @@ class Categorias extends React.Component {
                                                     ),
                                                 }}
                                             />
+                                            <Button
+                                                type="submit"
+                                                variant="contained"
+                                                sx={{ mt: 1 }}
+                                                size="small"
+                                                onClick={this.handleClickSearch}
+                                            >
+                                                {"Buscar"}
+                                            </Button>
                                         </FormControl>
                                     </Paper>
                                 </Grid>
@@ -239,7 +274,7 @@ class Categorias extends React.Component {
                                                 <TableHead>
                                                     <TableRow>
                                                         <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
-                                                        <TableCell bgcolor="pink" align="right"><b>Categorias</b></TableCell>
+                                                        <TableCell bgcolor="pink" align="left"><b>Categorias</b></TableCell>
                                                         <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
                                                     </TableRow>
                                                 </TableHead>
@@ -252,12 +287,13 @@ class Categorias extends React.Component {
                                                             <TableCell component="th" scope="row">
                                                                 {item.IdCategoria}
                                                             </TableCell>
-                                                            <TableCell align="right">{item.Categoria}</TableCell>
+                                                            <TableCell align="left">{item.Categoria}</TableCell>
                                                             <TableCell align="right" >
                                                                 <EditIcon
                                                                     sx={{ color: pink[200] }}
-                                                                    key={item.Categoria}
-                                                                //onClick={}
+                                                                    key={item.IdCategoria}
+                                                                    value={this.state.idedit}
+                                                                    onClick={() => { this.showModal(item.IdCategoria, item.Categoria); }}
                                                                 />
                                                                 <DeleteIcon
                                                                     sx={{ color: pink[600] }}
@@ -268,8 +304,47 @@ class Categorias extends React.Component {
                                                         </TableRow>
 
                                                     ))}
-                                                    <button onClick={this.previousPage}>PreviousPage</button>
-                                                    <button onClick={this.nextPage}>Next Page</button>
+                                                    <Modal open={this.state.open} onClose={this.hideModal}>
+                                                        <Box sx={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
+                                                            width: 400,
+                                                            bgcolor: 'background.paper',
+                                                            border: '2px solid #<000',
+                                                            boxShadow: 24,
+                                                            p: 4,
+                                                        }}>
+                                                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                                <b>Ingrese el nombre de la categoria que desea modificar</b>
+                                                            </Typography>
+                                                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                                Codigo: {this.state.idedit}
+                                                            </Typography>
+
+                                                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                                                <TextField
+                                                                    id="catedit"
+                                                                    size="small"
+                                                                    margin="normal"
+                                                                    value={this.state.catedit}
+                                                                    onChange={this.handleChangeEditCategoria}
+                                                                />
+                                                            </FormControl>
+                                                            <Button
+                                                                sx={{ mt: 2, left: '5%', }}
+                                                                margin variant="contained"
+                                                                onClick={this.handleEdit}>EDITAR
+                                                            </Button>
+                                                            <Button
+                                                                sx={{ mt: 2, left: '30%', }}
+                                                                variant="outlined"
+                                                                color="error"
+                                                                onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                                                        </Box>
+
+                                                    </Modal>
                                                 </TableBody>
                                             </Table>
 
@@ -282,7 +357,7 @@ class Categorias extends React.Component {
                         </Container>
                     </Box>
                 </Box>
-            </ThemeProvider>
+            </ThemeProvider >
         );
     }
 }

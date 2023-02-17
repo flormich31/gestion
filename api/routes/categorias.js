@@ -5,9 +5,20 @@ router.get("/", function (req, res, next) {
   const sql = `
     SELECT *
     FROM \`categorias\`
-    WHERE FechaEliminacion IS NULL
+    WHERE
+						FechaEliminacion IS NULL
+            ORDER BY Categoria ASC
   `;
+  console.log(sqlTotal);
+  const sqlTotal = `
+    SELECT count(IdCategoria) as total
+    FROM \`categorias\`
+    WHERE
+						(FechaEliminacion IS NULL ) `
+;
+
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
       console.log(err);
       res.send("Error recuperando categorias");
@@ -15,7 +26,8 @@ router.get("/", function (req, res, next) {
       res.json({ categorias: regs });
     }
   });
-});
+}); 
+
 
 function makeid(length) {
     var result = "";
@@ -69,7 +81,7 @@ router.put("/", function (req, res, next) {
   const sql = `
   UPDATE \`categorias\`
   SET Categoria='${req.body.categoria}'
-  WHERE IdCategoria='${req.body.IdCategoria}';
+  WHERE IdCategoria='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);

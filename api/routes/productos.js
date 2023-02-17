@@ -10,6 +10,7 @@ router.get("/", function (req, res, next) {
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE p.FechaEliminacion IS NULL
+    ORDER BY p.Detalle ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(req.body);

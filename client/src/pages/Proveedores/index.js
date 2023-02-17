@@ -25,10 +25,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import AddButton from "../../components/AddButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
+import Modal from '@mui/material/Modal';
+
 const mdTheme = createTheme();
 
 
@@ -39,6 +40,11 @@ class Proveedores extends React.Component {
 
     this.state = {
       proveedores: [],
+      open: false,
+      idedit: '',
+      nombredit: '',
+      domicilioedit: '',
+      webedit: '',
     };
   }
 
@@ -97,6 +103,57 @@ class Proveedores extends React.Component {
       this.setState({ web: "" }); 
   }
 
+ //Para editar un cliente
+ showModal = (IdProveedor, RazonSocial, Domicilio, Web) => {
+  this.setState({ open: true })
+  this.setState({ idedit: IdProveedor });
+  this.setState({ nombredit: RazonSocial });
+  this.setState({ domicilioedit: Domicilio });
+  this.setState({ webedit: Web });
+  console.log(IdProveedor);
+  console.log(this.state.idedit);
+  console.log(this.state.nombredit);
+}
+
+//Para editar un cliente
+handleChangeIdE = event => {
+  this.setState({ idedit: event.target.value });
+}
+handleChangeNombreE = event => {
+  this.setState({ nombredit: event.target.value });
+}
+handleChangeDomicilioE = event => {
+  this.setState({ domicilioedit: event.target.value });
+}
+handleChangeWebE = event => {
+  this.setState({ webedit: event.target.value });
+}
+
+// This is the put request
+handleEdit = event => {
+  let _this = this;
+
+  axios.put("http://localhost:9000/proveedores", {
+    id: this.state.idedit,
+    nombre: this.state.nombredit,
+    domicilio: this.state.domicilioedit,
+    web: this.state.webedit,
+  })
+    .then(function (response) {
+      _this.getProveedores();
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  this.setState({ idedit: "" });
+  this.setState({ nombredit: "" });
+  this.setState({ domicilioedit: "" });
+  this.setState({ webedit: "" });
+  this.setState({ open: false });
+}
+
+  //Borrar cliente
   handleRemove = (IdProveedor) => {
     let _this = this;
     var config = {
@@ -277,7 +334,13 @@ class Proveedores extends React.Component {
                               <TableCell component="th" scope="row">
                                 {item.Web}
                               </TableCell>
-                              <TableCell align="right"><EditIcon sx={{ color: pink[200] }} />
+                              <TableCell align="right">
+                                <EditIcon 
+                               sx={{ color: pink[200] }}
+                               key={item.IdProveedor}
+                               value={this.state.IdProveedor}
+                               onClick={() => { this.showModal(item.IdProveedor, item.RazonSocial, item.Domicilio, item.Web); }}
+                              />
                               <DeleteIcon 
                               sx={{ color: pink[600] }} 
                               onClick={() => {
@@ -286,13 +349,71 @@ class Proveedores extends React.Component {
 
                             </TableRow>
                           ))}
+                          <Modal open={this.state.open} onClose={this.hideModal}>
+                            <Box sx={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: 400,
+                              bgcolor: 'background.paper',
+                              border: '2px solid #<000',
+                              boxShadow: 24,
+                              p: 4,
+                            }}>
+                              <Typography id="modal-modal-title" variant="h6" component="h2">
+                                <b>Editor de proveedores</b>
+                              </Typography>
+                              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                Codigo: {this.state.idedit}
+                              </Typography>
+
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="nombredit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.nombredit}
+                                  onChange={this.handleChangeNombreE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="domicilioedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.domicilioedit}
+                                  onChange={this.handleChangeDomicilioE}
+                                />
+                              </FormControl>
+                              <FormControl variant="standard" onSubmit={this.handleEdit}>
+                                <TextField
+                                  id="celuedit"
+                                  size="small"
+                                  margin="normal"
+                                  value={this.state.webedit}
+                                  onChange={this.handleChangeWebE}
+                                />
+                              </FormControl>
+                              <Button
+                                sx={{ mt: 2, left: '5%', }}
+                                margin variant="contained"
+                                onClick={this.handleEdit}>EDITAR
+                              </Button>
+                              <Button
+                                sx={{ mt: 2, left: '30%', }}
+                                variant="outlined"
+                                color="error"
+                                onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                            </Box>
+
+                          </Modal>
                         </TableBody>
                       </Table>
                     </div>
                   </Paper>
                 </Grid>
 
-                <AddButton />
               </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>

@@ -51,6 +51,7 @@ router.delete("/:IdMarca", function (req, res, next) {
   const sql = `
   DELETE FROM \`marcas\`
   WHERE IdMarca = ?
+  ORDER BY Marca ASC
   `;
   console.log("Delete IdMarca > " + req.params.IdMarca);
   global.dbConnection.query(sql, [req.params.IdMarca], (err, regs) => {
@@ -67,15 +68,16 @@ router.delete("/:IdMarca", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`productos\`
-  SET detalle='${req.body.IdProducto}'
-  WHERE IdProducto='${req.body.IdProducto}';
+  UPDATE \`marcas\`
+  SET Marca='${req.body.marca}'
+  WHERE IdMarca='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
-      res.send("Error editando producto");
+      res.send("Error editando marca");
     } else {
-      res.json({ productos: regs });
+      res.json({ Marcas: regs });
     }
   });
 });

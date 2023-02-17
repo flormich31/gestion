@@ -171,12 +171,12 @@ class Productos extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-      this.setState({ id: "" }); 
-      this.setState({ detalle: "" }); 
-      this.setState({ costo: "" }); 
-      this.setState({ IdCategoria: "" }); 
-      this.setState({ IdMarca: "" }); 
-      this.setState({ IdProveedor: "" }); 
+    this.setState({ id: "" });
+    this.setState({ detalle: "" });
+    this.setState({ costo: "" });
+    this.setState({ IdCategoria: "" });
+    this.setState({ IdMarca: "" });
+    this.setState({ IdProveedor: "" });
   }
   // This is the put request
   handleEdit = (IdProducto) => {
@@ -205,14 +205,14 @@ class Productos extends React.Component {
     };
     if (window.confirm("¿Realmente desea borrar este producto?")) {
       axios(config)
-      .then(function (response) {
+        .then(function (response) {
           _this.getProductos();
           console.log(response);
-      })
-      .catch(function (error) {
+        })
+        .catch(function (error) {
           console.log(error);
-      });
-  } 
+        });
+    }
   }
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
@@ -426,7 +426,9 @@ class Productos extends React.Component {
                               <TableCell align="right">{item.Costo}</TableCell>
                               <TableCell align="right">
                                 <EditIcon sx={{ color: pink[200] }} />
-                                <DeleteIcon sx={{ color: pink[600] }} onClick={() => { this.handleRemove(item.IdProducto); }} />
+                                <DeleteIcon
+                                  sx={{ color: pink[600] }} align="left"
+                                  onClick={() => { this.handleRemove(item.IdProducto); }} />
                               </TableCell>
 
                             </TableRow>
