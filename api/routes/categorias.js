@@ -9,36 +9,45 @@ router.get("/", function (req, res, next) {
 						FechaEliminacion IS NULL
             ORDER BY Categoria ASC
   `;
-  console.log(sqlTotal);
-  const sqlTotal = `
+  /* const sqlTotal = `
     SELECT count(IdCategoria) as total
     FROM \`categorias\`
     WHERE
 						(FechaEliminacion IS NULL ) `
-;
+    ; */
 
-  global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(sql);
-    if (err) {
-      console.log(err);
-      res.send("Error recuperando categorias");
-    } else {
-      res.json({ categorias: regs });
-    }
-  });
-}); 
+    global.dbConnection.query(sql, [], (err, regs) => {
+      console.log(sql);
+      if (err) {
+        console.log(err);
+        res.send("Error recuperando categorias");
+      } else {
+        res.json({ categorias: regs });
+      }
+    });
+
+   /*  global.dbConnection.query(sqlTotal, [], (err, regs) => {
+      console.log(sqlTotal);
+      if (err) {
+        console.log(err);
+        res.send("Error recuperando total categorias");
+      } else {
+        res.json({ totalcategorias: regs });
+      }
+    }); */
+});
 
 
 function makeid(length) {
-    var result = "";
-    var characters =
-      "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+  var result = "";
+  var characters =
+    "0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+  return result;
+}
 
 router.post("/", function (req, res, next) {
   const codigo = makeid(5);
@@ -59,7 +68,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.delete("/:IdCategoria", function (req, res, next) {
-  console.log("Request",req.params.IdProducto);
+  console.log("Request", req.params.IdProducto);
   const sql = `
   DELETE FROM \`categorias\`
   WHERE IdCategoria = ?
@@ -93,6 +102,6 @@ router.put("/", function (req, res, next) {
   });
 });
 
- 
+
 
 module.exports = router;
