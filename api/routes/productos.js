@@ -2,18 +2,31 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
+  console.log("Request", req.query);
   
-  const sql = `
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+  const sql = String(req.query.query).split(' ').join('')
+  == '' || req.query.query
+  == 'undefined' || !req.query || !req.query.query ?`
+  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
+  `:`
+    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    FROM \`productos\` as p 
+    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
+    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
+    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
+    WHERE p.FechaEliminacion IS NULL
+    AND
+						Detalle LIKE "%${req.query.query}%"
+    ORDER BY p.Detalle ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(req.body);
+    console.log(sql);
     if (err) {
       console.log(err);
       res.send("Error recuperando productos");

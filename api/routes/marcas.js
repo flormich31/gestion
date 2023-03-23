@@ -2,10 +2,21 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const sql = `
+  console.log("Request", req.query);
+  const sql = String(req.query.query).split(' ').join('')
+    == '' || req.query.query
+    == 'undefined' || !req.query || !req.query.query ? `
     SELECT *
     FROM \`marcas\`
     WHERE FechaEliminacion IS NULL
+    ORDER BY Marca ASC
+  `: `
+  SELECT *
+  FROM \`marcas\`
+  WHERE FechaEliminacion IS NULL
+  AND
+  Marca LIKE "%${req.query.query}%"
+  ORDER BY Marca ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
@@ -16,22 +27,22 @@ router.get("/", function (req, res, next) {
     }
   });
 });
- 
+
 function makeid(length) {
-    var result = "";
-    var characters =
-      "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+  var result = "";
+  var characters =
+    "0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+  return result;
+}
 
 router.post("/", function (req, res, next) {
-    const codigo = makeid(5);
-    console.log(codigo);
-    console.log(req.body);
+  const codigo = makeid(5);
+  console.log(codigo);
+  console.log(req.body);
   const sql = `
   INSERT INTO \`marcas\`
   ( IdMarca, Marca) values ('${codigo}','${req.body.marca}');
@@ -47,7 +58,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.delete("/:IdMarca", function (req, res, next) {
-  console.log("Request",req.params.IdMarca);
+  console.log("Request", req.params.IdMarca);
   const sql = `
   DELETE FROM \`marcas\`
   WHERE IdMarca = ?
@@ -82,6 +93,6 @@ router.put("/", function (req, res, next) {
   });
 });
 
- 
- 
+
+
 module.exports = router;

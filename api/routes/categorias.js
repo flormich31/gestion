@@ -2,41 +2,37 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const sql = `
+  console.log("Request", req.query);
+  
+const sql = String(req.query.query).split(' ').join('') 
+== '' || req.query.query 
+== 'undefined' || !req.query || !req.query.query? `SELECT *
+FROM \`categorias\`
+WHERE
+        FechaEliminacion IS NULL 
+        
+        ORDER BY Categoria ASC
+`: `
     SELECT *
     FROM \`categorias\`
     WHERE
-						FechaEliminacion IS NULL
+						FechaEliminacion IS NULL 
+            AND
+						Categoria LIKE "%${req.query.query}%"
             ORDER BY Categoria ASC
-  `;
-  /* const sqlTotal = `
-    SELECT count(IdCategoria) as total
-    FROM \`categorias\`
-    WHERE
-						(FechaEliminacion IS NULL ) `
-    ; */
-
-    global.dbConnection.query(sql, [], (err, regs) => {
-      console.log(sql);
-      if (err) {
-        console.log(err);
-        res.send("Error recuperando categorias");
-      } else {
-        res.json({ categorias: regs });
-      }
-    });
-
-   /*  global.dbConnection.query(sqlTotal, [], (err, regs) => {
-      console.log(sqlTotal);
-      if (err) {
-        console.log(err);
-        res.send("Error recuperando total categorias");
-      } else {
-        res.json({ totalcategorias: regs });
-      }
-    }); */
+  `; 
+  console.log(sql);
+  global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
+    if (err) {
+      console.log(err);
+      res.send("Error recuperando categorias");
+    } else {
+      res.json({ categorias: regs });
+    }
+  })
+  
 });
-
 
 function makeid(length) {
   var result = "";

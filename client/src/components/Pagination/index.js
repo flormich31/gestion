@@ -153,15 +153,15 @@ class Pagination extends Component {
 
     return (
       <Fragment>
-        <nav aria-label="Countries Pagination">
+        <div class="cointainer">
+        <nav aria-label=" Pagination">
           <ul className="pagination">
             { pages.map((page, index) => {
 
               if (page === LEFT_PAGE) return (
-                <li key={index} className="page-item">
+                <li key={index} className="page-item" >
                   <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}>
                     <span aria-hidden="true">&laquo;</span>
-                    <span className="sr-only">Previous</span>
                   </a>
                 </li>
               );
@@ -170,7 +170,6 @@ class Pagination extends Component {
                 <li key={index} className="page-item">
                   <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}>
                     <span aria-hidden="true">&raquo;</span>
-                    <span className="sr-only">Next</span>
                   </a>
                 </li>
               );
@@ -185,6 +184,7 @@ class Pagination extends Component {
 
           </ul>
         </nav>
+        </div>
       </Fragment>
     );
 

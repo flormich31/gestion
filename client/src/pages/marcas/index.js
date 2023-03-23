@@ -9,36 +9,26 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import axios from "axios";
 import FormControl from "@mui/material/FormControl";
-import SearchBox from "../../components/SearchBox";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import Select from '@mui/material/Select';
-import FormHelperText from '@mui/material/FormHelperText';
 import {
   Paper,
   Button,
   Typography,
 } from "@mui/material";
 import { Redirect } from "react-router";
-import DataTableVenta from "../../components/DataTableVenta";
 import TextField from '@mui/material/TextField';
-import NativeSelect from '@mui/material/NativeSelect';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { DataGrid } from '@mui/x-data-grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import ButtonCreateProduct from "../../components/ButtonCreateProduct";
-import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
 import Modal from '@mui/material/Modal';
+import Pagination from '../../components/Pagination';
 
 const mdTheme = createTheme();
 
@@ -50,7 +40,13 @@ class Marcas extends React.Component {
 
     this.state = {
       marcas: [],
+
+      currentMarcas: [],
+      currentPage: null,
+      totalPages: null,
+
       open: false,
+      query: '',
       idedit: '',
       marcaedit: '',
     };
@@ -60,13 +56,23 @@ class Marcas extends React.Component {
     this.getMarcas();
   }
 
+  onPageChanged = data => {
+    const { marcas } = this.state;
+    const { currentPage, totalPages, pageLimit } = data;
+
+    const offset = (currentPage - 1) * pageLimit;
+    const currentMarcas = marcas.slice(offset, offset + pageLimit);
+
+    this.setState({ currentPage, currentMarcas, totalPages });
+  };
+
   getMarcas = () => {
     let _this = this;
-    var config = {
-      method: "get",
-      url: "http://localhost:9000/marcas",
-      headers: {},
-    };
+         var config = {
+            method: "get",
+            url: `http://localhost:9000/marcas?query=${this.state.query}`,
+            headers: {},
+        };
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
@@ -89,7 +95,7 @@ class Marcas extends React.Component {
 
   handleChangeEditMarca = event => {
     this.setState({ marcaedit: event.target.value });
-}
+  }
 
   handleSubmit = event => {
     event.preventDefault();
@@ -139,6 +145,29 @@ class Marcas extends React.Component {
     this.setState({ open: false });
   }
 
+ //Para buscar una categoria
+
+ handleChangeSearch = event => {
+  this.setState({ query: event.target.value });
+  console.log(this.state.query);
+  this.getMarcas();
+}
+handleClickSearch = (event) => {
+  event.preventDefault();
+  let _this = this;
+
+  axios.get("http://localhost:9000/marcas", {
+      query: this.state.query,
+  })
+      .then((res) => {
+          console.log(res);
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+}
+
+
   handleRemove = (IdMarca) => {
     let _this = this;
     var config = {
@@ -168,6 +197,23 @@ class Marcas extends React.Component {
   };
 
   render() {
+    const {
+      marcas,
+      currentMarcas,
+      currentPage,
+      totalPages
+    } = this.state;
+    const totalMarcas = this.state.marcas.length;
+
+    if (totalMarcas === 0) return null;
+
+    const headerClass = [
+      "text-dark py-2 pr-4 m-0",
+      currentPage ? "border-gray border-right" : ""
+    ]
+      .join(" ")
+      .trim();
+
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -230,6 +276,9 @@ class Marcas extends React.Component {
                         {"Guardar"}
                       </Button>
                     </Box>
+
+                   
+
                   </Paper>
                 </Grid>
 
@@ -244,102 +293,124 @@ class Marcas extends React.Component {
                     }}
                   >
                     {/* BUSCADOR */}
-                    <FormControl variant="standard" >
-                      <TextField
-                        id="input-with-icon-adornment"
-                        size="small"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start" >
-                              <SearchIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </FormControl>
+                    <div component="form" class="search" onSubmit={this.handleClickSearch}>
+                                            <input
+                                                type="text"
+                                                name="query"
+                                                placeholder={`Buscar...`}
+                                                class="searchTerm"
+                                                value={this.state.query}
+                                                onChange={this.handleChangeSearch}
+                                            />
+                                            <button type="submit"
+                                                class="searchButton"
+                                                onClick={this.handleClickSearch}
+
+                                            >
+                                                Buscar
+                                            </button>
+                                        </div>
                   </Paper>
                 </Grid>
 
                 <Grid item xs={12} md={12} lg={12}>
-                  <Paper elevation={23}>
-                    <div style={{ height: 400, width: '100%', alignContent: "center" }}>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
 
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
-                            <TableCell bgcolor="pink" align="left"><b>Marcas</b></TableCell>
-                            <TableCell bgcolor="pink" align="left"><b>Acciones</b></TableCell>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
+                          <TableCell bgcolor="pink" align="left"><b>Marcas</b></TableCell>
+                          <TableCell bgcolor="pink" align="left"><b>Acciones</b></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.marcas.map((item, index) => (
+                          <TableRow
+                            key={item.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {item.IdMarca}
+                            </TableCell>
+                            <TableCell align="left">{item.Marca}</TableCell>
+                            <TableCell align="left">
+                              <EditIcon sx={{ color: pink[200] }}
+                                key={item.IdMarca}
+                                value={this.state.idedit}
+                                onClick={() => { this.showModal(item.IdMarca, item.Marca); }}
+                              />
+                              <DeleteIcon sx={{ color: pink[600] }}
+                                onClick={() => { this.handleRemove(item.IdMarca); }} />
+                            </TableCell>
+
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {this.state.marcas.map((item, index) => (
-                            <TableRow
-                              key={item.id}
-                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                              <TableCell component="th" scope="row">
-                                {item.IdMarca}
-                              </TableCell>
-                              <TableCell align="left">{item.Marca}</TableCell>
-                              <TableCell align="left">
-                                <EditIcon sx={{ color: pink[200] }}
-                                  key={item.IdMarca}
-                                  value={this.state.idedit}
-                                  onClick={() => { this.showModal(item.IdMarca, item.Marca); }}
-                                />
-                                <DeleteIcon sx={{ color: pink[600] }}
-                                  onClick={() => { this.handleRemove(item.IdMarca); }} />
-                              </TableCell>
+                        ))}
+                        <Modal open={this.state.open} onClose={this.hideModal}>
+                          <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #<000',
+                            boxShadow: 24,
+                            p: 4,
+                          }}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                              <b>Ingrese el nombre de la marca que desea modificar</b>
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                              Codigo: {this.state.idedit}
+                            </Typography>
 
-                            </TableRow>
-                          ))}
-                          <Modal open={this.state.open} onClose={this.hideModal}>
-                            <Box sx={{
-                              position: 'absolute',
-                              top: '50%',
-                              left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                              width: 400,
-                              bgcolor: 'background.paper',
-                              border: '2px solid #<000',
-                              boxShadow: 24,
-                              p: 4,
-                            }}>
-                              <Typography id="modal-modal-title" variant="h6" component="h2">
-                                <b>Ingrese el nombre de la marca que desea modificar</b>
-                              </Typography>
-                              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Codigo: {this.state.idedit}
-                              </Typography>
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                              <TextField
+                                id="marcaedit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.marcaedit}
+                                onChange={this.handleChangeEditMarca}
+                              />
+                            </FormControl>
+                            <Button
+                              sx={{ mt: 2, left: '5%', }}
+                              margin variant="contained"
+                              onClick={this.handleEdit}>EDITAR
+                            </Button>
+                            <Button
+                              sx={{ mt: 2, left: '30%', }}
+                              variant="outlined"
+                              color="error"
+                              onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                          </Box>
 
-                              <FormControl variant="standard" onSubmit={this.handleEdit}>
-                                <TextField
-                                  id="marcaedit"
-                                  size="small"
-                                  margin="normal"
-                                  value={this.state.marcaedit}
-                                  onChange={this.handleChangeEditMarca}
-                                />
-                              </FormControl>
-                              <Button
-                                sx={{ mt: 2, left: '5%', }}
-                                margin variant="contained"
-                                onClick={this.handleEdit}>EDITAR
-                              </Button>
-                              <Button
-                                sx={{ mt: 2, left: '30%', }}
-                                variant="outlined"
-                                color="error"
-                                onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
-                            </Box>
-
-                          </Modal>
-                        </TableBody>
-                      </Table>
-
+                        </Modal>
+                      </TableBody>
+                    </Table>
+                    <div className="container mb-5">
+                      <div className="textPag ">
+                        <b>{totalMarcas}</b> {" "} Marcas
+                        {currentPage && (
+                          <span> {" "} <b>|</b>{" "} Pagina {" "}
+                            <span><b>{currentPage}</b></span><b>/</b>
+                            <span><b>{totalPages}</b></span>
+                          </span>
+                        )}
+                      </div>
+                     {/*  <div>
+                    <Pagination
+                      totalRecords={totalMarcas}
+                      pageLimit={10}
+                      pageNeighbours={1}
+                      onPageChanged={this.onPageChanged}
+                    />
+                    
+                    </div> */}
                     </div>
-                  </Paper>
+                  </TableContainer>
+
                 </Grid>
 
               </Grid>

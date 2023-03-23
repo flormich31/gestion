@@ -9,13 +9,8 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import axios from "axios";
 import FormControl from "@mui/material/FormControl";
-import SearchBox from "../../components/SearchBox";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import {
   Paper,
@@ -23,11 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Redirect } from "react-router";
-import DataTableVenta from "../../components/DataTableVenta";
 import TextField from '@mui/material/TextField';
-import NativeSelect from '@mui/material/NativeSelect';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { DataGrid } from '@mui/x-data-grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -35,11 +26,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
-import TablePagination from '@mui/material/TablePagination';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pink } from '@mui/material/colors';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Modal from '@mui/material/Modal';
+import Pagination from '../../components/Pagination';
 
 const mdTheme = createTheme();
 
@@ -54,6 +46,19 @@ class Productos extends React.Component {
       categorias: [],
       marcas: [],
       proveedores: [],
+
+      currentProductos: [],
+      currentPage: null,
+      totalPages: null,
+
+      open: false,
+      query: '',
+      idedit: '',
+      detalleedit: '',
+      IdCategoriaedit: '',
+      IdMarcaedit: '',
+      costoedit: '',
+      IdProveedoredit: '',
     };
   }
 
@@ -64,12 +69,22 @@ class Productos extends React.Component {
     this.getTodosProveedores();
   }
 
+  onPageChanged = data => {
+    const { productos } = this.state;
+    const { currentPage, totalPages, pageLimit } = data;
+
+    const offset = (currentPage - 1) * pageLimit;
+    const currentProductos = productos.slice(offset, offset + pageLimit);
+
+    this.setState({ currentPage, currentProductos, totalPages });
+  };
+
   getProductos = () => {
     let _this = this;
     var config = {
-      method: "get",
-      url: "http://localhost:9000/productos",
-      headers: {},
+        method: "get",
+        url: `http://localhost:9000/productos?query=${this.state.query}`,
+        headers: {},
     };
     axios(config)
       .then(function (response) {
@@ -178,23 +193,88 @@ class Productos extends React.Component {
     this.setState({ IdMarca: "" });
     this.setState({ IdProveedor: "" });
   }
+
+  //Para editar una categoria
+  handleChangeEditId = event => {
+    this.setState({ id: event.target.value });
+  }
+  handleChangeEditDetalle = event => {
+    this.setState({ detalleedit: event.target.value });
+  }
+  handleChangeEditIdCategoria = event => {
+    this.setState({ IdCategoriaedit: event.target.value });
+  }
+  handleChangeEditIdMarca = event => {
+    this.setState({ IdMarcaedit: event.target.value });
+  }
+  handleChangeEditCosto = event => {
+    this.setState({ costoedit: event.target.value });
+  }
+  handleChangeEditIdProveedor = event => {
+    this.setState({ IdProveedor: event.target.value });
+  }
+  showModal = (IdProducto, Detalle, IdCategoria, IdMarca, Costo, IdProveedor, event) => {
+    this.setState({ open: true })
+    this.setState({ idedit: IdProducto });
+    this.setState({ detalleedit: Detalle });
+    this.setState({ IdCategoriaedit: IdCategoria });
+    this.setState({ IdMarcaedit: IdMarca });
+    this.setState({ costoedit: Costo });
+    this.setState({ IdProveedor: IdProveedor });
+
+  }
+
   // This is the put request
-  handleEdit = (IdProducto) => {
+  handleEdit = event => {
     let _this = this;
-    var config = {
-      method: "put",
-      url: "http://localhost:9000/productos/${IdProducto}",
-      headers: {},
-    }
-    axios(config)
+
+    axios.put("http://localhost:9000/productos", {
+      id: this.state.id,
+      detalle: this.state.detalle,
+      IdCategoria: this.state.IdCategoria,
+      IdMarca: this.state.IdMarca,
+      costo: this.state.costo,
+      IdProveedor: this.state.IdProveedor
+    })
       .then(function (response) {
-        _this.getProductos();
+        _this.getCategorias();
         console.log(response);
       })
       .catch(function (error) {
         console.log(error);
       });
+    this.setState({ id: "" });
+    this.setState({ detalle: "" });
+    this.setState({ costo: "" });
+    this.setState({ IdCategoria: "" });
+    this.setState({ IdMarca: "" });
+    this.setState({ IdProveedor: "" });
+    this.setState({ open: false });
   }
+
+ //Para buscar un producto
+
+ handleChangeSearch = event => {
+  this.setState({ query: event.target.value });
+  console.log(this.state.query);
+  this.getProductos();
+}
+handleClickSearch = (event) => {
+  event.preventDefault();
+  let _this = this;
+
+  axios.get("http://localhost:9000/productos", {
+      query: this.state.query,
+  })
+      .then((res) => {
+          console.log(res);
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+}
+
+
 
   handleRemove = (IdProducto) => {
     let _this = this;
@@ -225,6 +305,23 @@ class Productos extends React.Component {
   };
 
   render() {
+    const {
+      productos,
+      currentProductos,
+      currentPage,
+      totalPages
+    } = this.state;
+    const totalProductos = this.state.productos.length;
+
+    if (totalProductos === 0) return null;
+
+    const headerClass = [
+      "text-dark py-2 pr-4 m-0",
+      currentPage ? "border-gray border-right" : ""
+    ]
+      .join(" ")
+      .trim();
+
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -367,77 +464,178 @@ class Productos extends React.Component {
                 </Grid>
                 <ButtonCreateProduct />
 
-                <Grid item xs={12} md={12} lg={12} >
-                  <Paper
-                    sx={{
+                <Grid item xs={12}  >
+                                    <Paper
+                                        component="form" class="paper"
+                                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 1040 }
+                                        }
+                                    >
 
-                      display: "flex",
-                      flexDirection: "column",
-                      height: 40,
-                      elevation: 100,
-                    }}
-                  >
                     {/* BUSCADOR */}
-                    <FormControl variant="standard" >
-                      <TextField
-                        id="input-with-icon-adornment"
-                        size="small"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start" >
-                              <SearchIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </FormControl>
+                    <div component="form" class="search" onSubmit={this.handleClickSearch}>
+                                            <input
+                                                type="text"
+                                                name="query"
+                                                placeholder={`Buscar...`}
+                                                class="searchTerm"
+                                                value={this.state.query}
+                                                onChange={this.handleChangeSearch}
+                                            />
+                                            <button type="submit"
+                                                class="searchButton"
+                                                onClick={this.handleClickSearch}
+
+                                            >
+                                                Buscar
+                                            </button>
+                                        </div>
                   </Paper>
                 </Grid>
 
                 <Grid item xs={12} md={12} lg={12}>
-                  <Paper elevation={23}>
-                    <div style={{ height: 400, width: '100%', alignContent: "center" }}>
+                  <TableContainer component={Paper}>
+                  <div
+                    align="center"
+                    sx={{
+                      p: 10,
+                    }}>
 
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
-                            <TableCell bgcolor="pink" > <b>Descripcion del producto</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Marca</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Categoria</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
-                            <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
+                    <Typography variant="body" component="div" >
+                      <b>Total Productos:{totalProductos}</b><br />
+                      {/* <b>Pagina:{currentPage}</b> */}
+                      <b>{totalPages}</b>
+                    </Typography>
+                  </div>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell bgcolor="pink" > <b>Codigo</b></TableCell>
+                          <TableCell bgcolor="pink" > <b>Descripcion del producto</b></TableCell>
+                          <TableCell bgcolor="pink" align="right"><b>Marca</b></TableCell>
+                          <TableCell bgcolor="pink" align="right"><b>Categoria</b></TableCell>
+                          <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                          <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.productos.map((item, index) => (
+                          <TableRow
+                            key={item.Costo}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell align="left" component="th" scope="row">
+                              {item.IdProducto}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {item.Detalle}
+                            </TableCell>
+                            <TableCell align="right">{item.marca}</TableCell>
+                            <TableCell align="right">{item.categoria}</TableCell>
+                            <TableCell align="right">{item.Costo}</TableCell>
+                            <TableCell align="right">
+                              <EditIcon
+                                sx={{ color: pink[200] }}
+                                key={item.IdProducto}
+                                value={this.state.idedit}
+                                onClick={() => { this.showModal(item.IdProducto, item.Detalle, item.IdCategoria, item.IdMarca, item.Costo, item.IdProveedor,); }} />
+                              <DeleteIcon
+                                sx={{ color: pink[600] }} align="left"
+                                onClick={() => { this.handleRemove(item.IdProducto); }} />
+                            </TableCell>
+
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {this.state.productos.map((item, index) => (
-                            <TableRow
-                              key={item.Costo}
-                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                              <TableCell align="left" component="th" scope="row">
-                                {item.IdProducto}
-                              </TableCell>
-                              <TableCell component="th" scope="row">
-                                {item.Detalle}
-                              </TableCell>
-                              <TableCell align="right">{item.marca}</TableCell>
-                              <TableCell align="right">{item.categoria}</TableCell>
-                              <TableCell align="right">{item.Costo}</TableCell>
-                              <TableCell align="right">
-                                <EditIcon sx={{ color: pink[200] }} />
-                                <DeleteIcon
-                                  sx={{ color: pink[600] }} align="left"
-                                  onClick={() => { this.handleRemove(item.IdProducto); }} />
-                              </TableCell>
+                        ))}
+                        <Modal open={this.state.open} onClose={this.hideModal}>
+                          <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #<000',
+                            boxShadow: 24,
+                            p: 4,
+                          }}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                              <b>Ingrese el nombre de la categoria que desea modificar</b>
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                              Codigo: {this.state.idedit}
+                            </Typography>
 
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                              <TextField
+                                id="detalleedit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.detalleedit}
+                                onChange={this.handleChangeEditDetalle}
+                              />
+                            </FormControl>
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                              <TextField
+                                id="costoedit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.costoedit}
+                                onChange={this.handleChangeEditCosto}
+                              />
+                            </FormControl>
+                            {/* arreglar ID de categoria , marca y proveedor con select */}
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
 
-                    </div>
-                  </Paper>
+                              <TextField
+                                id="IdCategoriaedit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.IdCategoriaedit}
+                                onChange={this.handleChangeEditIdCategoria}
+                              />
+                            </FormControl>
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                              <TextField
+                                id="IdMarcaedit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.IdMarcaedit}
+                                onChange={this.handleChangeEditIdMarca}
+                              />
+                            </FormControl>
+                            <FormControl variant="standard" onSubmit={this.handleEdit}>
+                              <TextField
+                                id="IdProveedoredit"
+                                size="small"
+                                margin="normal"
+                                value={this.state.IdProveedoredit}
+                                onChange={this.handleChangeEditIdProveedor}
+                              />
+                            </FormControl>
+                            <Button
+                              sx={{ mt: 2, left: '5%', }}
+                              margin variant="contained"
+                              onClick={this.handleEdit}>EDITAR
+                            </Button>
+                            <Button
+                              sx={{ mt: 2, left: '30%', }}
+                              variant="outlined"
+                              color="error"
+                              onClick={() => { this.setState({ open: false }); }}>CANCELAR</Button>
+                          </Box>
+
+                        </Modal>
+                      </TableBody>
+                    </Table>
+                  
+
+                  {/* <Pagination
+                    totalRecords={totalProductos}
+                    pageLimit={10}
+                    pageNeighbours={1}
+                    onPageChanged={this.onPageChanged}
+                  /> */}
+                 
+                  </TableContainer>
                 </Grid>
 
               </Grid>

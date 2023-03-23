@@ -2,12 +2,19 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const sql = `
+  const sql = String(req.query.query).split(' ').join('')
+    == '' || req.query.query
+    == 'undefined' || !req.query || !req.query.query ? `
     SELECT *
     FROM \`proveedores\`
     WHERE FechaEliminacion IS NULL
     ORDER BY RazonSocial ASC
-  `;
+    `: ` SELECT *
+    FROM \`proveedores\`
+    WHERE FechaEliminacion IS NULL
+    AND
+						RazonSocial LIKE "%${req.query.query}%"
+    ORDER BY RazonSocial ASC`;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
       console.log(err);
