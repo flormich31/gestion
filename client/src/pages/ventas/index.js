@@ -14,20 +14,15 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import AddButton from "../../components/AddButton";
 import axios from "axios";
-import {
-  Button,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Autocomplete, Button, Paper, Typography } from "@mui/material";
 import { Redirect } from "react-router";
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import DataTableVenta from "../../components/DataTableVenta";
-import TextField from '@mui/material/TextField';
-import NativeSelect from '@mui/material/NativeSelect';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import TextField from "@mui/material/TextField";
+import NativeSelect from "@mui/material/NativeSelect";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const mdTheme = createTheme();
-
 
 class DashboardContent extends React.Component {
   constructor(props) {
@@ -36,7 +31,7 @@ class DashboardContent extends React.Component {
     this.state = {
       vendedores: [],
       formaPago: [],
-      numeroVenta: '',
+      numeroVenta: "",
     };
   }
 
@@ -90,8 +85,7 @@ class DashboardContent extends React.Component {
   };
   makeid = (length) => {
     const result = "";
-    const characters =
-      "0123456789";
+    const characters = "0123456789";
     var charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -116,9 +110,7 @@ class DashboardContent extends React.Component {
       });
   };
 
-
   render() {
-
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -139,163 +131,155 @@ class DashboardContent extends React.Component {
             <Toolbar />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-
-              <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6} >
-                  <Paper elevation={10}
-                    sx={{
-                      p: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      height: 300,
-                      width: 470,
-                    }}
-                  >
-                    <Typography variant="h4" component="div" p={1}>
-                      Detalle de venta
-                    </Typography>
-
-                    {/* Numero de venta y fecha */}
-                    <Grid  >
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        <TextField id="standard-read-only-input"
-                          defaultValue={this.numeroVenta}
-                          label="Venta número:"
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                          variant="standard" />
-                      </FormControl>
-
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        <TextField id="standard-read-only-input"
-                          defaultValue={new Date().toLocaleString()}
-                          label="Fecha"
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                          variant="standard" />
-                      </FormControl>
-                    </Grid>
-                    {/* Vendedor  */}
-                    <div >
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                          Vendedor
-                        </InputLabel>
-                        <NativeSelect
-                          inputProps={{
-                            id: 'uncontrolled-native',
-                          }}
-                        >{this.state.vendedores.map((item, index) => (
-                          <option
-                            key={item}
-                            value={item.IdVendedor}>
-                            {item.Nombre}
-                          </option>
-                        ))}
-                        </NativeSelect>
-                      </FormControl>
-                      {/* Forma de pago */}
-
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                          Forma de pago
-                        </InputLabel>
-                        <NativeSelect
-                          inputProps={{
-                            id: 'uncontrolled-native',
-                          }}
-                        >{this.state.formaPago.map((item, index) => (
-                          <option
-                            key={item}
-                            value={item.IdFormaPago}>
-                            {item.FormaPago}
-                          </option>
-                        ))}
-                        </NativeSelect>
-                      </FormControl>
-
-                      {/* Entregado y Pagado */}
-
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
-                        <InputLabel variant="standard" htmlFor="demo-simple-select-label">
-                          Entregado
-                        </InputLabel><NativeSelect
-                          inputProps={{
-                            id: 'uncontrolled-native',
-                          }}
-                        >
-                          <option>Si</option>
-                          <option >No</option>
-                        </NativeSelect>
-                      </FormControl>
-                      <FormControl variant="standard" sx={{ m: 1 }}>
-                        <InputLabel variant="standard" htmlFor="demo-simple-select-label">
-                          Pagado
-                        </InputLabel>
-                        <NativeSelect
-                          inputProps={{
-                            id: 'uncontrolled-native',
-                          }}
-                        >
-                          <option >Si</option>
-                          <option>No</option>
-                        </NativeSelect>
-                      </FormControl>
-                      <FormControl variant="standard" sx={{ m: 1, Width: 20 }}>
-                        <TextField
-                          id="standard-basic" label="Descuento..%.." variant="standard" 
-                        />
-                      </FormControl>
-                    </div>
-                    {/* Descuento */}
-                    <Grid>
-                      
-                    </Grid>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={6}  >
-                  <Paper elevation={10}
-                    sx={{
-                      p: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      height: 300,
-                      width: 470,
-                    }}
-                  >
-                    {/* Cliente */}
-                    <Typography variant="h4" component="div">
-                      Cliente <br />
-                      <Grid >
-                        <FormControl variant="standard">
-                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                            <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                            <TextField id="input-with-sx" label="Nombre del cliente..." variant="standard" />
-                          </Box>
-                        </FormControl>
+              <Paper
+                elevation={10}
+                sx={{
+                  p: 2,
+                  display: "flex",
+                }}
+              >
+                <Grid container direction="column">
+                  <Grid item>
+                    <Grid container direction="row" sx={12}>
+                      <Grid item xs={12}>
+                        <Typography variant="h5" component="div" p={1}>
+                          Detalle de venta
+                        </Typography>
                       </Grid>
-
-                    </Typography>
-                    <Typography variant="p" component="div" Align="left">
-                      <br />Observaciones
-                      <br />
-                      <TextField
-                        id="outlined-multiline-static"
-                        multiline
-                        rows={4}
-                        defaultValue="Escriba aquí..."
-                      />
-                    </Typography>
-                  </Paper>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item xs container direction="column">
+                        <Grid item xs>
+                          <TextField
+                            id="standard-read-only-input"
+                            defaultValue={this.numeroVenta}
+                            label="Venta número:"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            variant="standard"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            id="standard-read-only-input"
+                            defaultValue={new Date().toLocaleString()}
+                            label="Fecha"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            variant="standard"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="uncontrolled-native"
+                          >
+                            Vendedor
+                          </InputLabel>
+                          <NativeSelect
+                            inputProps={{
+                              id: "uncontrolled-native",
+                            }}
+                          >
+                            {this.state.vendedores.map((item, index) => (
+                              <option key={item} value={item.IdVendedor}>
+                                {item.Nombre}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs container direction="column">
+                        <Grid item xs>
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="uncontrolled-native"
+                          >
+                            Forma de pago
+                          </InputLabel>
+                          <NativeSelect
+                            inputProps={{
+                              id: "uncontrolled-native",
+                            }}
+                          >
+                            {this.state.formaPago.map((item, index) => (
+                              <option key={item} value={item.IdFormaPago}>
+                                {item.FormaPago}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        </Grid>
+                        <Grid item xs>
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="demo-simple-select-label"
+                          >
+                            Entregado
+                          </InputLabel>
+                          <NativeSelect
+                            inputProps={{
+                              id: "uncontrolled-native",
+                            }}
+                          >
+                            <option>Si</option>
+                            <option>No</option>
+                          </NativeSelect>
+                        </Grid>
+                        <Grid item xs>
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="demo-simple-select-label"
+                          >
+                            Pagado
+                          </InputLabel>
+                          <NativeSelect
+                            inputProps={{
+                              id: "uncontrolled-native",
+                            }}
+                          >
+                            <option>Si</option>
+                            <option>No</option>
+                          </NativeSelect>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs container direction="column">
+                        <Grid item xs>
+                          <TextField
+                            id="standard-basic"
+                            label="Descuento..%.."
+                            variant="standard"
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            size="small"
+                            renderInput={(params) => (
+                              <TextField {...params} label="Cliente" />
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            id="standard-basic"
+                            label="Observaciones"
+                            variant="standard"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
-
-              </Grid>
+              </Paper>
 
               <Grid m={0} pt={2}>
-                <Paper elevation={10}
+                <Paper
+                  elevation={10}
                   sx={{
                     p: 2,
                     display: "flex",
@@ -323,7 +307,11 @@ class DashboardContent extends React.Component {
                 </Paper>
               </Grid>
 
-              <Grid m={0} pt={2}><Paper elevation={10} ><DataTableVenta /></Paper></Grid>
+              <Grid m={0} pt={2}>
+                <Paper elevation={10}>
+                  <DataTableVenta />
+                </Paper>
+              </Grid>
 
               <Copyright sx={{ pt: 4 }} />
             </Container>
