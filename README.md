@@ -1,4 +1,4 @@
-# ABC Aprendiendo juntos 
+# Sistema de gestión - Diva Forever 2023
 Introduccion sobre el proyecto
 ## Comandos para iniciar por primera vez
 
