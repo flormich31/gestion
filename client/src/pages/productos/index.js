@@ -70,13 +70,11 @@ class Productos extends React.Component {
   }
 
   onPageChanged = (data) => {
-    const { productos } = this.state;
-    const { currentPage, totalPages, pageLimit } = data;
-
-    const offset = (currentPage - 1) * pageLimit;
-    const currentProductos = productos.slice(offset, offset + pageLimit);
-
-    this.setState({ currentPage, currentProductos, totalPages });
+    // const { productos } = this.state;
+    // const { currentPage, totalPages, pageLimit } = data;
+    // const offset = (currentPage - 1) * pageLimit;
+    // const currentProductos = productos.slice(offset, offset + pageLimit);
+    // this.setState({ currentPage, currentProductos, totalPages });
   };
 
   getProductos = () => {
@@ -88,8 +86,12 @@ class Productos extends React.Component {
     };
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        _this.setState(response.data);
+        // console.log(JSON.stringify(response.data));
+        if (response.data.productos.length === 0) {
+          // alert("No se encontraron productos");
+        } else {
+          _this.setState(response.data);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -211,7 +213,7 @@ class Productos extends React.Component {
     this.setState({ costoedit: event.target.value });
   };
   handleChangeEditIdProveedor = (event) => {
-    this.setState({IdProveedoredit: event.target.value });
+    this.setState({ IdProveedoredit: event.target.value });
   };
   showModal = (
     IdProducto,
@@ -268,8 +270,8 @@ class Productos extends React.Component {
 
   //Para buscar un producto
 
-  handleChangeSearch = (event) => {
-    this.setState({ query: event.target.value });
+  handleChangeSearch = async (event) => {
+    await this.setState({ query: event.target.value });
     console.log(this.state.query);
     this.getProductos();
   };
@@ -433,7 +435,10 @@ class Productos extends React.Component {
                           onChange={this.handleChangeCategoria}
                         >
                           {this.state.categorias.map((item, index) => (
-                            <option key={item} value={item.IdCategoria}>
+                            <option
+                              key={item.IdCategoria}
+                              value={item.IdCategoria}
+                            >
                               {item.Categoria}
                             </option>
                           ))}
@@ -452,7 +457,7 @@ class Productos extends React.Component {
                           onChange={this.handleChangeMarca}
                         >
                           {this.state.marcas.map((item, index) => (
-                            <option key={item} value={item.IdMarca}>
+                            <option key={item.IdMarca} value={item.IdMarca}>
                               {item.Marca}
                             </option>
                           ))}
@@ -473,7 +478,10 @@ class Productos extends React.Component {
                           input={<OutlinedInput label="proveedores" />}
                         >
                           {this.state.proveedores.map((item, index) => (
-                            <option key={item} value={item.IdProveedor}>
+                            <option
+                              key={item.IdProveedor}
+                              value={item.IdProveedor}
+                            >
                               {item.RazonSocial}
                             </option>
                           ))}
@@ -498,31 +506,30 @@ class Productos extends React.Component {
                 <Grid item xs={12}>
                   <Paper
                     component="form"
-                    class="paper"
+                    className="paper"
                     sx={{
                       p: "2px 4px",
                       display: "flex",
                       alignItems: "center",
-                      width: 1040,
                     }}
                   >
                     {/* BUSCADOR */}
                     <div
                       component="form"
-                      class="search"
+                      className="search"
                       onSubmit={this.handleClickSearch}
                     >
                       <input
                         type="text"
                         name="query"
                         placeholder={`Buscar...`}
-                        class="searchTerm"
+                        className="searchTerm"
                         value={this.state.query}
                         onChange={this.handleChangeSearch}
                       />
                       <button
                         type="submit"
-                        class="searchButton"
+                        className="searchButton"
                         onClick={this.handleClickSearch}
                       >
                         Buscar
@@ -577,7 +584,7 @@ class Productos extends React.Component {
                       <TableBody>
                         {this.state.productos.map((item, index) => (
                           <TableRow
-                            key={item.Costo}
+                            key={item.IdProducto}
                             sx={{
                               "&:last-child td, &:last-child th": { border: 0 },
                             }}
@@ -695,7 +702,10 @@ class Productos extends React.Component {
                                 onChange={this.handleChangeEditIdCategoria}
                               >
                                 {this.state.categorias.map((item, index) => (
-                                  <MenuItem value={item.IdCategoria}>
+                                  <MenuItem
+                                    key={item.IdCategoria}
+                                    value={item.IdCategoria}
+                                  >
                                     {item.Categoria}
                                   </MenuItem>
                                 ))}
@@ -714,9 +724,12 @@ class Productos extends React.Component {
                                 onChange={this.handleChangeEditIdMarca}
                               >
                                 {this.state.marcas.map((item, index) => (
-                                  <MenuItem value={item.IdMarca}>
+                                  <MenuItem
+                                    key={item.IdMarca}
+                                    value={item.IdMarca}
+                                  >
                                     {item.Marca}
-                                    </MenuItem>
+                                  </MenuItem>
                                 ))}
                               </Select>
                             </FormControl>
@@ -733,7 +746,10 @@ class Productos extends React.Component {
                                 onChange={this.handleChangeEditIdProveedor}
                               >
                                 {this.state.proveedores.map((item, index) => (
-                                  <MenuItem value={item.IdProveedor}>
+                                  <MenuItem
+                                    key={item.IdProveedor}
+                                    value={item.IdProveedor}
+                                  >
                                     {item.RazonSocial}
                                   </MenuItem>
                                 ))}
