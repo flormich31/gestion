@@ -29,6 +29,7 @@ class DashboardContent extends React.Component {
     super(props);
 
     this.state = {
+      productos: [],
       vendedores: [],
       formaPago: [],
       clientes: [],
@@ -78,9 +79,9 @@ class DashboardContent extends React.Component {
   getClientes = () => {
     let _this = this;
     var config = {
-        method: "get",
-        url: `http://localhost:9000/clientes?query=${this.state.query}`,
-        headers: {},
+      method: "get",
+      url: `http://localhost:9000/clientes?query=${this.state.query}`,
+      headers: {},
     };
     axios(config)
       .then(function (response) {
@@ -91,7 +92,26 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   };
-
+  getProductos = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: `http://localhost:9000/productos?query=${this.state.query}`,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.productos.length === 0) {
+          // alert("No se encontraron productos");
+        } else {
+          _this.setState(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
@@ -129,6 +149,15 @@ class DashboardContent extends React.Component {
       });
   };
 
+  handleProductInputChange = async (event)=>{
+    await this.setState({ query: event.target.value });
+    this.getProductos();
+  }
+  handleProductChange = (event, newValue)=>{
+    // alert(newValue);
+    // alert(event.target.value);
+  }
+
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -159,7 +188,7 @@ class DashboardContent extends React.Component {
               >
                 <Grid container direction="column">
                   <Grid item>
-                    <Grid container direction="row" sx={12}>
+                    <Grid container direction="row">
                       <Grid item xs={12}>
                         <Typography variant="h5" component="div" p={1}>
                           Detalle de venta
@@ -181,7 +210,7 @@ class DashboardContent extends React.Component {
                             variant="standard"
                           />
                         </Grid>
-                        <Grid item xs >
+                        <Grid item xs>
                           <TextField
                             id="standard-read-only-input"
                             defaultValue={new Date().toLocaleString()}
@@ -205,7 +234,7 @@ class DashboardContent extends React.Component {
                             }}
                           >
                             {this.state.vendedores.map((item, index) => (
-                              <option key={item} value={item.IdVendedor}>
+                              <option key={item.IdVendedor} value={item.IdVendedor}>
                                 {item.Nombre}
                               </option>
                             ))}
@@ -226,7 +255,7 @@ class DashboardContent extends React.Component {
                             }}
                           >
                             {this.state.formaPago.map((item, index) => (
-                              <option key={item} value={item.IdFormaPago}>
+                              <option key={item.IdFormaPago} value={item.IdFormaPago}>
                                 {item.FormaPago}
                               </option>
                             ))}
@@ -279,7 +308,7 @@ class DashboardContent extends React.Component {
                             id="combo-box-demo"
                             size="small"
                             options={this.state.clientes}
-                            getOptionLabel={(option)=> option.Nombre}
+                            getOptionLabel={(option) => option.Nombre}
                             renderInput={(params) => (
                               <TextField {...params} label="Cliente" />
                             )}
@@ -304,27 +333,20 @@ class DashboardContent extends React.Component {
                   sx={{
                     p: 2,
                     display: "flex",
-                    flexDirection: "column",
-                    height: 140,
+                    flexDirection: "column"
                   }}
                 >
-                  <Typography variant="h6" component="div">
-                    Producto
-                  </Typography>
-                  <br />
-                  <FormControl variant="standard">
-                    <InputLabel htmlFor="input-with-icon-adornment">
-                      Buscar
-                    </InputLabel>
-                    <Input
-                      id="input-with-icon-adornment"
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <SearchIcon />
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-producto"
+                    size="small"
+                    options={this.state.productos}
+                    getOptionLabel={(option) => option.Detalle}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Buscar producto..." />
+                    )}
+                    onInputChange={this.handleProductInputChange}
+                  />
                 </Paper>
               </Grid>
 
