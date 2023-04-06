@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -19,10 +20,10 @@ var testAPIRouter = require("./routes/testAPI");
 /* Conexión a mysql */
 var mysql = require("mysql");
 var dbConnection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "ClaveMax123!",
-  database: "gestion",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 dbConnection.connect(function (err) {
