@@ -76,10 +76,15 @@ router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   UPDATE \`productos\`
-  SET detalle='${req.body.IdProducto}'
-  WHERE IdProducto='${req.body.IdProducto}';
+  SET detalle='${req.body.detalle}',
+  Categoria_Id='${req.body.Categoria_Id}',
+  Marca_Id='${req.body.Marca_Id}',
+  Costo='${req.body.costo}',
+  Proveedor_Id='${req.body.Proveedor_Id}'
+  WHERE IdProducto='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
     if (err) {
       res.send("Error editando producto");
     } else {

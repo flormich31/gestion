@@ -148,7 +148,6 @@ class Productos extends React.Component {
   handleChangeId = (event) => {
     console.log(event.target.value);
     this.setState({ id: event.target.value });
-    console.log(event.target.value);
   };
   handleChangeDetalle = (event) => {
     this.setState({ detalle: event.target.value });
@@ -212,7 +211,7 @@ class Productos extends React.Component {
     this.setState({ costoedit: event.target.value });
   };
   handleChangeEditIdProveedor = (event) => {
-    this.setState({ IdProveedor: event.target.value });
+    this.setState({IdProveedoredit: event.target.value });
   };
   showModal = (
     IdProducto,
@@ -244,15 +243,15 @@ class Productos extends React.Component {
 
     axios
       .put("http://localhost:9000/productos", {
-        id: this.state.id,
-        detalle: this.state.detalle,
-        IdCategoria: this.state.IdCategoria,
-        IdMarca: this.state.IdMarca,
-        costo: this.state.costo,
-        IdProveedor: this.state.IdProveedor,
+        id: this.state.idedit,
+        detalle: this.state.detalleedit,
+        Categoria_Id: this.state.IdCategoriaedit,
+        Marca_Id: this.state.IdMarcaedit,
+        costo: this.state.costoedit,
+        Proveedor_Id: this.state.IdProveedoredit,
       })
       .then(function (response) {
-        _this.getCategorias();
+        _this.getProductos();
         console.log(response);
       })
       .catch(function (error) {
@@ -693,7 +692,7 @@ class Productos extends React.Component {
                                 id="edit-select-categoria"
                                 value={this.state.IdCategoriaedit}
                                 label="Categoría"
-                                // onChange={this.handleChangeEditIdCategoria}
+                                onChange={this.handleChangeEditIdCategoria}
                               >
                                 {this.state.categorias.map((item, index) => (
                                   <MenuItem value={item.IdCategoria}>
@@ -712,7 +711,7 @@ class Productos extends React.Component {
                                 id="edit-select-marca"
                                 value={this.state.IdMarcaedit}
                                 label="Marca"
-                                // onChange={this.handleChangeEditIdCategoria}
+                                onChange={this.handleChangeEditIdMarca}
                               >
                                 {this.state.marcas.map((item, index) => (
                                   <MenuItem value={item.IdMarca}>
@@ -731,7 +730,7 @@ class Productos extends React.Component {
                                 id="edit-select-proveedor"
                                 value={this.state.IdProveedoredit}
                                 label="Proveedor"
-                                // onChange={this.handleChangeEditIdCategoria}
+                                onChange={this.handleChangeEditIdProveedor}
                               >
                                 {this.state.proveedores.map((item, index) => (
                                   <MenuItem value={item.IdProveedor}>
