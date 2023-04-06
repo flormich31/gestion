@@ -358,7 +358,7 @@ class Productos extends React.Component {
                     }}>
                     {/* Editor de productos */}
                     <Typography variant="h8" component="div">
-                      <b>Editor de productos</b>
+                      <b>Creador de productos</b>
                     </Typography>
 
 
