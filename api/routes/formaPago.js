@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
     console.log(sql);
     if (err) {
       console.log(err);
-      res.send("Error recuperando Formas de pago");
+      res.send("Error recuperando formas de pago");
     } else {
       res.json({ formaPago: regs });
     }

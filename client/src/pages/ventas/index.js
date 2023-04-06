@@ -36,6 +36,7 @@ class DashboardContent extends React.Component {
     this.state = {
       vendedores: [],
       formaPago: [],
+      numeroVenta: '',
     };
   }
 
@@ -87,6 +88,18 @@ class DashboardContent extends React.Component {
       return <Redirect to="/groups-A" />;
     }
   };
+  makeid = (length) => {
+    const result = "";
+    const characters =
+      "0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    this.setState.numeroVenta = result(5);
+    console.log(this.numeroVenta);
+  };
   handleRemove = (id) => {
     let _this = this;
     var config = {
@@ -101,9 +114,11 @@ class DashboardContent extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  }; 
+  };
+
 
   render() {
+
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -122,18 +137,17 @@ class DashboardContent extends React.Component {
             }}
           >
             <Toolbar />
-            
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            
+
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6} >
                   <Paper elevation={10}
                     sx={{
-                      p: 3,
+                      p: 2,
                       display: "flex",
                       flexDirection: "column",
-                      height: 360,
+                      height: 300,
                       width: 470,
                     }}
                   >
@@ -145,7 +159,7 @@ class DashboardContent extends React.Component {
                     <Grid  >
                       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                         <TextField id="standard-read-only-input"
-                          defaultValue="3250"
+                          defaultValue={this.numeroVenta}
                           label="Venta número:"
                           InputProps={{
                             readOnly: true,
@@ -163,77 +177,81 @@ class DashboardContent extends React.Component {
                           variant="standard" />
                       </FormControl>
                     </Grid>
-                    {/* Vendedor y forma de pago */}
-                    <Grid >
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    {/* Vendedor  */}
+                    <div >
+                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
                         <InputLabel variant="standard" htmlFor="uncontrolled-native">
                           Vendedor
                         </InputLabel>
                         <NativeSelect
                           inputProps={{
-                            name: 'vendedores',
                             id: 'uncontrolled-native',
                           }}
                         >{this.state.vendedores.map((item, index) => (
-                          <option  key={item}
-                          value={item.IdVendedor}>
-                          {item.Nombre}</option>
-                          ))}
+                          <option
+                            key={item}
+                            value={item.IdVendedor}>
+                            {item.Nombre}
+                          </option>
+                        ))}
                         </NativeSelect>
                       </FormControl>
+                      {/* Forma de pago */}
 
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
                         <InputLabel variant="standard" htmlFor="uncontrolled-native">
                           Forma de pago
                         </InputLabel>
                         <NativeSelect
                           inputProps={{
-                            name: 'formaPago',
                             id: 'uncontrolled-native',
                           }}
                         >{this.state.formaPago.map((item, index) => (
-                          <option  key={item}
-                          value={item.IdFormaPago}>
-                          {item.FormaPago}</option>
-                          ))}
+                          <option
+                            key={item}
+                            value={item.IdFormaPago}>
+                            {item.FormaPago}
+                          </option>
+                        ))}
                         </NativeSelect>
                       </FormControl>
-                    </Grid>
-                    {/* Entregado y Pagado */}
-                    <Grid>
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        Entregado:<NativeSelect
-                          defaultValue={30}
+
+                      {/* Entregado y Pagado */}
+
+                      <FormControl variant="standard" sx={{ m: 1, minWidth: 60 }}>
+                        <InputLabel variant="standard" htmlFor="demo-simple-select-label">
+                          Entregado
+                        </InputLabel><NativeSelect
                           inputProps={{
-                            name: 'age',
                             id: 'uncontrolled-native',
                           }}
                         >
-                          <option value={10}>Si</option>
-                          <option value={20}>No</option>
+                          <option>Si</option>
+                          <option >No</option>
                         </NativeSelect>
                       </FormControl>
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        Pagado:
+                      <FormControl variant="standard" sx={{ m: 1 }}>
+                        <InputLabel variant="standard" htmlFor="demo-simple-select-label">
+                          Pagado
+                        </InputLabel>
                         <NativeSelect
-                          defaultValue={30}
                           inputProps={{
-                            name: 'age',
                             id: 'uncontrolled-native',
                           }}
                         >
-                          <option value={10}>Si</option>
-                          <option value={20}>No</option>
+                          <option >Si</option>
+                          <option>No</option>
                         </NativeSelect>
                       </FormControl>
-                    </Grid>
-                    {/* Descuento */}
-                    <Grid>
-                      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                      <FormControl variant="standard" sx={{ m: 1, Width: 20 }}>
                         <TextField
-                          id="standard-basic" label="Descuento" variant="standard"
+                          id="standard-basic" label="Descuento..%.." variant="standard" 
                         />
                       </FormControl>
+                    </div>
+                    {/* Descuento */}
+                    <Grid>
+                      
                     </Grid>
                   </Paper>
                 </Grid>
@@ -241,10 +259,10 @@ class DashboardContent extends React.Component {
                 <Grid item xs={6}  >
                   <Paper elevation={10}
                     sx={{
-                      p: 3,
+                      p: 2,
                       display: "flex",
                       flexDirection: "column",
-                      height: 360,
+                      height: 300,
                       width: 470,
                     }}
                   >
@@ -252,14 +270,14 @@ class DashboardContent extends React.Component {
                     <Typography variant="h4" component="div">
                       Cliente <br />
                       <Grid >
-                      <FormControl variant="standard">
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                        <TextField id="input-with-sx" label="Nombre del cliente..." variant="standard" />
-                      </Box>
-                      </FormControl>
+                        <FormControl variant="standard">
+                          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField id="input-with-sx" label="Nombre del cliente..." variant="standard" />
+                          </Box>
+                        </FormControl>
                       </Grid>
-                      
+
                     </Typography>
                     <Typography variant="p" component="div" Align="left">
                       <br />Observaciones
@@ -269,7 +287,6 @@ class DashboardContent extends React.Component {
                         multiline
                         rows={4}
                         defaultValue="Escriba aquí..."
-
                       />
                     </Typography>
                   </Paper>
@@ -278,15 +295,15 @@ class DashboardContent extends React.Component {
               </Grid>
 
               <Grid m={0} pt={2}>
-                <Paper elevation={10} 
+                <Paper elevation={10}
                   sx={{
-                    p: 3,
+                    p: 2,
                     display: "flex",
                     flexDirection: "column",
-                    height: 200,
+                    height: 140,
                   }}
                 >
-                  <Typography variant="h4" component="div">
+                  <Typography variant="h6" component="div">
                     Producto
                   </Typography>
                   <br />
@@ -307,7 +324,7 @@ class DashboardContent extends React.Component {
               </Grid>
 
               <Grid m={0} pt={2}><Paper elevation={10} ><DataTableVenta /></Paper></Grid>
-             
+
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>

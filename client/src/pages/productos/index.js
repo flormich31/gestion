@@ -55,9 +55,12 @@ class Productos extends React.Component {
       query: '',
       idedit: '',
       detalleedit: '',
+      categoriaedit: '',
       IdCategoriaedit: '',
+      marcaedit: '',
       IdMarcaedit: '',
       costoedit: '',
+      razonsocialedit: '',
       IdProveedoredit: '',
     };
   }
@@ -82,9 +85,9 @@ class Productos extends React.Component {
   getProductos = () => {
     let _this = this;
     var config = {
-        method: "get",
-        url: `http://localhost:9000/productos?query=${this.state.query}`,
-        headers: {},
+      method: "get",
+      url: `http://localhost:9000/productos?query=${this.state.query}`,
+      headers: {},
     };
     axios(config)
       .then(function (response) {
@@ -213,15 +216,17 @@ class Productos extends React.Component {
   handleChangeEditIdProveedor = event => {
     this.setState({ IdProveedor: event.target.value });
   }
-  showModal = (IdProducto, Detalle, IdCategoria, IdMarca, Costo, IdProveedor, event) => {
+  showModal = (IdProducto, Detalle, categoria, IdCategoria, marca, IdMarca, Costo, IdProveedor, RazonSocial, event) => {
     this.setState({ open: true })
     this.setState({ idedit: IdProducto });
     this.setState({ detalleedit: Detalle });
+    this.setState({ categoriaedit: categoria });
     this.setState({ IdCategoriaedit: IdCategoria });
     this.setState({ IdMarcaedit: IdMarca });
+    this.setState({ marcaedit: marca });
     this.setState({ costoedit: Costo });
     this.setState({ IdProveedor: IdProveedor });
-
+    this.setState({ razonsocialedit: RazonSocial });
   }
 
   // This is the put request
@@ -252,29 +257,27 @@ class Productos extends React.Component {
     this.setState({ open: false });
   }
 
- //Para buscar un producto
+  //Para buscar un producto
 
- handleChangeSearch = event => {
-  this.setState({ query: event.target.value });
-  console.log(this.state.query);
-  this.getProductos();
-}
-handleClickSearch = (event) => {
-  event.preventDefault();
-  let _this = this;
+  handleChangeSearch = event => {
+    this.setState({ query: event.target.value });
+    console.log(this.state.query);
+    this.getProductos();
+  }
+  handleClickSearch = (event) => {
+    event.preventDefault();
+    let _this = this;
 
-  axios.get("http://localhost:9000/productos", {
+    axios.get("http://localhost:9000/productos", {
       query: this.state.query,
-  })
+    })
       .then((res) => {
-          console.log(res);
+        console.log(res);
       })
       .catch((err) => {
-          console.log(err);
+        console.log(err);
       });
-}
-
-
+  }
 
   handleRemove = (IdProducto) => {
     let _this = this;
@@ -348,7 +351,7 @@ handleClickSearch = (event) => {
                 <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
-                      p: 3,
+                      p: 2,
                       display: "flex",
                       flexDirection: "column",
 
@@ -359,7 +362,7 @@ handleClickSearch = (event) => {
                     </Typography>
 
 
-                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                    <Box component="form" noValidate sx={{ mt: 0 }}>
 
                       <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit}>
                         <TextField
@@ -373,7 +376,7 @@ handleClickSearch = (event) => {
                           onChange={this.handleChangeId}
                         />
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 80 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -385,7 +388,7 @@ handleClickSearch = (event) => {
                           onChange={this.handleChangeDetalle}
                         />
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 80 }} onSubmit={this.handleSubmit} >
                         <TextField
                           margin="normal"
                           required
@@ -397,8 +400,8 @@ handleClickSearch = (event) => {
                           onChange={this.handleChangeCosto}
                         />
                       </FormControl>
-                      <br />
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
+                      
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 80 }} size="small" onSubmit={this.handleSubmit} >
                         <FormHelperText>Categoria</FormHelperText>
                         <select
                           name="categorias"
@@ -414,7 +417,7 @@ handleClickSearch = (event) => {
                           ))}
                         </select>
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 80 }} size="small" onSubmit={this.handleSubmit} >
                         <FormHelperText>Marca</FormHelperText>
                         <select
                           name="marcas"
@@ -430,7 +433,7 @@ handleClickSearch = (event) => {
                         </select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }} size="small" onSubmit={this.handleSubmit} >
+                      <FormControl variant="filled" sx={{ m: 1, minWidth: 80 }} size="small" onSubmit={this.handleSubmit} >
                         <FormHelperText>Proveedores</FormHelperText>
                         <select
                           name="proveedores"
@@ -465,47 +468,46 @@ handleClickSearch = (event) => {
                 <ButtonCreateProduct />
 
                 <Grid item xs={12}  >
-                                    <Paper
-                                        component="form" class="paper"
-                                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 1040 }
-                                        }
-                                    >
+                  <Paper
+                    component="form" class="paper"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 1040 }
+                    }
+                  >
 
                     {/* BUSCADOR */}
                     <div component="form" class="search" onSubmit={this.handleClickSearch}>
-                                            <input
-                                                type="text"
-                                                name="query"
-                                                placeholder={`Buscar...`}
-                                                class="searchTerm"
-                                                value={this.state.query}
-                                                onChange={this.handleChangeSearch}
-                                            />
-                                            <button type="submit"
-                                                class="searchButton"
-                                                onClick={this.handleClickSearch}
-
-                                            >
-                                                Buscar
-                                            </button>
-                                        </div>
+                      <input
+                        type="text"
+                        name="query"
+                        placeholder={`Buscar...`}
+                        class="searchTerm"
+                        value={this.state.query}
+                        onChange={this.handleChangeSearch}
+                      />
+                      <button type="submit"
+                        class="searchButton"
+                        onClick={this.handleClickSearch}
+                      >
+                        Buscar
+                      </button>
+                    </div>
                   </Paper>
                 </Grid>
 
                 <Grid item xs={12} md={12} lg={12}>
                   <TableContainer component={Paper}>
-                  <div
-                    align="center"
-                    sx={{
-                      p: 10,
-                    }}>
+                    <div
+                      align="center"
+                      sx={{
+                        p: 10,
+                      }}>
 
-                    <Typography variant="body" component="div" >
-                      <b>Total Productos:{totalProductos}</b><br />
-                      {/* <b>Pagina:{currentPage}</b> */}
-                      <b>{totalPages}</b>
-                    </Typography>
-                  </div>
+                      <Typography variant="body" component="div" >
+                        <b>{totalProductos} Productos</b><br />
+                        {/* <b>Pagina:{currentPage}</b> */}
+                        <b>{totalPages}</b>
+                      </Typography>
+                    </div>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                       <TableHead>
                         <TableRow>
@@ -514,6 +516,7 @@ handleClickSearch = (event) => {
                           <TableCell bgcolor="pink" align="right"><b>Marca</b></TableCell>
                           <TableCell bgcolor="pink" align="right"><b>Categoria</b></TableCell>
                           <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                          <TableCell bgcolor="pink" align="right"><b>Proveedor</b></TableCell>
                           <TableCell bgcolor="pink" align="right"><b>Acciones</b></TableCell>
                         </TableRow>
                       </TableHead>
@@ -532,12 +535,13 @@ handleClickSearch = (event) => {
                             <TableCell align="right">{item.marca}</TableCell>
                             <TableCell align="right">{item.categoria}</TableCell>
                             <TableCell align="right">{item.Costo}</TableCell>
+                            <TableCell align="right">{item.RazonSocial}</TableCell>
                             <TableCell align="right">
                               <EditIcon
                                 sx={{ color: pink[200] }}
                                 key={item.IdProducto}
                                 value={this.state.idedit}
-                                onClick={() => { this.showModal(item.IdProducto, item.Detalle, item.IdCategoria, item.IdMarca, item.Costo, item.IdProveedor,); }} />
+                                onClick={() => { this.showModal(item.IdProducto, item.Detalle, item.categoria, item.IdCategoria, item.marca, item.IdMarca, item.Costo, item.RazonSocial, item.IdProveedor,); }} />
                               <DeleteIcon
                                 sx={{ color: pink[600] }} align="left"
                                 onClick={() => { this.handleRemove(item.IdProducto); }} />
@@ -566,6 +570,7 @@ handleClickSearch = (event) => {
 
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
+                                label="Descripcion del producto"
                                 id="detalleedit"
                                 size="small"
                                 margin="normal"
@@ -575,7 +580,8 @@ handleClickSearch = (event) => {
                             </FormControl>
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
-                                id="costoedit"
+                                label="Costo"
+                                id="Costo"
                                 size="small"
                                 margin="normal"
                                 value={this.state.costoedit}
@@ -586,28 +592,49 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
 
                               <TextField
+                                label="Categoria"
                                 id="IdCategoriaedit"
                                 size="small"
                                 margin="normal"
-                                value={this.state.IdCategoriaedit}
+                                value={this.state.categoriaedit}
                                 onChange={this.handleChangeEditIdCategoria}
                               />
+
+                              {/*  <FormHelperText>Categoria</FormHelperText>
+                              <select
+                                name="categoria"
+                                value={this.state.IdCategoriaedit}
+                                onChange={this.handleChangeEditIdCategoria}
+                                input={<OutlinedInput label="Categoria" />}
+                              >
+
+                                {this.state.categorias.map((item, index) => (
+                                  <option
+                                    key={item}
+                                    value={item.IdCategoria}>
+                                    {item.Categoria}
+                                  </option>
+                                ))}
+                              </select> */}
+
                             </FormControl>
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
+                                label="Marca"
                                 id="IdMarcaedit"
                                 size="small"
                                 margin="normal"
-                                value={this.state.IdMarcaedit}
+                                value={this.state.marcaedit}
                                 onChange={this.handleChangeEditIdMarca}
                               />
                             </FormControl>
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
-                                id="IdProveedoredit"
+                                label="Proveedor"
+                                id="razonsocialedit"
                                 size="small"
                                 margin="normal"
-                                value={this.state.IdProveedoredit}
+                                value={this.state.razonsocialedit}
                                 onChange={this.handleChangeEditIdProveedor}
                               />
                             </FormControl>
@@ -626,15 +653,15 @@ handleClickSearch = (event) => {
                         </Modal>
                       </TableBody>
                     </Table>
-                  
 
-                  {/* <Pagination
+
+                    {/* <Pagination
                     totalRecords={totalProductos}
                     pageLimit={10}
                     pageNeighbours={1}
                     onPageChanged={this.onPageChanged}
                   /> */}
-                 
+
                   </TableContainer>
                 </Grid>
 

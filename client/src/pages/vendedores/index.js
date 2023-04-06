@@ -175,7 +175,7 @@ class Vendedores extends React.Component {
       domicilio: this.state.domicilioedit,
       celular: this.state.celuedit,
       email: this.state.emailedit,
-      codigoPostal: this.state.cpedit
+      codigoPostal: this.state.cpedit,
     })
       .then(function (response) {
         _this.getVendedores();
@@ -362,7 +362,7 @@ handleClickSearch = (event) => {
                           id="codigoPostal"
                           label="Codigo Postal"
                           size="small"
-                          value={this.state.CodigoPostal}
+                          value={this.state.codigoPostal}
                           onChange={this.handleChangeCodigoPostal}
                         />
                       </FormControl>

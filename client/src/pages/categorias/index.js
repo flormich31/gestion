@@ -231,44 +231,44 @@ class Categorias extends React.Component {
                         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-                                {/* Editor de categorias */}
+                                {/* Creador de categorias */}
                                 <Grid item xs={12} >
-                                    <Paper component="form" 
-                                    sx={{ p: '4px 4px', display: 'flex', alignItems: 'center', width: 1040,  }
-                                }
-                                
-                                        >
-                                         <Typography variant="h8" component="div">
-                                            <b>Crear nueva categoria</b>
-                                        </Typography> 
-                                       
+                                    <Paper component="form" class="paper-create" >
 
-                                        <Box component="form" noValidate sx={{ mt: 1 }}>
-                                       
-                                            <FormControl variant="filled" sx={{ minWidth: 120 }} onSubmit={this.handleSubmit} >
 
-                                                <TextField
-                                                class="input"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    id="categoria"
-                                                    label="Nombre de la categoria"
+                                        <label >
+                                            <span class="paper-create-typography">Crear nueva categoria</span>
+
+                                        </label>
+
+
+                                        <Box component="form" class="input" >
+                                            
+                                                <FormControl variant="filled"  onSubmit={this.handleSubmit} >
+
+                                                    <TextField
+                                                        class="input"
+                                                        margin="normal"
+                                                        required
+                                                        fullWidth
+                                                        id="categoria"
+                                                        label="Nombre"
+                                                        value={this.state.categoria}
+                                                        onChange={this.handleChangeCategoria}
+                                                    />
+                                                </FormControl>
+
+                                                <Button
+                                                    class="button"
+                                                    type="submit"
+                                                    variant="contained"
+                                                    sx={{ mt: 1 }}
                                                     size="small"
-                                                    value={this.state.categoria}
-                                                    onChange={this.handleChangeCategoria}
-                                                />
-                                            </FormControl>
-                                           
-                                            <Button
-                                                type="submit"
-                                                variant="contained"
-                                                sx={{ mt: 1 }}
-                                                size="small"
-                                                onClick={this.handleSubmit}
-                                            >
-                                                {"Crear"}
-                                            </Button>
+                                                    onClick={this.handleSubmit}
+                                                >
+                                                    {"Crear"}
+                                                </Button>
+                                            
                                         </Box>
                                     </Paper>
                                 </Grid>
