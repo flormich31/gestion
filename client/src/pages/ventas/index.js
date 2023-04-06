@@ -31,6 +31,7 @@ class DashboardContent extends React.Component {
     this.state = {
       vendedores: [],
       formaPago: [],
+      clientes: [],
       numeroVenta: "",
     };
   }
@@ -38,6 +39,7 @@ class DashboardContent extends React.Component {
   componentDidMount() {
     this.getVendedores();
     this.getFormaPago();
+    this.getClientes();
   }
 
   getVendedores = () => {
@@ -73,6 +75,23 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   };
+  getClientes = () => {
+    let _this = this;
+    var config = {
+        method: "get",
+        url: `http://localhost:9000/clientes?query=${this.state.query}`,
+        headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        _this.setState(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
 
   redirectHandlerOpen = () => {
     this.setState({ redirect: true });
@@ -162,7 +181,7 @@ class DashboardContent extends React.Component {
                             variant="standard"
                           />
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs >
                           <TextField
                             id="standard-read-only-input"
                             defaultValue={new Date().toLocaleString()}
@@ -259,6 +278,8 @@ class DashboardContent extends React.Component {
                             disablePortal
                             id="combo-box-demo"
                             size="small"
+                            options={this.state.clientes}
+                            getOptionLabel={(option)=> option.Nombre}
                             renderInput={(params) => (
                               <TextField {...params} label="Cliente" />
                             )}
