@@ -10,11 +10,17 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { pink } from "@mui/material/colors";
 import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import AddButton from "../../components/AddButton";
 import axios from "axios";
-import { Autocomplete, Button, Paper, Typography } from "@mui/material";
+import { Autocomplete, Button, Paper, Table, TableContainer, Typography } from "@mui/material";
 import { Redirect } from "react-router";
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import DataTableVenta from "../../components/DataTableVenta";
@@ -351,9 +357,77 @@ class DashboardContent extends React.Component {
               </Grid>
 
               <Grid m={0} pt={2}>
-                <Paper elevation={10}>
-                  <DataTableVenta />
-                </Paper>
+              <TableContainer component={Paper}>
+                   
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell bgcolor="pink">
+                            {" "}
+                            <b>Codigo</b>
+                          </TableCell>
+                          <TableCell bgcolor="pink">
+                            {" "}
+                            <b>Producto</b>
+                          </TableCell>
+                          <TableCell bgcolor="pink" align="right">
+                            <b>Cant</b>
+                          </TableCell>
+                          <TableCell bgcolor="pink" align="right">
+                            <b>Precio</b>
+                          </TableCell>
+                          <TableCell bgcolor="pink" align="right">
+                            <b>Subtotal</b>
+                          </TableCell>
+                          <TableCell bgcolor="pink" align="right">
+                            <b>Acciones</b>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.productos.map((item, index) => (
+                          <TableRow
+                            key={item.IdProducto}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell align="left" component="th" scope="row">
+                              {item.IdProducto}
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {item.Detalle}
+                            </TableCell>
+                            <TableCell align="right">{item.marca}</TableCell>
+                            <TableCell align="right">
+                              <InputLabel/>
+                            </TableCell>
+                            <TableCell align="right">{item.Costo}</TableCell>
+                            <TableCell align="right">
+                              {item.RazonSocial}
+                            </TableCell>
+                            <TableCell align="right">
+                              <DeleteIcon
+                                sx={{ color: pink[600] }}
+                                align="left"
+                                onClick={() => {
+                                  this.handleRemove(item.IdProducto);
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        
+                      </TableBody>
+                    </Table>
+
+                    {/* <Pagination
+                    totalRecords={totalProductos}
+                    pageLimit={10}
+                    pageNeighbours={1}
+                    onPageChanged={this.onPageChanged}
+                  /> */}
+                  </TableContainer>
               </Grid>
 
               <Copyright sx={{ pt: 4 }} />
