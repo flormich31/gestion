@@ -397,7 +397,7 @@ class DashboardContent extends React.Component {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {this.state.productos.map((item, index) => (
+                        {this.state.ventaProductos.map((item, index) => (
                           <TableRow
                             key={item.IdProducto}
                             sx={{
