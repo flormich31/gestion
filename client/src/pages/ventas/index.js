@@ -383,6 +383,9 @@ class DashboardContent extends React.Component {
                             <b>Producto</b>
                           </TableCell>
                           <TableCell bgcolor="pink" align="right">
+                            <b>Marca</b>
+                          </TableCell> 
+                          <TableCell bgcolor="pink" align="right">
                             <b>Cant</b>
                           </TableCell>
                           <TableCell bgcolor="pink" align="right">
@@ -416,7 +419,7 @@ class DashboardContent extends React.Component {
                             </TableCell>
                             <TableCell align="right">{item.Costo}</TableCell>
                             <TableCell align="right">
-                              {item.RazonSocial}
+                              {}
                             </TableCell>
                             <TableCell align="right">
                               <DeleteIcon
