@@ -30,6 +30,7 @@ class DashboardContent extends React.Component {
 
     this.state = {
       productos: [],
+      ventaProductos: [],
       vendedores: [],
       formaPago: [],
       clientes: [],
@@ -149,14 +150,18 @@ class DashboardContent extends React.Component {
       });
   };
 
-  handleProductInputChange = async (event)=>{
+  handleProductInputChange = async (event) => {
     await this.setState({ query: event.target.value });
     this.getProductos();
-  }
-  handleProductChange = (event, newValue)=>{
-    // alert(newValue);
-    // alert(event.target.value);
-  }
+  };
+  handleProductChange = async (event, selectedProduct) => {
+    if (selectedProduct) {
+      console.log(selectedProduct);
+      this.state.ventaProductos.push(selectedProduct);
+      console.log(this.state.ventaProductos);
+      await this.setState({ ventaProductos: this.state.ventaProductos });
+    }
+  };
 
   render() {
     return (
@@ -234,7 +239,10 @@ class DashboardContent extends React.Component {
                             }}
                           >
                             {this.state.vendedores.map((item, index) => (
-                              <option key={item.IdVendedor} value={item.IdVendedor}>
+                              <option
+                                key={item.IdVendedor}
+                                value={item.IdVendedor}
+                              >
                                 {item.Nombre}
                               </option>
                             ))}
@@ -255,7 +263,10 @@ class DashboardContent extends React.Component {
                             }}
                           >
                             {this.state.formaPago.map((item, index) => (
-                              <option key={item.IdFormaPago} value={item.IdFormaPago}>
+                              <option
+                                key={item.IdFormaPago}
+                                value={item.IdFormaPago}
+                              >
                                 {item.FormaPago}
                               </option>
                             ))}
@@ -333,7 +344,7 @@ class DashboardContent extends React.Component {
                   sx={{
                     p: 2,
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
                   }}
                 >
                   <Autocomplete
@@ -345,6 +356,7 @@ class DashboardContent extends React.Component {
                     renderInput={(params) => (
                       <TextField {...params} label="Buscar producto..." />
                     )}
+                    onChange={this.handleProductChange}
                     onInputChange={this.handleProductInputChange}
                   />
                 </Paper>
