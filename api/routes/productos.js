@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
   const sql = String(req.query.query).split(' ').join('')
   == '' || req.query.query
   == 'undefined' || !req.query || !req.query.query ?`
-  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
   `:`
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -25,8 +25,8 @@ router.get("/", function (req, res, next) {
 						Detalle LIKE "%${req.query.query}%"
     ORDER BY p.Detalle ASC
   `;
+  console.log(sql);
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(sql);
     if (err) {
       console.log(err);
       res.send("Error recuperando productos");

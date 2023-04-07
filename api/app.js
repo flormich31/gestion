@@ -9,6 +9,7 @@ var cors = require("cors");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var productosRouter = require("./routes/productos");
+var ventasRouter = require("./routes/ventas");
 var categoriasRouter = require("./routes/categorias");
 var marcasRouter = require("./routes/marcas"); 
 var clientesRouter = require("./routes/clientes");
@@ -59,6 +60,7 @@ app.use("/proveedores", proveedoresRouter);
 app.use("/vendedores", vendedoresRouter);
 app.use("/formaPago", formaPagoRouter);
 app.use("/testAPI", testAPIRouter);
+app.use("/ventas", ventasRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

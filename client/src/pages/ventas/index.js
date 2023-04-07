@@ -20,7 +20,15 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import AddButton from "../../components/AddButton";
 import axios from "axios";
-import { Autocomplete, Button, Paper, Table, TableContainer, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  FilledInput,
+  Paper,
+  Table,
+  TableContainer,
+  Typography,
+} from "@mui/material";
 import { Redirect } from "react-router";
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import DataTableVenta from "../../components/DataTableVenta";
@@ -140,20 +148,10 @@ class DashboardContent extends React.Component {
     this.setState.numeroVenta = result(5);
     console.log(this.numeroVenta);
   };
-  handleRemove = (id) => {
-    let _this = this;
-    var config = {
-      method: "delete",
-      url: "http://localhost:9000/productos/" + id,
-      headers: {},
-    };
-    axios(config)
-      .then(function (response) {
-        _this.getGroups();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+  handleBorrarProducto = async (index) => {
+    this.state.ventaProductos.splice(index, 1);
+    await this.setState({ ventaProductos: this.state.ventaProductos });
   };
 
   handleProductInputChange = async (event) => {
@@ -163,10 +161,55 @@ class DashboardContent extends React.Component {
   handleProductChange = async (event, selectedProduct) => {
     if (selectedProduct) {
       console.log(selectedProduct);
+
+      selectedProduct.Cantidad = 1;
+      selectedProduct.PrecioVenta = selectedProduct.PrecioMenor;
+
       this.state.ventaProductos.push(selectedProduct);
       console.log(this.state.ventaProductos);
       await this.setState({ ventaProductos: this.state.ventaProductos });
     }
+  };
+
+  onCantidadChange = async (index, cantidad) => {
+    this.state.ventaProductos[index].Cantidad = cantidad;
+    this.state.ventaProductos[index].PrecioVenta =
+      this.state.ventaProductos[index].PrecioMenor * cantidad;
+    this.setState({ ventaProductos: this.state.ventaProductos });
+  };
+
+  onPrecioChange = async (index, precio) => {
+    this.state.ventaProductos[index].PrecioMenor = precio;
+    this.state.ventaProductos[index].PrecioVenta =
+      this.state.ventaProductos[index].Cantidad * precio;
+    this.setState({ ventaProductos: this.state.ventaProductos });
+  };
+
+  handleGuardarVenta = () => {
+    if (this.state.ventaProductos.length === 0) {
+      return alert("No hay productos");
+    }
+    const ventaData = {
+      Fecha: "2023-04-07 10:10:10",
+      Vendedor_Id: 42520,
+      Cliente_Id: 1,
+      FormaPago_Id: 1,
+      Total: 1234,
+      Entregado: 1,
+      Observacion: "Naranja",
+      Descuento: 0,
+      productos: this.state.ventaProductos,
+    };
+    let _this = this;
+    axios
+      .post("http://localhost:9000/ventas", ventaData)
+      .then(function (response) {
+        console.log(response);
+        alert("Se guardó correctamente");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   render() {
@@ -369,80 +412,119 @@ class DashboardContent extends React.Component {
               </Grid>
 
               <Grid m={0} pt={2}>
-              <TableContainer component={Paper}>
-                   
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell bgcolor="pink">
-                            {" "}
-                            <b>Codigo</b>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell bgcolor="pink">
+                          {" "}
+                          <b>Codigo</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink">
+                          {" "}
+                          <b>Producto</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Marca</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Cant</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Precio</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Subtotal</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Acciones</b>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {this.state.ventaProductos.map((item, index) => (
+                        <TableRow
+                          key={index}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell align="left" component="th" scope="row">
+                            {item.IdProducto}
                           </TableCell>
-                          <TableCell bgcolor="pink">
-                            {" "}
-                            <b>Producto</b>
+                          <TableCell component="th" scope="row">
+                            {item.Detalle}
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Marca</b>
-                          </TableCell> 
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Cant</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Precio</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Subtotal</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Acciones</b>
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {this.state.ventaProductos.map((item, index) => (
-                          <TableRow
-                            key={item.IdProducto}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
-                            <TableCell align="left" component="th" scope="row">
-                              {item.IdProducto}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {item.Detalle}
-                            </TableCell>
-                            <TableCell align="right">{item.marca}</TableCell>
-                            <TableCell align="right">
-                              <InputLabel/>
-                            </TableCell>
-                            <TableCell align="right">{item.Costo}</TableCell>
-                            <TableCell align="right">
-                              {}
-                            </TableCell>
-                            <TableCell align="right">
-                              <DeleteIcon
-                                sx={{ color: pink[600] }}
-                                align="left"
-                                onClick={() => {
-                                  this.handleRemove(item.IdProducto);
+                          <TableCell align="right">{item.marca}</TableCell>
+                          <TableCell align="right">
+                            <FormControl fullWidth sx={{ m: 1 }} size="small">
+                              <Input
+                                id="filled-adornment-amount"
+                                defaultValue={item.Cantidad}
+                                onChange={(e) => {
+                                  this.onCantidadChange(index, e.target.value);
                                 }}
                               />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                        
-                      </TableBody>
-                    </Table>
+                            </FormControl>
+                          </TableCell>
+                          <TableCell align="right">
+                            <FormControl fullWidth sx={{ m: 1 }} size="small">
+                              <Input
+                                defaultValue={item.PrecioMenor}
+                                onChange={(e) => {
+                                  this.onPrecioChange(index, e.target.value);
+                                }}
+                                startAdornment={
+                                  <InputAdornment position="start">
+                                    $
+                                  </InputAdornment>
+                                }
+                              />
+                            </FormControl>
+                          </TableCell>
+                          <TableCell align="right">
+                            <FormControl fullWidth sx={{ m: 1 }} size="small">
+                              <FilledInput
+                                value={item.PrecioVenta}
+                                startAdornment={
+                                  <InputAdornment position="start">
+                                    $
+                                  </InputAdornment>
+                                }
+                              />
+                            </FormControl>
+                          </TableCell>
+                          <TableCell align="right">
+                            <DeleteIcon
+                              sx={{ color: pink[600] }}
+                              align="left"
+                              onClick={() => {
+                                this.handleBorrarProducto(index);
+                              }}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
 
-                    {/* <Pagination
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ mt: 1, mb: 1 }}
+                        size="small"
+                        onClick={this.handleGuardarVenta}
+                      >
+                        {"Guardar"}
+                      </Button>
+                    </TableBody>
+                  </Table>
+
+                  {/* <Pagination
                     totalRecords={totalProductos}
                     pageLimit={10}
                     pageNeighbours={1}
                     onPageChanged={this.onPageChanged}
                   /> */}
-                  </TableContainer>
+                </TableContainer>
               </Grid>
 
               <Copyright sx={{ pt: 4 }} />

@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  
   const sql = `
     SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
@@ -22,26 +21,64 @@ router.get("/", function (req, res, next) {
   });
 });
 
-
 router.post("/", function (req, res, next) {
   console.log(req.body);
+  const ventaData = req.body;
+
+  const ventaParams = [
+    ventaData.Fecha,
+    ventaData.Vendedor_Id,
+    ventaData.Cliente_Id,
+    ventaData.FormaPago_Id,
+    ventaData.Total,
+    ventaData.Entregado,
+    ventaData.Pagado,
+    ventaData.Observacion,
+    ventaData.Descuento,
+  ];
   const sql = `
-  INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values ('${req.body.id}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.IdProveedor}');
+  INSERT INTO ventas
+  ( Fecha, Vendedor_Id, Cliente_Id, FormaPago_Id, Total, Entregado, Pagado, Observacion, Descuento) VALUES (?,?,?,?,?,?,?,?,?);
   `;
-  global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(sql);
+  console.log(sql);
+  global.dbConnection.query(sql, ventaParams, (err, result) => {
     if (err) {
-      res.send("Error creando nuevo producto");
+      res.status(500).send("Error insertando venta");
     } else {
-      res.json({ productos: regs });
+      ventaData.IdVenta = result.insertId;
+      const paramsDetalleVenta = [];
+      const sqlDetalleVenta = `
+        INSERT INTO detalle_ventas (Venta_Id, Producto_Id, Cantidad, PrecioVenta, PrecioCosto) VALUES ?
+      `;
+
+      ventaData.productos.map((producto) => {
+        paramsDetalleVenta.push([
+          ventaData.IdVenta,
+          producto.IdProducto,
+          producto.Cantidad,
+          producto.PrecioVenta,
+          producto.Costo,
+        ]);
+      });
+      global.dbConnection.query(
+        sqlDetalleVenta,
+        [paramsDetalleVenta],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send("Error insertando detalle venta");
+          } else {
+            res.json({ data: ventaData });
+          }
+        }
+      );
     }
   });
 });
 
 router.delete("/:IdProducto", function (req, res, next) {
-  console.log("Request",req.params.IdProducto);
-  
+  console.log("Request", req.params.IdProducto);
+
   const sql = `
   DELETE FROM \`productos\`
   WHERE IdProducto = ?
@@ -56,7 +93,6 @@ router.delete("/:IdProducto", function (req, res, next) {
     }
   });
 });
-
 
 router.put("/", function (req, res, next) {
   console.log(req.body);
@@ -73,7 +109,5 @@ router.put("/", function (req, res, next) {
     }
   });
 });
-
- 
 
 module.exports = router;
