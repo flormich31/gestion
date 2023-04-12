@@ -194,9 +194,8 @@ class Vendedores extends React.Component {
   }
 
 //Para buscar una vendedores
-
-handleChangeSearch = event => {
-  this.setState({ query: event.target.value });
+handleChangeSearch = async event => {
+  await this.setState({ query: event.target.value });
   console.log(this.state.query);
   this.getVendedores();
 }
@@ -477,6 +476,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="nombredit"
+                                label="Nombre"
                                 size="small"
                                 margin="normal"
                                 value={this.state.nombredit}
@@ -486,6 +486,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="domicilioedit"
+                                label="Domicilio"
                                 size="small"
                                 margin="normal"
                                 value={this.state.domicilioedit}
@@ -495,6 +496,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="cpedit"
+                                label="Codigo Postal"
                                 size="small"
                                 margin="normal"
                                 value={this.state.cpedit}
@@ -504,6 +506,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="emailedit"
+                                label="Email"
                                 size="small"
                                 margin="normal"
                                 value={this.state.emailedit}
@@ -513,6 +516,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="celuedit"
+                                label="Celular"
                                 size="small"
                                 margin="normal"
                                 value={this.state.celuedit}

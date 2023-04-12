@@ -111,6 +111,7 @@ export default function AppBar() {
                   <Route path="/proveedores">Proveedores</Route>
                   <Route path="/vendedores">Vendedores</Route>
                  
+                  <Route path="/listadoVentas">Listado de ventas</Route>
                   <Route path="/reports">Informes</Route>
                   <Route path="/profile">Mi perfil</Route>
                 </Switch>

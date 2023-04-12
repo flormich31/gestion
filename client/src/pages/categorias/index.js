@@ -16,6 +16,7 @@ import {
     Button,
     Typography,
     TableContainer,
+    Alert,
 } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
@@ -151,8 +152,8 @@ class Categorias extends React.Component {
 
     //Para buscar una categoria
 
-    handleChangeSearch = event => {
-        this.setState({ query: event.target.value });
+    handleChangeSearch = async event => {
+        await this.setState({ query: event.target.value });
         console.log(this.state.query);
         this.getCategorias();
     }
@@ -171,7 +172,7 @@ class Categorias extends React.Component {
             });
     }
 
-    handleRemove = (IdCategoria) => {
+     handleRemove = (IdCategoria) => {
         let _this = this;
         var config = {
             method: "delete",
@@ -188,8 +189,9 @@ class Categorias extends React.Component {
                     console.log(error);
                 });
         }
-    }
-        ;
+    } ; 
+
+
     render() {
 
         const {

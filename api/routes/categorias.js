@@ -63,8 +63,8 @@ router.post("/", function (req, res, next) {
   });
 });
 
-router.delete("/:IdCategoria", function (req, res, next) {
-  console.log("Request", req.params.IdProducto);
+ router.delete("/:IdCategoria", function (req, res, next) {
+  console.log("Request", req.params.IdCategoria);
   const sql = `
   DELETE FROM \`categorias\`
   WHERE IdCategoria = ?
@@ -78,8 +78,7 @@ router.delete("/:IdCategoria", function (req, res, next) {
       res.json({ categorias: regs });
     }
   });
-});
-
+}); 
 
 router.put("/", function (req, res, next) {
   console.log(req.body);

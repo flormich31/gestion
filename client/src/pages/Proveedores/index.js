@@ -152,7 +152,7 @@ class Proveedores extends React.Component {
 
     axios.put("http://localhost:9000/proveedores", {
       id: this.state.idedit,
-      nombre: this.state.nombredit,
+      razonSocial: this.state.nombredit,
       domicilio: this.state.domicilioedit,
       web: this.state.webedit,
     })
@@ -172,8 +172,8 @@ class Proveedores extends React.Component {
 
 //Para buscar una proveedores
 
-handleChangeSearch = event => {
-  this.setState({ query: event.target.value });
+handleChangeSearch = async event => {
+  await this.setState({ query: event.target.value });
   console.log(this.state.query);
   this.getProveedores();
 }
@@ -428,6 +428,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="nombredit"
+                                label="Nombre"
                                 size="small"
                                 margin="normal"
                                 value={this.state.nombredit}
@@ -437,6 +438,7 @@ handleClickSearch = (event) => {
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
                                 id="domicilioedit"
+                                label="Domicilio"
                                 size="small"
                                 margin="normal"
                                 value={this.state.domicilioedit}
@@ -445,7 +447,8 @@ handleClickSearch = (event) => {
                             </FormControl>
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
-                                id="celuedit"
+                                id="WebEdit"
+                                label="Sitio Web"
                                 size="small"
                                 margin="normal"
                                 value={this.state.webedit}
@@ -455,7 +458,8 @@ handleClickSearch = (event) => {
                             <Button
                               sx={{ mt: 2, left: '5%', }}
                               margin variant="contained"
-                              onClick={this.handleEdit}>EDITAR
+                              onClick={this.handleEdit}>
+                                EDITAR
                             </Button>
                             <Button
                               sx={{ mt: 2, left: '30%', }}

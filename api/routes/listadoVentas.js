@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
   const sql = String(req.query.query).split(' ').join('')
   == '' || req.query.query
   == 'undefined' || !req.query || !req.query.query ?`
-  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -36,24 +36,12 @@ router.get("/", function (req, res, next) {
   });
 });
 
-function makeid(length) {
-  var result = "";
-  var characters =
-    "0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 
 router.post("/", function (req, res, next) {
-  const codigo = makeid(5);
   console.log(req.body);
   const sql = `
   INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, PrecioMenor, PrecioMayor, Observacion, Proveedor_Id) values ('${codigo}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.PrecioMenor}','${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
+  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, Proveedor_Id) values ('${req.body.id}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.IdProveedor}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -72,6 +60,7 @@ router.delete("/:IdProducto", function (req, res, next) {
   DELETE FROM \`productos\`
   WHERE IdProducto = ?
   `;
+  //console.log("Delete IdProducto > " + req.params.IdProducto);
   global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {
     console.log(sql);
     if (err) {
@@ -91,9 +80,6 @@ router.put("/", function (req, res, next) {
   Categoria_Id='${req.body.Categoria_Id}',
   Marca_Id='${req.body.Marca_Id}',
   Costo='${req.body.costo}',
-  PrecioMenor='${req.body.PrecioMenor}',
-  PrecioMayor='${req.body.PrecioMayor}',
-  Observacion='${req.body.Observacion}',
   Proveedor_Id='${req.body.Proveedor_Id}'
   WHERE IdProducto='${req.body.id}';
   `;

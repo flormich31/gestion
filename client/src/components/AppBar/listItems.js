@@ -14,6 +14,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ListIcon from '@mui/icons-material/List';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BallotIcon from '@mui/icons-material/Ballot';
 import { useHistory } from "react-router-dom";
 
 export const MainListItems = () => {
@@ -72,9 +73,15 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Vendedores" />
       </ListItem>
-      <ListItem  onClick={() => goto("/reports")}>
+      <ListItem  onClick={() => goto("/listadoVentas")}>
         <ListItemIcon>
           <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Listado de ventas" />
+      </ListItem>
+      <ListItem  onClick={() => goto("/reports")}>
+        <ListItemIcon>
+          <BallotIcon />
         </ListItemIcon>
         <ListItemText primary="Informes" />
       </ListItem>

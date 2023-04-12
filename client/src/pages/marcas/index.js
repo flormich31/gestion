@@ -147,8 +147,8 @@ class Marcas extends React.Component {
 
  //Para buscar una categoria
 
- handleChangeSearch = event => {
-  this.setState({ query: event.target.value });
+ handleChangeSearch = async event => {
+  await this.setState({ query: event.target.value });
   console.log(this.state.query);
   this.getMarcas();
 }
@@ -328,7 +328,7 @@ handleClickSearch = (event) => {
                       <TableBody>
                         {this.state.marcas.map((item, index) => (
                           <TableRow
-                            key={item.id}
+                            key={item.IdMarca}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">

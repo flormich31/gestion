@@ -26,7 +26,7 @@ router.post("/", function (req, res, next) {
   const ventaData = req.body;
 
   const ventaParams = [
-    ventaData.Fecha,
+    new Date(),
     ventaData.Vendedor_Id,
     ventaData.Cliente_Id,
     ventaData.FormaPago_Id,
@@ -40,8 +40,9 @@ router.post("/", function (req, res, next) {
   INSERT INTO ventas
   ( Fecha, Vendedor_Id, Cliente_Id, FormaPago_Id, Total, Entregado, Pagado, Observacion, Descuento) VALUES (?,?,?,?,?,?,?,?,?);
   `;
-  console.log(sql);
+  
   global.dbConnection.query(sql, ventaParams, (err, result) => {
+    console.log(sql);
     if (err) {
       res.status(500).send("Error insertando venta");
     } else {

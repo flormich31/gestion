@@ -59,7 +59,7 @@ router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   UPDATE \`proveedores\`
-  SET RazonSocial='Grupo SUPER Pro'
+  SET RazonSocial='${req.body.razonSocial}'
   WHERE IdProveedor='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
