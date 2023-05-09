@@ -439,11 +439,11 @@ handleClickSearch = (event) => {
                       <TableBody>
                         {this.state.clientes.map((item, index) => (
                           <TableRow
-                            key={item.Nombre}
+                            key={item.IdCliente}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">
-                              {item.Nombre}
+                              {item.Nombre_Cliente}
                             </TableCell>
                             <TableCell component="th" scope="row">
                               {item.Cuit}

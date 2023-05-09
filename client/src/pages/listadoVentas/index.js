@@ -32,10 +32,24 @@ import {
 } from "@mui/material";
 import { Redirect } from "react-router";
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from '@mui/icons-material/Add';
+import Modal from "@mui/material/Modal";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import DataTableVenta from "../../components/DataTableVenta";
 import TextField from "@mui/material/TextField";
 import NativeSelect from "@mui/material/NativeSelect";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const mdTheme = createTheme();
 
@@ -44,15 +58,24 @@ class ListadoVentas extends React.Component {
     super(props);
 
     this.state = {
+      ventas: [],
+      prodventas: [],
       productos: [],
       ventaProductos: [],
       vendedores: [],
+      totalVenta:  [],
+      currentPage: null,
+      totalPages: null,
+
+      open: false,
+      query: "",
       IdVendedor: ' ',
       IdFormaPago: ' ',
       Entregado: ' ',
       Pagado: ' ',
       Descuento: ' ',
-      Cliente_Id:"",
+      
+      Cliente_Id: "",
       Observacion: ' ',
       formaPago: [],
       clientes: [],
@@ -61,72 +84,57 @@ class ListadoVentas extends React.Component {
   }
 
   componentDidMount() {
-    this.getVendedores();
-    this.getFormaPago();
-    this.getClientes();
+    this.getVentas();
+    this.getDetalleVentas();
+    this.getTotalVentas();
   }
 
-  getVendedores = () => {
+  getVentas = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/vendedores",
+      url: `http://localhost:9000/ventas?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
+    .then(function (response) {
+      // console.log(JSON.stringify(response.data));
+      if (response.data.ventas.length === 0) {
+         alert("No se encontraron ventas");
+      } else {
         _this.setState(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-  getFormaPago = () => {
+    
+}; 
+
+
+  handleClose = async () => {
+
+    await this.setState({ open: false });
+    this.setState({ query:""});
+    //this.setState({ });
+    //console.log("query es", this.state.query);
+    //console.log(IdVenta);
+    this.getVentas();
+  }
+
+getDetalleVentas = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/formaPago",
-      headers: {},
-    };
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        _this.setState(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  getClientes = () => {
-    let _this = this;
-    var config = {
-      method: "get",
-      url: `http://localhost:9000/clientes?query=${this.state.query}`,
-      headers: {},
-    };
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        _this.setState(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  getProductos = () => {
-    let _this = this;
-    var config = {
-      method: "get",
-      url: `http://localhost:9000/productos?query=${this.state.query}`,
+      url: `http://localhost:9000/detalleVentas?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
-        if (response.data.productos.length === 0) {
-          // alert("No se encontraron productos");
+        if (response.data.prodventas.length === 0) {
+           alert("No se encontraron productos en esta venta");
         } else {
           _this.setState(response.data);
         }
@@ -134,113 +142,69 @@ class ListadoVentas extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  };
+  }; 
 
-  redirectHandlerOpen = () => {
-    this.setState({ redirect: true });
-    this.renderRedirectOpen();
-  };
-  renderRedirectOpen = () => {
-    if (this.state.redirect) {
-      return <Redirect to="/groups-A" />;
-    }
-  };
-  makeid = (length) => {
-    const result = "";
-    const characters = "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+
+  getTotalVentas = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: `http://localhost:9000/totalVentas?query=${this.state.query}`,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.totalVenta.length === 0) {
+           alert("No se encontraron Totales en esta venta");
+        } else {
+          _this.setState(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }; 
+
+    showProductos = async (IdVenta) => {
+
+      await this.setState({ open: true, query: IdVenta });
+      //this.setState({ });
+      console.log("query es", this.state.query);
+      //console.log(IdVenta);}
+      this.getVentas();
+      this.getDetalleVentas();
+      this.getTotalVentas();
     }
 
-    this.setState.numeroVenta = result(5);
-    console.log(this.numeroVenta);
-  };
+    handleChangeEntregado = async (event) => {
+      this.setState({ Entregado: event.target.value });
+    };
 
   handleBorrarProducto = async (index) => {
     this.state.ventaProductos.splice(index, 1);
     await this.setState({ ventaProductos: this.state.ventaProductos });
   };
 
-  handleProductInputChange = async (event) => {
-    await this.setState({ query: event.target.value });
-    this.getProductos();
-  };
-  handleProductChange = async (event, selectedProduct) => {
-    if (selectedProduct) {
-      console.log(selectedProduct);
-
-      selectedProduct.Cantidad = 1;
-      selectedProduct.PrecioVenta = selectedProduct.PrecioMenor;
-
-      this.state.ventaProductos.push(selectedProduct);
-      console.log(this.state.ventaProductos);
-      await this.setState({ ventaProductos: this.state.ventaProductos });
-    }
-  };
-
-  onCantidadChange = async (index, cantidad) => {
-    this.state.ventaProductos[index].Cantidad = cantidad;
-    this.state.ventaProductos[index].PrecioVenta =
-      this.state.ventaProductos[index].PrecioMenor * cantidad;
-    this.setState({ ventaProductos: this.state.ventaProductos });
-  };
-
-  onPrecioChange = async (index, precio) => {
-    this.state.ventaProductos[index].PrecioMenor = precio;
-    this.state.ventaProductos[index].PrecioVenta =
-      this.state.ventaProductos[index].Cantidad * precio;
-    this.setState({ ventaProductos: this.state.ventaProductos });
-  };
-  handleChangeIdVendedor = async (event) => {
-    this.setState({ IdVendedor: event.target.value });
-  };
-  handleChangeIdFormaPago = async (event) => {
-    this.setState({ IdFormaPago: event.target.value });
-  };
-  handleChangeEntregado = async (event) => {
-    this.setState({ Entregado: event.target.value });
-  };
-  handleChangePagado = async (event) => {
-    this.setState({ Pagado: event.target.value });
-  };
-  handleChangeDescuento = async (event) => {
-    this.setState({ Descuento: event.target.value });
-  };
-  handleChangeCliente_Id = async (event) => {
-    this.setState({ Cliente_Id: event.target.value });
-alert(event.target.value);
-  };
-  handleChangeObservacion = async (event) => {
-    this.setState({ Observacion: event.target.value });
-  };
-
-  handleGuardarVenta = () => {
-    if (this.state.ventaProductos.length === 0) {
-      return alert("No hay productos");
-    }
-    const ventaData = {
-      Fecha: "2023-04-07 10:10:10",
-      Vendedor_Id: this.state.IdVendedor,
-      Cliente_Id: this.state.Cliente_Id,
-      FormaPago_Id: this.state.IdFormaPago,
-      Total: 1234,
-      Entregado: this.state.Entregado,
-      Pagado: this.state.Pagado,
-      Observacion: this.state.Observacion,
-      Descuento: this.state.Descuento,
-      productos: this.state.ventaProductos,
-    };
+  handleRemove = (IdVenta) => {
+    
     let _this = this;
-    axios
-      .post("http://localhost:9000/ventas", ventaData)
-      .then(function (response) {
-        console.log(response);
-        alert("Se guardó correctamente");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    var config = {
+      method: "delete",
+      url: "http://localhost:9000/listadoVentas/" + IdVenta,
+      headers: {},
+    };
+    if (window.confirm("¿Realmente desea borrar esta venta?")) {
+      axios(config)
+        .then(function (response) {
+          _this.getVentas();
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+   
   };
 
   render() {
@@ -264,340 +228,249 @@ alert(event.target.value);
             <Toolbar />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Paper
-                elevation={10}
-                sx={{
-                  p: 2,
-                  display: "flex",
-                }}
-              >
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container direction="row">
-                      <Grid item xs={12}>
-                        <Typography variant="h5" component="div" p={1}>
-                          Detalle de venta
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction="row">
-                      <Grid item xs container direction="column">
-                        <Grid item xs>
-                            <TextField
-                              id="standard-read-only-input"
-                              defaultValue={this.numeroVenta}
-                              label="Venta número:"
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                              variant="standard"
-                            />
-                        </Grid>
-
-                        <Grid item xs>
-                            <TextField
-                              id="standard-read-only-input"
-                              defaultValue={new Date().toLocaleString()}
-                              label="Fecha"
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                              variant="standard"
-                            />
-                        </Grid>
-                        <Grid item xs>
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="uncontrolled-native"
-                            >
-                              Vendedor
-                            </InputLabel>
-                            <NativeSelect
-                              value={this.state.IdVendedor}
-                              onChange={this.handleChangeIdVendedor}
-                              inputProps={{
-                                id: "uncontrolled-native",
-                              }}
-                            >
-                              {this.state.vendedores.map((item, index) => (
-                                <option
-                                  key={item.IdVendedor}
-                                  value={item.IdVendedor}
-                                >
-                                  {item.Nombre}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs container direction="column">
-                        <Grid item xs>
-                          
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
-                          >
-                            Forma de pago
-                          </InputLabel>
-                          <NativeSelect
-                            value={this.state.IdFormaPago}
-                            onChange={this.handleChangeIdFormaPago}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            {this.state.formaPago.map((item, index) => (
-                              <option
-                                key={item.IdFormaPago}
-                                value={item.IdFormaPago}
-                              >
-                                {item.FormaPago}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        </Grid>
-                        <Grid item xs>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="demo-simple-select-label"
-                          >
-                            Entregado
-                          </InputLabel>
-                          <NativeSelect
-                            value={this.state.Entregado}
-                            onChange={this.handleChangeEntregado}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            <option value={0}>--</option>
-                            <option value={1}>Si</option>
-                            <option value={2}>No</option>
-                          </NativeSelect>
-                        </Grid>
-                        <Grid item xs>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="demo-simple-select-label"
-                          >
-                            Pagado
-                          </InputLabel>
-                          <NativeSelect
-                            value={this.state.Pagado}
-                            onChange={this.handleChangePagado}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            <option value={0}>--</option>
-                            <option value={1}>Si</option>
-                            <option value={2}>No</option>
-                          </NativeSelect>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs container direction="column">
-                        <Grid item xs>
-                          <TextField
-                            id="standard-basic"
-                            label="Descuento..%.."
-                            variant="standard"
-                            value={this.state.Descuento}
-                            onChange={this.handleChangeDescuento}
-                          />
-                        </Grid>
-                        <Grid item xs>
-                        <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
-                          >
-                            Clientes
-                          </InputLabel>
-                          <NativeSelect
-                          //input={<OutlinedInput id="select-multiple-chip" label="clientes" />}
-                            value={this.state.Cliente_Id}
-                            onChange={this.handleChangeCliente_Id}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            {this.state.clientes.map((item, index) => (
-                              <option
-                                key={item.IdCliente}
-                                value={item.IdCliente}
-                              >
-                                {item.Nombre}
-                              </option>
-                            ))}
-                          </NativeSelect>
-
-                          {/* <Autocomplete
-                            disablePortal
-                            id="combo-box-demo"
-                            size="small"
-                            
-                            onChange={this.handleChangeCliente_Id}
-                            options={this.state.clientes}
-                            getOptionLabel={(option) => option.Nombre}
-                            renderInput={(params) => (
-                              <TextField {...params}  value={this.state.Cliente_Id} label="Cliente" />
-                            )}
-                          /> */}
-                        </Grid>
-                        <Grid item xs>
-                          <TextField
-                            id="standard-basic"
-                            label="Observaciones"
-                            variant="standard"
-                            value={this.state.Observacion}
-                            onChange={this.handleChangeObservacion}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Paper>
-
-              <Grid m={0} pt={2}>
-                <Paper
-                  elevation={10}
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-producto"
-                    size="small"
-                    options={this.state.productos}
-                    getOptionLabel={(option) => option.Detalle}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Buscar producto..." />
-                    )}
-                    onChange={this.handleProductChange}
-                    onInputChange={this.handleProductInputChange}
-                  />
-                </Paper>
+             
+              <Grid m={0} pt={1}>
+               
               </Grid>
 
-              <Grid m={0} pt={2}>
+              <Grid m={0} pt={1}>
                 <TableContainer component={Paper}>
+                 
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                       <TableRow>
+
                         <TableCell bgcolor="pink">
-                          {" "}
-                          <b>Codigo</b>
+                          <b>N° de venta</b>
                         </TableCell>
                         <TableCell bgcolor="pink">
-                          {" "}
-                          <b>Producto</b>
+                          <b>Fecha</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
-                          <b>Marca</b>
+                          <b>Vendedor</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
-                          <b>Cant</b>
+                          <b>Cliente</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
-                          <b>Precio</b>
+                          <b>Forma de pago</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
-                          <b>Subtotal</b>
+                          <b>Total</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Productos</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Entregado</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Pagado</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Observacion</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Descuento</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
                           <b>Acciones</b>
                         </TableCell>
                       </TableRow>
                     </TableHead>
+
                     <TableBody>
-                      {this.state.ventaProductos.map((item, index) => (
+                      
+                      {this.state.ventas.map((item, index) => (
+
                         <TableRow
-                          key={index}
+                          key={item.IdProducto}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
                           <TableCell align="left" component="th" scope="row">
-                            {item.IdProducto}
+                            {item.IdVenta}
+                          </TableCell>
+                          <TableCell component="th" scope="row" format="date">
+                            {item.Fecha}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Detalle}
+                            {item.Nombre}
                           </TableCell>
-                          <TableCell align="right">{item.marca}</TableCell>
+                          <TableCell align="right">{item.Nombre_Cliente}</TableCell>
+                          <TableCell align="right">{item.FormaPago}</TableCell>
+                          <TableCell align="right">{item.Total}</TableCell>
                           <TableCell align="right">
-                            <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <Input
-                                id="filled-adornment-amount"
-                                defaultValue={item.Cantidad}
-                                onChange={(e) => {
-                                  this.onCantidadChange(index, e.target.value);
-                                }}
-                              />
-                            </FormControl>
-                          </TableCell>
-                          <TableCell align="right">
-                            <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <Input
-                                defaultValue={item.PrecioMenor}
-                                onChange={(e) => {
-                                  this.onPrecioChange(index, e.target.value);
-                                }}
-                                startAdornment={
-                                  <InputAdornment position="start">
-                                    $
-                                  </InputAdornment>
-                                }
-                              />
-                            </FormControl>
+                            <AddIcon
+                              aria-label="expand row"
+                              size="small"
+                              key={item.IdVenta}
+                              value={this.state.query}
+                              onClick={() => {
+                                this.showProductos(item.IdVenta);
+                              }}
+                            />
                           </TableCell>
                           <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <FilledInput
-                                value={item.PrecioVenta}
-                                startAdornment={
-                                  <InputAdornment position="start">
-                                    $
-                                  </InputAdornment>
-                                }
-                              />
-                            </FormControl>
+                         <NativeSelect
+                             value={this.state.Entregado}
+                             onChange={this.handleChangeEntregado}
+                             inputProps={{
+                               id: "uncontrolled-native",
+                             }}
+                           >
+                             <option value={0}>{item.Entregado}</option>
+                              <option value={1}>Si</option>
+                              <option value={2}>No</option>
+                           </NativeSelect>
+                           
+                       </FormControl>
+                             {/* {item.Entregado} */}
                           </TableCell>
                           <TableCell align="right">
+                          <FormControl fullWidth sx={{ m: 1 }} size="small">
+                         <NativeSelect
+                             value={this.state.Pagado}
+                             onChange={this.handleChangeEntregado}
+                             inputProps={{
+                               id: "uncontrolled-native",
+                             }}
+                           >
+                             <option value={0}>{item.Pagado}</option>
+                              <option value={1}>Si</option>
+                              <option value={2}>No</option>
+                           </NativeSelect>
+                           
+                       </FormControl>
+                            
+                            </TableCell>
+                          <TableCell align="right">{item.Observacion}</TableCell>
+                          <TableCell align="right">{item.Descuento}</TableCell>
+                          <TableCell align="right">
+                            <EditIcon
+                              sx={{ color: pink[200] }}
+                            />
+
                             <DeleteIcon
                               sx={{ color: pink[600] }}
                               align="left"
+                              value
                               onClick={() => {
-                                this.handleBorrarProducto(index);
+                                this.handleRemove(item.IdVenta);
                               }}
                             />
                           </TableCell>
                         </TableRow>
-                      ))}
 
-                      
+                      ))}
+                      <TableRow>
+
+                      </TableRow>
+
+                      <Dialog
+                        fullScreen
+                        open={this.state.open}
+                     >
+                        <DialogTitle >DETALLE DE VENTA</DialogTitle>
+                        <DialogContent >
+                          <DialogContentText
+                           >
+                            {this.state.ventas.map((item) => 
+                             <Typography> Número de venta: {item.IdVenta}
+                              <br />
+
+                              Fecha: {item.Fecha}<br />
+                              Vendedor: {item.Nombre}<br />
+                              Cliente: {item.Nombre_Cliente}<br />
+                              Forma de pago: {item.FormaPago}<br />
+                              Entregado: {item.Entregado}<br />
+                              Pagado: {item.Pagado}<br />
+                              Observaciones: {item.Observacion}<br />
+                              </Typography>)}
+
+                            <Table size="small" aria-label="purchases">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell bgcolor="pink">Código</TableCell>
+                                  <TableCell bgcolor="pink">Descripcion</TableCell>
+                                  <TableCell bgcolor="pink">Marca</TableCell>
+                                  <TableCell bgcolor="pink" align="right">Cantidad</TableCell>
+                                  <TableCell bgcolor="pink" align="right">Precio</TableCell>
+                                  <TableCell bgcolor="pink" align="right">Subtotal</TableCell>
+                                  <TableCell bgcolor="pink" align="right">Descuento</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {this.state.prodventas.map((item, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell component="th" scope="row">{item.IdProducto}</TableCell>
+                                    <TableCell component="th" scope="row">{item.Detalle}</TableCell>
+                                    <TableCell>{item.Marca}</TableCell>
+                                    <TableCell align="right">{item.cantidad}</TableCell>
+                                    <TableCell align="right">{item.PrecioVenta}</TableCell>
+                                    <TableCell align="right">{item.Subtotal}</TableCell>
+                                    <TableCell align="right">{item.Descuento}</TableCell>
+                                  </TableRow>
+                                ))}
+
+                                {this.state.totalVenta.map((item) => (
+                                  <TableRow key={item.IdVenta}>
+                                   
+                                    <TableCell bgcolor="pink" colSpan={6}>TOTAL</TableCell>
+                                    <TableCell bgcolor="pink" align="right">{item.Total}</TableCell>
+                                  </TableRow>
+                                ))} 
+                              </TableBody>
+                            </Table>
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button bgcolor="pink" onClick={this.handleClose}>Cerrar</Button>
+                        </DialogActions>
+                      </Dialog>
+
+
+
+                      {/* <Modal open={this.state.open} >
+
+                        <Box sx={{
+                          position: 'absolute',
+
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          bgcolor: 'background.paper',
+                          border: '2px solid #<000',
+                          boxShadow: 24,
+                          p: 4,
+                        }}>
+                          <div>
+
+
+                            {this.state.prodventas.map((item) => <p> DETALLE DE VENTA N°{item.IdVenta}
+                              <br /> Datos:  <br />
+                              Fecha:{item.Fecha}<br />
+                              Vendedor:{item.Nombre}<br />
+                              Cliente:{item.Nombre_Cliente}<br />
+                              Forma de pago:{item.FormaPago}<br />
+                              Entregado:{item.Entregado}<br />
+                              Pagado:{item.Pagado}<br />
+                              Observaciones:{item.Observacion}<br />
+                            </p>)}
+
+                          </div>
+
+                          
+
+                        </Box>
+
+                      </Modal> */}
                     </TableBody>
                   </Table>
-                  <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{ mt: 1, mb: 1 }}
-                        size="small"
-                        onClick={this.handleGuardarVenta}
-                      >
-                        {"Guardar"}
-                      </Button>
-                  {/* <Pagination
-                    totalRecords={totalProductos}
-                    pageLimit={10}
-                    pageNeighbours={1}
-                    onPageChanged={this.onPageChanged}
-                  /> */}
                 </TableContainer>
+
               </Grid>
 
               <Copyright sx={{ pt: 4 }} />

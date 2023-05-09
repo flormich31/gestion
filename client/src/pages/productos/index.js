@@ -102,7 +102,7 @@ class Productos extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  };
+  }; 
 
   getTodasCategorias = () => {
     let _this = this;
@@ -653,9 +653,9 @@ class Productos extends React.Component {
                             <TableCell align="right">
                               {item.categoria}
                             </TableCell>
-                            <TableCell align="right">{item.Costo}</TableCell>
-                            <TableCell align="right">{item.PrecioMenor}</TableCell>
-                            <TableCell align="right">{item.PrecioMayor}</TableCell>
+                            <TableCell align="right">${item.Costo}</TableCell>
+                            <TableCell align="right">${item.PrecioMenor}</TableCell>
+                            <TableCell align="right">${item.PrecioMayor}</TableCell>
                             <TableCell align="right">
                               {item.RazonSocial}
                             </TableCell>

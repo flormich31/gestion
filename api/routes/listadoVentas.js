@@ -3,35 +3,24 @@ var router = express.Router();
 
 router.get("/", function (req, res, next) {
   console.log("Request", req.query);
-  
-  const sql = String(req.query.query).split(' ').join('')
-  == '' || req.query.query
-  == 'undefined' || !req.query || !req.query.query ?`
-  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
-    FROM \`productos\` as p 
-    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
-    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
-    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
-    WHERE p.FechaEliminacion IS NULL
-    ORDER BY p.Detalle ASC
-  `:`
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
-    FROM \`productos\` as p 
-    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
-    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
-    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
-    WHERE p.FechaEliminacion IS NULL
-    AND
-						Detalle LIKE "%${req.query.query}%"
-    ORDER BY p.Detalle ASC
+
+  const sql =  `
+  SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, v.Total, v.Observacion, v.Descuento , CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
+  FROM \`ventas\` as v 
+  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
+  WHERE v.FechaEliminacion IS NULL
+  ORDER BY v.Fecha ASC
   `;
-  console.log(sql);
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log("ventas:",sql);
     if (err) {
       console.log(err);
       res.send("Error recuperando productos");
     } else {
-      res.json({ productos: regs });
+      res.json({ ventas: regs });
+      console.log( "todas las ventas", regs );
     }
   });
 });
@@ -53,23 +42,24 @@ router.post("/", function (req, res, next) {
   });
 });
 
-router.delete("/:IdProducto", function (req, res, next) {
-  console.log("Request",req.params.IdProducto);
+router.delete("/:IdVenta", function (req, res, next) {
+  console.log("Request",req.params.IdVenta);
   
   const sql = `
-  DELETE FROM \`productos\`
-  WHERE IdProducto = ?
+  UPDATE \`ventas\`
+  SET FechaEliminacion= now()
+  WHERE IdVenta = ?
   `;
-  //console.log("Delete IdProducto > " + req.params.IdProducto);
-  global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {
+  global.dbConnection.query(sql, [req.params.IdVenta], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error eliminando producto");
+      res.send("Error eliminando venta");
     } else {
-      res.json({ productos: regs });
+      res.json({ventas: regs });
     }
   });
 });
+
 
 
 router.put("/", function (req, res, next) {
@@ -93,6 +83,6 @@ router.put("/", function (req, res, next) {
   });
 });
 
- 
+
 
 module.exports = router;

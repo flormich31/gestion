@@ -112,7 +112,7 @@ export default function AppBar() {
                   <Route path="/vendedores">Vendedores</Route>
                  
                   <Route path="/listadoVentas">Listado de ventas</Route>
-                  <Route path="/reports">Informes</Route>
+                  <Route path="/detalleVentas">Detalle de ventas</Route>
                   <Route path="/profile">Mi perfil</Route>
                 </Switch>
               </div>

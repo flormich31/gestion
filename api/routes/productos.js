@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
   `:`
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -23,7 +23,7 @@ router.get("/", function (req, res, next) {
     WHERE p.FechaEliminacion IS NULL
     AND
 						Detalle LIKE "%${req.query.query}%"
-    ORDER BY p.Detalle ASC
+    ORDER BY p.Detalle ASC 
   `;
   console.log(sql);
   global.dbConnection.query(sql, [], (err, regs) => {
@@ -69,7 +69,8 @@ router.delete("/:IdProducto", function (req, res, next) {
   console.log("Request",req.params.IdProducto);
   
   const sql = `
-  DELETE FROM \`productos\`
+  UPDATE \`productos\`
+  SET FechaEliminacion= now()
   WHERE IdProducto = ?
   `;
   global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {

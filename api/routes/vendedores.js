@@ -81,7 +81,8 @@ router.put("/", function (req, res, next) {
 
 router.delete("/:IdVendedor", function (req, res, next) {
   const sql = `
-  DELETE FROM \`vendedores\`
+  UPDATE \`vendedores\`
+  SET FechaEliminacion= now()
   WHERE IdVendedor = ?
   `;
   console.log("Delete IdVendedor > " + req.params.IdVendedor);

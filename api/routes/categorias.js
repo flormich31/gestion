@@ -66,7 +66,8 @@ router.post("/", function (req, res, next) {
  router.delete("/:IdCategoria", function (req, res, next) {
   console.log("Request", req.params.IdCategoria);
   const sql = `
-  DELETE FROM \`categorias\`
+  UPDATE \`categorias\`
+  SET FechaEliminacion= now()
   WHERE IdCategoria = ?
   `;
   //console.log("Delete IdCategoria > " + req.params.IdCategoria);

@@ -2,14 +2,31 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const sql = `
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
-    FROM \`productos\` as p 
-    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
-    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
-    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
-    WHERE p.FechaEliminacion IS NULL
-  `;
+  const sql = String(req.query.query).split(' ').join('')
+  == '' || req.query.query
+  == 'undefined' || !req.query || !req.query.query ? `
+  SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, 
+  v.Total, v.Subtotal, v.Observacion, v.Descuento, CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
+  CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
+  FROM \`ventas\` as v 
+  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
+  WHERE v.FechaEliminacion IS NULL
+  
+  ORDER BY v.Fecha desc
+  `:`SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago,
+  v.Total, v.Subtotal, v.Observacion, v.Descuento , CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
+  CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
+  FROM \`ventas\` as v 
+  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
+  WHERE v.FechaEliminacion IS NULL
+ 
+   and IdVenta LIKE 	"%${req.query.query}%"
+  ORDER BY v.Fecha ASC	`;
+
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(req.body);
     if (err) {
@@ -17,6 +34,7 @@ router.get("/", function (req, res, next) {
       res.send("Error recuperando ventas");
     } else {
       res.json({ ventas: regs });
+      console.log(regs);
     }
   });
 });
@@ -31,18 +49,21 @@ router.post("/", function (req, res, next) {
     ventaData.Cliente_Id,
     ventaData.FormaPago_Id,
     ventaData.Total,
+    ventaData.Subtotal,
     ventaData.Entregado,
     ventaData.Pagado,
     ventaData.Observacion,
     ventaData.Descuento,
+    ventaData.Interes,
   ];
   const sql = `
   INSERT INTO ventas
-  ( Fecha, Vendedor_Id, Cliente_Id, FormaPago_Id, Total, Entregado, Pagado, Observacion, Descuento) VALUES (?,?,?,?,?,?,?,?,?);
+  ( Fecha, Vendedor_Id, Cliente_Id, FormaPago_Id, Total, Subtotal, Entregado, Pagado, Observacion, Descuento, Interes) 
+  VALUES (?,?,?,?,?,?,?,?,?,?,?);
   `;
   
   global.dbConnection.query(sql, ventaParams, (err, result) => {
-    console.log(sql);
+    console.log(sql, ventaParams);
     if (err) {
       res.status(500).send("Error insertando venta");
     } else {

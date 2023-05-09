@@ -64,7 +64,7 @@ class Categorias extends React.Component {
         const currentCategorias = categorias.slice(offset, offset + pageLimit);
 
         this.setState({ currentPage, currentCategorias, totalPages, categorias });
-    };
+    };arge
 
     getCategorias = () => {
         let _this = this;

@@ -8,14 +8,14 @@ router.get("/", function (req, res, next) {
     SELECT *
     FROM \`clientes\`
     WHERE FechaEliminacion IS NULL
-    ORDER BY Nombre ASC
+    ORDER BY Nombre_Cliente ASC
   `:`
   SELECT *
   FROM \`clientes\`
   WHERE FechaEliminacion IS NULL
   AND
-          Nombre LIKE "%${req.query.query}%"
-  ORDER BY Nombre ASC
+  Nombre_Cliente LIKE "%${req.query.query}%"
+  ORDER BY Nombre_Cliente ASC
 `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -46,7 +46,7 @@ router.post("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   INSERT INTO \`clientes\`
-  ( IdCliente, Nombre, Domicilio, CodigoPostal,Celular,Email,Cuit) values ('${codigo}','${req.body.nombre}', '${req.body.domicilio}', '${req.body.codigoPostal}','${req.body.celular}','${req.body.email}','${req.body.cuit}');
+  ( IdCliente, Nombre_Cliente, Domicilio, CodigoPostal,Celular,Email,Cuit) values ('${codigo}','${req.body.nombre}', '${req.body.domicilio}', '${req.body.codigoPostal}','${req.body.celular}','${req.body.email}','${req.body.cuit}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     if (err) {
@@ -61,7 +61,7 @@ router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   UPDATE \`clientes\`
-  SET Nombre='${req.body.nombre}',
+  SET Nombre_Cliente='${req.body.nombre}',
   Domicilio='${req.body.domicilio}',
   CodigoPostal='${req.body.codigoPostal}',
   Celular='${req.body.celular}',
@@ -81,7 +81,8 @@ router.put("/", function (req, res, next) {
 
 router.delete("/:IdCliente", function (req, res, next) {
   const sql = `
-  DELETE FROM \`clientes\`
+  UPDATE\`clientes\`
+  SET FechaEliminacion= now()
   WHERE IdCliente = ?
   `;
   console.log("Delete IdCliente > " + req.params.IdCliente);

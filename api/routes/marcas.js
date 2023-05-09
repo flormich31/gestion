@@ -60,7 +60,8 @@ router.post("/", function (req, res, next) {
 router.delete("/:IdMarca", function (req, res, next) {
   console.log("Request", req.params.IdMarca);
   const sql = `
-  DELETE FROM \`marcas\`
+  UPDATE \`marcas\`
+  SET FechaEliminacion= now()
   WHERE IdMarca = ?
   ORDER BY Marca ASC
   `;
