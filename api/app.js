@@ -15,7 +15,6 @@ var marcasRouter = require("./routes/marcas");
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
 var listadoVentasRouter = require("./routes/listadoVentas");
-var detalleVentasRouter = require("./routes/detalleVentas");
 var totalVentasRouter = require("./routes/totalVentas");
 var vendedoresRouter = require("./routes/vendedores");
 var formaPagoRouter = require("./routes/formaPago");
@@ -65,7 +64,6 @@ app.use("/formaPago", formaPagoRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/ventas", ventasRouter);
 app.use("/listadoVentas", listadoVentasRouter);
-app.use("/detalleVentas", detalleVentasRouter);
 app.use("/totalVentas", totalVentasRouter);
 
 // catch 404 and forward to error handler

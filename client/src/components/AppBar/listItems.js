@@ -79,12 +79,6 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Listado de ventas" />
       </ListItem>
-      <ListItem  onClick={() => goto("/detalleVentas")}>
-        <ListItemIcon>
-          <BallotIcon />
-        </ListItemIcon>
-        <ListItemText primary="Detalle de ventas" />
-      </ListItem>
     </div>
   );
 };

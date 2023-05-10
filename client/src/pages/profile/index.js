@@ -10,7 +10,7 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import { deepOrange } from "@mui/material/colors";
+import { deepOrange, pink } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
@@ -51,18 +51,18 @@ export default function Profile() {
                       <ListItem>
                         <Avatar
                           sx={{
-                            bgcolor: deepOrange[300],
+                            bgcolor: pink[300],
                             width: 60,
                             height: 60,
                           }}
                         >
-                          LQ
+                          DF
                         </Avatar>
                         <ListItemIcon />
                         <ListItemText
                           disableTypography
                           primary={
-                            <Typography variant="h4">Laura Quintos</Typography>
+                            <Typography variant="h4">Diva Forever</Typography>
                           }
                         />
                       </ListItem>
@@ -84,9 +84,9 @@ export default function Profile() {
                   <Typography variant="h4" component="div">
                     Contacto
                   </Typography>
-                  Telefono: +54 345 6789
+                  Telefono: +54 9 3757 65-1761
                   <br />
-                  Email: profelau@gmail.com
+                  Email: divaforever@gmail.com
                 </Paper>
               </Grid>
               {/* Recent Orders */}
@@ -99,10 +99,6 @@ export default function Profile() {
                     height: 140,
                   }}
                 >
-                  <Typography variant="h4" component="div">
-                    Grupos
-                  </Typography>
-                  <h5>4to GRADO - 5to GRADO - 6to GRADO</h5>
                 </Paper>
               </Grid>
             </Grid>

@@ -50,6 +50,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const mdTheme = createTheme();
 
@@ -76,6 +82,8 @@ class ListadoVentas extends React.Component {
       Pagado: ' ',
       Descuento: ' ',
       Observacion: ' ',
+      dateStart: dayjs('2022-04-17'),
+      dateEnd: new Date(),
 
       Cliente_Id: "",
       Observacion: ' ',
@@ -117,9 +125,6 @@ class ListadoVentas extends React.Component {
 
     await this.setState({ open: false });
     this.setState({ query: "" });
-    //this.setState({ });
-    //console.log("query es", this.state.query);
-    //console.log(IdVenta);
     this.getVentas();
   }
 
@@ -132,7 +137,6 @@ class ListadoVentas extends React.Component {
     };
     axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(response.data));
         if (response.data.prodventas.length === 0) {
           alert("No se encontraron productos en esta venta");
         } else {
@@ -154,7 +158,6 @@ class ListadoVentas extends React.Component {
     };
     axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(response.data));
         if (response.data.totalVenta.length === 0) {
           alert("No se encontraron Totales en esta venta");
         } else {
@@ -169,10 +172,8 @@ class ListadoVentas extends React.Component {
   showProductos = async (IdVenta) => {
 
     await this.setState({ open: true, query: IdVenta, IdVenta: IdVenta });
-    //this.setState({ });
     console.log("query es", this.state.query);
 
-    //console.log(IdVenta);}
     await this.getVentas();
     await this.getDetalleVentas();
     await this.getTotalVentas();
@@ -215,6 +216,11 @@ class ListadoVentas extends React.Component {
 
   };
 
+  onChangeDate = async (event) => {
+    this.setState({ dateStart: event.target.value });
+    this.setState({ dateEnd: event.target.value });
+  };
+
   handleUpdate = (e) => {
 
     if (window.confirm("¿Realmente desea editar esta venta?")) {
@@ -237,6 +243,8 @@ class ListadoVentas extends React.Component {
       this.getDetalleVentas();
       this.getTotalVentas();
     }
+
+   
 
   };
   render() {
@@ -263,7 +271,20 @@ class ListadoVentas extends React.Component {
 
               <Grid m={0} pt={1}>
 
+        
+            {/*     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker', 'DatePicker']}>
+                  <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-17')} />
+                    <DatePicker
+                      label="Controlled picker"
+                      //value={this.state.dateEnd}
+                      onChange={(event) => this.onChangeDate()}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+ */}
               </Grid>
+
 
               <Grid m={0} pt={1}>
                 <TableContainer component={Paper}>
@@ -354,8 +375,7 @@ class ListadoVentas extends React.Component {
                               onClick={() => {
                                 this.handleUpdate(item.IdVenta);
                               }}
-                            />
- */}
+                            />*/}
                             <DeleteIcon
                               sx={{ color: pink[600] }}
                               align="center"
@@ -369,9 +389,7 @@ class ListadoVentas extends React.Component {
 
                       ))}
                       <TableRow>
-
                       </TableRow>
-
                       <Dialog
                         fullScreen
                         open={this.state.open}
@@ -386,9 +404,8 @@ class ListadoVentas extends React.Component {
                           >DETALLE DE VENTA
                           </Typography>
                         </DialogTitle>
-                        <DialogContent >
-                          <DialogContentText
-                          >
+                        <DialogContent>
+                          <DialogContentText>
                             {this.state.ventas.map((item) =>
                               <Box
                                 sx={{
