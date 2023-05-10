@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../../components/Copyright";
 import { useHistory } from "react-router-dom";
-import backgroundImg from "../../assets/images/diva.jpg";
+import backgroundImg from "../../assets/images/diva2.jpg";
 
 const theme = createTheme({
   palette: {
