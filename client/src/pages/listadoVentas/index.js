@@ -16,7 +16,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { pink } from "@mui/material/colors";
+import { pink, white } from "@mui/material/colors";
 import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import AddButton from "../../components/AddButton";
@@ -63,18 +63,20 @@ class ListadoVentas extends React.Component {
       productos: [],
       ventaProductos: [],
       vendedores: [],
-      totalVenta:  [],
+      totalVenta: [],
       currentPage: null,
       totalPages: null,
 
       open: false,
       query: "",
+      IdVenta: ' ',
       IdVendedor: ' ',
       IdFormaPago: ' ',
       Entregado: ' ',
       Pagado: ' ',
       Descuento: ' ',
-      
+      Observacion: ' ',
+
       Cliente_Id: "",
       Observacion: ' ',
       formaPago: [],
@@ -97,33 +99,31 @@ class ListadoVentas extends React.Component {
       headers: {},
     };
     axios(config)
-    .then(function (response) {
-      // console.log(JSON.stringify(response.data));
-      if (response.data.ventas.length === 0) {
-         alert("No se encontraron ventas");
-      } else {
-        _this.setState(response.data);
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.ventas.length === 0) {
+          alert("No se encontraron ventas");
+        } else {
+          _this.setState(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-    
-}; 
-
+  };
 
   handleClose = async () => {
 
     await this.setState({ open: false });
-    this.setState({ query:""});
+    this.setState({ query: "" });
     //this.setState({ });
     //console.log("query es", this.state.query);
     //console.log(IdVenta);
     this.getVentas();
   }
 
-getDetalleVentas = () => {
+  getDetalleVentas = () => {
     let _this = this;
     var config = {
       method: "get",
@@ -134,7 +134,7 @@ getDetalleVentas = () => {
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data.prodventas.length === 0) {
-           alert("No se encontraron productos en esta venta");
+          alert("No se encontraron productos en esta venta");
         } else {
           _this.setState(response.data);
         }
@@ -142,7 +142,7 @@ getDetalleVentas = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }; 
+  };
 
 
   getTotalVentas = () => {
@@ -156,7 +156,7 @@ getDetalleVentas = () => {
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data.totalVenta.length === 0) {
-           alert("No se encontraron Totales en esta venta");
+          alert("No se encontraron Totales en esta venta");
         } else {
           _this.setState(response.data);
         }
@@ -164,22 +164,30 @@ getDetalleVentas = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }; 
+  };
 
-    showProductos = async (IdVenta) => {
+  showProductos = async (IdVenta) => {
 
-      await this.setState({ open: true, query: IdVenta });
-      //this.setState({ });
-      console.log("query es", this.state.query);
-      //console.log(IdVenta);}
-      this.getVentas();
-      this.getDetalleVentas();
-      this.getTotalVentas();
-    }
+    await this.setState({ open: true, query: IdVenta, IdVenta: IdVenta });
+    //this.setState({ });
+    console.log("query es", this.state.query);
 
-    handleChangeEntregado = async (event) => {
-      this.setState({ Entregado: event.target.value });
-    };
+    //console.log(IdVenta);}
+    await this.getVentas();
+    await this.getDetalleVentas();
+    await this.getTotalVentas();
+  }
+
+  onEntregadoChange = async (event) => {
+    this.setState({ Entregado: event.target.value });
+  };
+  onPagadoChange = async (event) => {
+    this.setState({ Pagado: event.target.value });
+  };
+
+  onObservacionChange = async (e) => {
+    this.setState({ Observacion: e.target.value });
+  };
 
   handleBorrarProducto = async (index) => {
     this.state.ventaProductos.splice(index, 1);
@@ -187,7 +195,7 @@ getDetalleVentas = () => {
   };
 
   handleRemove = (IdVenta) => {
-    
+
     let _this = this;
     var config = {
       method: "delete",
@@ -204,9 +212,33 @@ getDetalleVentas = () => {
           console.log(error);
         });
     }
-   
+
   };
 
+  handleUpdate = (e) => {
+
+    if (window.confirm("¿Realmente desea editar esta venta?")) {
+      let _this = this;
+      axios
+        .put("http://localhost:9000/ventas/", {
+          IdVenta: this.state.IdVenta,
+          Entregado: this.state.Entregado,
+          Pagado: this.state.Pagado,
+          Observacion: this.state.Observacion,
+        })
+        .then(function (response) {
+          _this.getVentas();
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      this.getVentas();
+      this.getDetalleVentas();
+      this.getTotalVentas();
+    }
+
+  };
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -228,59 +260,58 @@ getDetalleVentas = () => {
             <Toolbar />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-             
+
               <Grid m={0} pt={1}>
-               
+
               </Grid>
 
               <Grid m={0} pt={1}>
                 <TableContainer component={Paper}>
-                 
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+
+                  <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table"  >
                     <TableHead>
                       <TableRow>
-
-                        <TableCell bgcolor="pink">
-                          <b>N° de venta</b>
+                        <TableCell bgcolor="pink" align="center">
+                          <b>Número</b>
                         </TableCell>
-                        <TableCell bgcolor="pink">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Fecha</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Vendedor</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Cliente</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Forma de pago</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Total</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
-                          <b>Productos</b>
+                        <TableCell bgcolor="pink" align="center">
+                          <b>Ver detalle</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Entregado</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Pagado</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Observacion</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Descuento</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Acciones</b>
                         </TableCell>
                       </TableRow>
                     </TableHead>
 
                     <TableBody>
-                      
+
                       {this.state.ventas.map((item, index) => (
 
                         <TableRow
@@ -288,20 +319,21 @@ getDetalleVentas = () => {
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
+
                         >
-                          <TableCell align="left" component="th" scope="row">
+                          <TableCell align="center" component="th" scope="row" >
                             {item.IdVenta}
                           </TableCell>
-                          <TableCell component="th" scope="row" format="date">
+                          <TableCell align="center" component="th" scope="row" format="date">
                             {item.Fecha}
                           </TableCell>
-                          <TableCell component="th" scope="row">
+                          <TableCell align="center" component="th" scope="row">
                             {item.Nombre}
                           </TableCell>
-                          <TableCell align="right">{item.Nombre_Cliente}</TableCell>
-                          <TableCell align="right">{item.FormaPago}</TableCell>
-                          <TableCell align="right">{item.Total}</TableCell>
-                          <TableCell align="right">
+                          <TableCell align="center">{item.Nombre_Cliente}</TableCell>
+                          <TableCell align="center">{item.FormaPago}</TableCell>
+                          <TableCell align="center">${item.Total}</TableCell>
+                          <TableCell align="center">
                             <AddIcon
                               aria-label="expand row"
                               size="small"
@@ -312,50 +344,21 @@ getDetalleVentas = () => {
                               }}
                             />
                           </TableCell>
-                          <TableCell align="right">
-                            <FormControl fullWidth sx={{ m: 1 }} size="small">
-                         <NativeSelect
-                             value={this.state.Entregado}
-                             onChange={this.handleChangeEntregado}
-                             inputProps={{
-                               id: "uncontrolled-native",
-                             }}
-                           >
-                             <option value={0}>{item.Entregado}</option>
-                              <option value={1}>Si</option>
-                              <option value={2}>No</option>
-                           </NativeSelect>
-                           
-                       </FormControl>
-                             {/* {item.Entregado} */}
-                          </TableCell>
-                          <TableCell align="right">
-                          <FormControl fullWidth sx={{ m: 1 }} size="small">
-                         <NativeSelect
-                             value={this.state.Pagado}
-                             onChange={this.handleChangeEntregado}
-                             inputProps={{
-                               id: "uncontrolled-native",
-                             }}
-                           >
-                             <option value={0}>{item.Pagado}</option>
-                              <option value={1}>Si</option>
-                              <option value={2}>No</option>
-                           </NativeSelect>
-                           
-                       </FormControl>
-                            
-                            </TableCell>
-                          <TableCell align="right">{item.Observacion}</TableCell>
-                          <TableCell align="right">{item.Descuento}</TableCell>
-                          <TableCell align="right">
-                            <EditIcon
+                          <TableCell align="center">{item.Entregado}</TableCell>
+                          <TableCell align="center">{item.Pagado}</TableCell>
+                          <TableCell align="center">{item.Observacion}</TableCell>
+                          <TableCell align="center">{item.Descuento}</TableCell>
+                          <TableCell align="center">
+                            {/* <EditIcon
                               sx={{ color: pink[200] }}
+                              onClick={() => {
+                                this.handleUpdate(item.IdVenta);
+                              }}
                             />
-
+ */}
                             <DeleteIcon
                               sx={{ color: pink[600] }}
-                              align="left"
+                              align="center"
                               value
                               onClick={() => {
                                 this.handleRemove(item.IdVenta);
@@ -372,34 +375,90 @@ getDetalleVentas = () => {
                       <Dialog
                         fullScreen
                         open={this.state.open}
-                     >
-                        <DialogTitle >DETALLE DE VENTA</DialogTitle>
+                      >
+                        <DialogTitle style={{ backgroundColor: "#f73378" }} >
+                          <Typography
+                            component="h1"
+                            variant="h6"
+                            color="white"
+                            noWrap
+                            sx={{ flexGrow: 1 }}
+                          >DETALLE DE VENTA
+                          </Typography>
+                        </DialogTitle>
                         <DialogContent >
                           <DialogContentText
-                           >
-                            {this.state.ventas.map((item) => 
-                             <Typography> Número de venta: {item.IdVenta}
-                              <br />
+                          >
+                            {this.state.ventas.map((item) =>
+                              <Box
+                                sx={{
+                                  width: 300,
+                                  bgcolor: "background.paper",
+                                }}
+                              >
+                                <br />
+                                <Typography color="#000000" variant="p"> <b>Número de venta:</b> {item.IdVenta}
+                                  <br />
+                                  <b>Fecha:</b>  {item.Fecha}<br />
+                                  <b> Vendedor:</b>  {item.Nombre}<br />
+                                  <b>Cliente:</b>  {item.Nombre_Cliente}<br />
+                                  <b>Forma de pago:</b>   {item.FormaPago}<br />
+                                  <b>Entregado:</b>  <FormControl onSubmit={this.handleUpdate} size="small" >
+                                    <NativeSelect
+                                      size="small"
+                                      placeholder='size="small"'
+                                      value={this.state.Entregado}
+                                      onChange={this.onEntregadoChange}
+                                      inputProps={{
+                                        id: "uncontrolled-native",
+                                      }}
+                                    >
+                                      <option value={0}>{item.Entregado}</option>
+                                      <option value={1}>Si</option>
+                                      <option value={2}>No</option>
+                                    </NativeSelect>
+                                  </FormControl>
+                                  <b>Pagado:</b> <FormControl onSubmit={this.handleUpdate} size="small">
+                                    <NativeSelect
+                                      size="small"
+                                      placeholder='size="small"'
+                                      value={this.state.Pagado}
+                                      onChange={this.onPagadoChange}
+                                      inputProps={{
+                                        id: "uncontrolled-native",
+                                      }}
+                                    >
+                                      <option value={0}>{item.Pagado}</option>
+                                      <option value={1}>Si</option>
+                                      <option value={2}>No</option>
+                                    </NativeSelect>
 
-                              Fecha: {item.Fecha}<br />
-                              Vendedor: {item.Nombre}<br />
-                              Cliente: {item.Nombre_Cliente}<br />
-                              Forma de pago: {item.FormaPago}<br />
-                              Entregado: {item.Entregado}<br />
-                              Pagado: {item.Pagado}<br />
-                              Observaciones: {item.Observacion}<br />
-                              </Typography>)}
+                                  </FormControl>
+                                  <b>Observacion: </b>
+                                  <FormControl onSubmit={this.handleUpdate} variant="standard" size="small">
+                                    <TextField
+                                      size="small"
+                                      placeholder='size="small"'
+                                      id="Observacion"
+                                      defaultValue={item.Observacion}
+                                      onChange={this.onObservacionChange}
+                                      autoComplete="on"
+                                    />
+                                  </FormControl>
+                                  <br />      <br />
+                                </Typography>
+                              </Box>)}
 
                             <Table size="small" aria-label="purchases">
                               <TableHead>
                                 <TableRow>
-                                  <TableCell bgcolor="pink">Código</TableCell>
-                                  <TableCell bgcolor="pink">Descripcion</TableCell>
-                                  <TableCell bgcolor="pink">Marca</TableCell>
-                                  <TableCell bgcolor="pink" align="right">Cantidad</TableCell>
-                                  <TableCell bgcolor="pink" align="right">Precio</TableCell>
-                                  <TableCell bgcolor="pink" align="right">Subtotal</TableCell>
-                                  <TableCell bgcolor="pink" align="right">Descuento</TableCell>
+                                  <TableCell bgcolor="pink"><b>Código</b></TableCell>
+                                  <TableCell bgcolor="pink"><b>Descripcion</b></TableCell>
+                                  <TableCell bgcolor="pink"><b>Marca</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Cantidad</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Subtotal</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Descuento</b></TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -409,64 +468,28 @@ getDetalleVentas = () => {
                                     <TableCell component="th" scope="row">{item.Detalle}</TableCell>
                                     <TableCell>{item.Marca}</TableCell>
                                     <TableCell align="right">{item.cantidad}</TableCell>
-                                    <TableCell align="right">{item.PrecioVenta}</TableCell>
-                                    <TableCell align="right">{item.Subtotal}</TableCell>
+                                    <TableCell align="right">${item.PrecioVenta}</TableCell>
+                                    <TableCell align="right">${item.Subtotal}</TableCell>
                                     <TableCell align="right">{item.Descuento}</TableCell>
                                   </TableRow>
                                 ))}
 
                                 {this.state.totalVenta.map((item) => (
                                   <TableRow key={item.IdVenta}>
-                                   
-                                    <TableCell bgcolor="pink" colSpan={6}>TOTAL</TableCell>
-                                    <TableCell bgcolor="pink" align="right">{item.Total}</TableCell>
+
+                                    <TableCell bgcolor="pink" colSpan={6}><b>TOTAL</b></TableCell>
+                                    <TableCell bgcolor="pink" align="right"><b>${item.Total}</b></TableCell>
                                   </TableRow>
-                                ))} 
+                                ))}
                               </TableBody>
                             </Table>
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
+                          <Button variant="contained" size="small" bgcolor="pink" onClick={this.handleUpdate}>Guardar cambios</Button>
                           <Button bgcolor="pink" onClick={this.handleClose}>Cerrar</Button>
                         </DialogActions>
                       </Dialog>
-
-
-
-                      {/* <Modal open={this.state.open} >
-
-                        <Box sx={{
-                          position: 'absolute',
-
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          bgcolor: 'background.paper',
-                          border: '2px solid #<000',
-                          boxShadow: 24,
-                          p: 4,
-                        }}>
-                          <div>
-
-
-                            {this.state.prodventas.map((item) => <p> DETALLE DE VENTA N°{item.IdVenta}
-                              <br /> Datos:  <br />
-                              Fecha:{item.Fecha}<br />
-                              Vendedor:{item.Nombre}<br />
-                              Cliente:{item.Nombre_Cliente}<br />
-                              Forma de pago:{item.FormaPago}<br />
-                              Entregado:{item.Entregado}<br />
-                              Pagado:{item.Pagado}<br />
-                              Observaciones:{item.Observacion}<br />
-                            </p>)}
-
-                          </div>
-
-                          
-
-                        </Box>
-
-                      </Modal> */}
                     </TableBody>
                   </Table>
                 </TableContainer>

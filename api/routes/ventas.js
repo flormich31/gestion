@@ -119,15 +119,19 @@ router.delete("/:IdProducto", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`productos\`
-  SET detalle='${req.body.IdProducto}'
-  WHERE IdProducto='${req.body.IdProducto}';
+  UPDATE \`ventas\`
+  SET Entregado='${req.body.Entregado}',
+  Pagado='${req.body.Pagado}',
+  Observacion='${req.body.Observacion}'
+  WHERE IdVenta='${req.body.IdVenta}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(sql);
+    console.log(regs);
     if (err) {
-      res.send("Error editando producto");
+      res.send("Error editando venta");
     } else {
-      res.json({ productos: regs });
+      //res.json({ ventas?: regs });
     }
   });
 });

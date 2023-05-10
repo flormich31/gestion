@@ -494,8 +494,8 @@ class DashboardContent extends React.Component {
                       ))}
 
                       <TableRow>
-                        <TableCell rowSpan={3} />
-                        <TableCell colSpan={2}>
+                        <TableCell rowSpan={4} />
+                        <TableCell size="small" colSpan={2}>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
                             Subtotal:
                             <FilledInput
