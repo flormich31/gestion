@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from 'react';
 import { pink, purple } from '@mui/material/colors';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -14,8 +15,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../../components/Copyright";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import backgroundImg from "../../assets/images/diva2.jpg";
+import axios from "axios";
+import PropTypes from 'prop-types';
 
 const theme = createTheme({
   palette: {
@@ -30,19 +33,29 @@ const theme = createTheme({
   },
 });
 
-export default function Login() {
+export default function Login({ }) {
   const history = useHistory();
+  const [usuario, setUsuario] = useState();
+  const [clave, setClave] = useState();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    history.push("/home");
-  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:9000/login", {
+        usuario: usuario,
+        clave: clave,
+      })
+      .then(function (response) {
+        // Maneja la respuesta del servidor en caso de éxito
+        console.log(response.data);
+        // Redirecciona al usuario a otra página
+        history.push("/ventas")
+      })
+      .catch((error) => {
+        // Maneja el error en caso de fallo de autenticación
+        alert("¡Combinación incorrecta de usuario/contraseña!")
+      });
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -83,28 +96,30 @@ export default function Login() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+
               sx={{ mt: 1 }}
             >
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="usuario"
                 label="Correo electrónico"
-                name="email"
+
                 autoComplete="email"
                 autoFocus
+                onChange={e => setUsuario(e.target.value)}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                name="password"
+
                 label="Contraseña"
                 type="password"
-                id="password"
+                id="clave "
                 autoComplete="current-password"
+                onChange={e => setClave(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -113,10 +128,13 @@ export default function Login() {
 
               <Button
                 type="submit"
+                onClick={handleSubmit}
                 fullWidth
                 variant="contained"
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
+
+
               >
                 Iniciar sesi&oacute;n
               </Button>
@@ -141,3 +159,4 @@ export default function Login() {
     </ThemeProvider>
   );
 }
+

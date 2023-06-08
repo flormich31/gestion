@@ -8,12 +8,14 @@ var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var loginRouter = require("./routes/login");
 var productosRouter = require("./routes/productos");
 var ventasRouter = require("./routes/ventas");
 var categoriasRouter = require("./routes/categorias");
 var marcasRouter = require("./routes/marcas"); 
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
+var datosVentaRouter = require("./routes/datosVenta");
 var listadoVentasRouter = require("./routes/listadoVentas");
 var totalVentasRouter = require("./routes/totalVentas");
 var vendedoresRouter = require("./routes/vendedores");
@@ -54,6 +56,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/login", loginRouter);
 app.use("/productos", productosRouter);
 app.use("/categorias", categoriasRouter);
 app.use("/marcas", marcasRouter);
@@ -63,6 +66,7 @@ app.use("/vendedores", vendedoresRouter);
 app.use("/formaPago", formaPagoRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/ventas", ventasRouter);
+app.use("/datosVenta", datosVentaRouter);
 app.use("/listadoVentas", listadoVentasRouter);
 app.use("/totalVentas", totalVentasRouter);
 

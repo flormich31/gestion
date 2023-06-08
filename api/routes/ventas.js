@@ -1,11 +1,13 @@
 var express = require("express");
 var router = express.Router();
 
+/* 
 router.get("/", function (req, res, next) {
-  const sql = String(req.query.query).split(' ').join('')
-  == '' || req.query.query
-  == 'undefined' || !req.query || !req.query.query ? `
-  SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, 
+  console.log("req.body1111", req.body);
+  const sql = String(req.body).split(' ').join('')
+  == '' || req.body
+  == 'undefined' || !req.body || !req.body.body ? `
+   SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, 
   v.Total, v.Subtotal, v.Observacion, v.Descuento, CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
   CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
   FROM \`ventas\` as v 
@@ -23,12 +25,13 @@ router.get("/", function (req, res, next) {
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
   WHERE v.FechaEliminacion IS NULL
- 
-   and IdVenta LIKE 	"%${req.query.query}%"
+  
+  AND v.Fecha >= "%${req.body.startDate}%" AND v.Fecha <= "%${req.body.endDate}%"
+   
   ORDER BY v.Fecha ASC	`;
 
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(req.body);
+    console.log("req.body 2222", req.body);
     if (err) {
       console.log(err);
       res.send("Error recuperando ventas");
@@ -37,7 +40,46 @@ router.get("/", function (req, res, next) {
       console.log(regs);
     }
   });
-});
+}); */
+
+router.get("/", function (req, res, next) {
+  const sql = String(req.query.query).split(' ').join('')
+  == '' || req.query.query
+  == 'undefined' || !req.query || !req.query.query ? `
+   SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, 
+  v.Total, v.Subtotal, v.Observacion, v.Descuento, CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
+  CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
+  FROM \`ventas\` as v 
+  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
+  WHERE v.FechaEliminacion IS NULL
+  
+  ORDER BY v.Fecha desc
+  `:`SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago,
+  v.Total, v.Subtotal, v.Observacion, v.Descuento , CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
+  CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
+  FROM \`ventas\` as v 
+  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
+  WHERE v.FechaEliminacion IS NULL
+
+  AND v.Fecha >= "${req.query.query}" AND v.Fecha <= "${req.query.query2}"
+   
+  ORDER BY v.Fecha ASC	`;
+
+  global.dbConnection.query(sql, [], (err, regs) => {
+    console.log(req.query);
+    if (err) {
+      console.log(err);
+      res.send("Error recuperando ventas");
+    } else {
+      res.json({ ventas: regs });
+      console.log(regs);
+    }
+  });
+}); 
 
 router.post("/", function (req, res, next) {
   console.log(req.body);
@@ -98,23 +140,24 @@ router.post("/", function (req, res, next) {
   });
 });
 
-router.delete("/:IdProducto", function (req, res, next) {
-  console.log("Request", req.params.IdProducto);
-
+router.delete("/:IdVenta", function (req, res, next) {
+  console.log("Request",req.params.IdVenta);
+  
   const sql = `
-  DELETE FROM \`productos\`
-  WHERE IdProducto = ?
+  UPDATE \`ventas\`
+  SET FechaEliminacion= now()
+  WHERE IdVenta = ?
   `;
-  //console.log("Delete IdProducto > " + req.params.IdProducto);
-  global.dbConnection.query(sql, [req.params.IdProducto], (err, regs) => {
+  global.dbConnection.query(sql, [req.params.IdVenta], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error eliminando producto");
+      res.send("Error eliminando venta");
     } else {
-      res.json({ productos: regs });
+      res.json({ventas: regs });
     }
   });
 });
+
 
 router.put("/", function (req, res, next) {
   console.log(req.body);

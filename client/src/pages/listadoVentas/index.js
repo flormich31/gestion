@@ -55,7 +55,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const mdTheme = createTheme();
 
@@ -65,6 +66,7 @@ class ListadoVentas extends React.Component {
 
     this.state = {
       ventas: [],
+      datosVenta: [],
       prodventas: [],
       productos: [],
       ventaProductos: [],
@@ -82,8 +84,12 @@ class ListadoVentas extends React.Component {
       Pagado: ' ',
       Descuento: ' ',
       Observacion: ' ',
-      dateStart: dayjs('2022-04-17'),
-      dateEnd: new Date(),
+      // dateStart: dayjs('2022-04-17'),
+      // dateEnd: new Date(),
+      startDate: '',
+      startDateMysql: '',
+      endDate: '',
+      endDateMysql: '',
 
       Cliente_Id: "",
       Observacion: ' ',
@@ -95,15 +101,16 @@ class ListadoVentas extends React.Component {
 
   componentDidMount() {
     this.getVentas();
-    this.getDetalleVentas();
+    this.getDatosVenta();
+    this.getListadoVentas();
     this.getTotalVentas();
   }
 
-  getVentas = () => {
+   getVentas = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/ventas?query=${this.state.query}`,
+      url: `http://localhost:9000/ventas?query=${this.state.startDateMysql}&query2=${this.state.endDateMysql}`,
       headers: {},
     };
     axios(config)
@@ -120,19 +127,59 @@ class ListadoVentas extends React.Component {
       });
 
   };
+ 
 
-  handleClose = async () => {
+ /*  getVentas = () => {
+    let _this = this;
 
-    await this.setState({ open: false });
-    this.setState({ query: "" });
-    this.getVentas();
-  }
+    axios
+      .get("http://localhost:9000/ventas", {
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+      })
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.ventas.length === 0) {
+          alert("No se encontraron ventas");
+        } else {
+          _this.setState(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    this.setState({ startDate: "" });
+    this.setState({ endDate: "" });
+  
+  }; */
 
-  getDetalleVentas = () => {
+  getDatosVenta = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/detalleVentas?query=${this.state.query}`,
+      url: `http://localhost:9000/datosVenta?query=${this.state.query}`,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data.datosVenta.length === 0) {
+          alert("No se encontraron datos de venta");
+        } else {
+          _this.setState(response.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  };
+
+  getListadoVentas = () => {
+    let _this = this;
+    var config = {
+      method: "get",
+      url: `http://localhost:9000/listadoVentas?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -147,7 +194,6 @@ class ListadoVentas extends React.Component {
         console.log(error);
       });
   };
-
 
   getTotalVentas = () => {
     let _this = this;
@@ -174,9 +220,16 @@ class ListadoVentas extends React.Component {
     await this.setState({ open: true, query: IdVenta, IdVenta: IdVenta });
     console.log("query es", this.state.query);
 
-    await this.getVentas();
-    await this.getDetalleVentas();
+    await this.getDatosVenta();
+    await this.getListadoVentas();
     await this.getTotalVentas();
+  }
+
+  handleClose = async () => {
+
+    await this.setState({ open: false });
+    this.setState({ query: "", });
+    this.getVentas();
   }
 
   onEntregadoChange = async (event) => {
@@ -200,7 +253,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/listadoVentas/" + IdVenta,
+      url: "http://localhost:9000/ventas/" + IdVenta,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar esta venta?")) {
@@ -240,13 +293,37 @@ class ListadoVentas extends React.Component {
           console.log(error);
         });
       this.getVentas();
-      this.getDetalleVentas();
+      this.getListadoVentas();
       this.getTotalVentas();
     }
 
-   
+
 
   };
+
+  handleSearch = async (e) => {
+    // Llamar a la función de búsqueda con las fechas seleccionadas
+    //onSearch(startDate, endDate);
+    //alert("BUSQUEDA POR FECHA");
+    console.log(this.state.startDate, this.state.endDate)
+    this.getVentas();
+  };
+
+  onChangeDateStart = async (date) => {
+    
+    let sqldate = new Date(date).toISOString().split('T')[0]+ ' 00:00:00';
+   
+    this.setState({ startDateMysql: sqldate, startDate: date });
+    console.log("Date", sqldate)
+  };
+  onChangeDateEnd = async (date) => {
+    let sqldate = new Date(date).toISOString().split('T')[0]+ ' 23:59:59';
+
+    this.setState({ endDate: date, endDateMysql:sqldate });
+    console.log("endDate", date)
+
+  };
+
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -270,22 +347,75 @@ class ListadoVentas extends React.Component {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
               <Grid m={0} pt={1}>
-
-        
-            {/*     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Paper
+                  elevation={10}
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    alignItems: "column",
+                  }}
+                >
+                  <div>
+                    <h3>Búsqueda por fechas</h3>
+                    <div>
+                      <label>Desde:</label>
+                      <DatePicker dateFormat="dd/M/yyyy" selected={this.state.startDate} onChange={(date) => this.onChangeDateStart(date)} />
+                    </div>
+                    <div>
+                      <label>Hasta:</label>
+                      <DatePicker dateFormat="dd/MM/yyyy" selected={this.state.endDate} onSelect={(date) => this.onChangeDateEnd(date)} />
+                    </div>
+                    <button onClick={this.handleSearch}>Buscar</button>
+                  </div>
+                </Paper>
+                {/*  
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker', 'DatePicker']}>
-                  <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-17')} />
+                  <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2023-05-01')} />
                     <DatePicker
                       label="Controlled picker"
-                      //value={this.state.dateEnd}
+                      value={this.state.dateEnd}
                       onChange={(event) => this.onChangeDate()}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
- */}
+  */}
               </Grid>
-
-
+{/* 
+              <Grid m={0} pt={1}>
+                <Paper
+                  elevation={10}
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    alignItems: "column",
+                  }}
+                >
+                  {/* BUSCADOR  
+                  <div
+                    component="form"
+                    className="search"
+                    onSubmit={this.handleClickSearch}
+                  >
+                    <input
+                      type="text"
+                      name="query"
+                      placeholder={`Buscar...`}
+                      className="searchTerm"
+                      value={this.state.query}
+                      onChange={this.handleChangeSearch}
+                    />
+                    <button
+                      type="submit"
+                      className="searchButton"
+                      onClick={this.handleClickSearch}
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                </Paper>
+              </Grid>
+ */}
               <Grid m={0} pt={1}>
                 <TableContainer component={Paper}>
 
@@ -406,7 +536,7 @@ class ListadoVentas extends React.Component {
                         </DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            {this.state.ventas.map((item) =>
+                            {this.state.datosVenta.map((item) =>
                               <Box
                                 sx={{
                                   width: 300,
@@ -503,8 +633,18 @@ class ListadoVentas extends React.Component {
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                          <Button variant="contained" size="small" bgcolor="pink" onClick={this.handleUpdate}>Guardar cambios</Button>
-                          <Button bgcolor="pink" onClick={this.handleClose}>Cerrar</Button>
+                          <Button 
+                          variant="contained" 
+                          size="small" 
+                          bgcolor="pink" 
+                          onClick={this.handleUpdate}>
+                            Guardar cambios
+                          </Button>
+                          <Button 
+                          bgcolor="pink" 
+                          onClick={this.handleClose}>
+                            Cerrar
+                            </Button>
                         </DialogActions>
                       </Dialog>
                     </TableBody>

@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
   const sql = String(req.query.query).split(' ').join('')
   == '' || req.query.query
   == 'undefined' || !req.query || !req.query.query ?`
-  SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+  SELECT p.IdProducto, p.Imagen, p.ImagenURL ,p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
   `:`
-    SELECT p.IdProducto, p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    SELECT p.IdProducto,  p.Imagen,  p.ImagenURL , p.Detalle, p.Categoria_Id, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
@@ -53,7 +53,7 @@ router.post("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   INSERT INTO \`productos\`
-  ( IdProducto, Detalle, Categoria_Id, Marca_Id, Costo, PrecioMenor, PrecioMayor, Observacion, Proveedor_Id) values ('${codigo}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.PrecioMenor}','${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
+  ( IdProducto, ImagenURL, Detalle, Categoria_Id, Marca_Id, Costo, PrecioMenor, PrecioMayor, Observacion, Proveedor_Id) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.PrecioMenor}','${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -89,6 +89,7 @@ router.put("/", function (req, res, next) {
   const sql = `
   UPDATE \`productos\`
   SET detalle='${req.body.detalle}',
+  ImagenURL='http://localhost:3000/${req.body.ImagenURL}',
   Categoria_Id='${req.body.Categoria_Id}',
   Marca_Id='${req.body.Marca_Id}',
   Costo='${req.body.costo}',

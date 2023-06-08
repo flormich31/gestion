@@ -5,23 +5,27 @@ router.get("/", function (req, res, next) {
   console.log("Request", req.query);
 
   const sql =  `
-  SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente, f.FormaPago, v.Total, v.Observacion, v.Descuento , CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
-  FROM \`ventas\` as v 
-  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+ SELECT d.IdDetalleVentas, v.IdVenta, vv.Nombre, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, c.Nombre_Cliente, f.FormaPago, 
+v.Entregado, v.Pagado, v.Observacion, p.IdProducto, p.Detalle, m.Marca, d.cantidad, p.PrecioMenor, d.PrecioVenta, v.Descuento, 
+v.Total, v.Subtotal
+  FROM \`detalle_ventas\` as d 
+  INNER JOIN \`ventas\` as v on v.IdVenta = d.Venta_Id
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
+  INNER JOIN \`vendedores\` as vv on vv.IdVendedor = v.Vendedor_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
-  WHERE v.FechaEliminacion IS NULL
-  ORDER BY v.Fecha ASC
-  `;
+  INNER JOIN \`productos\` as p on p.IdProducto = d.Producto_Id
+  INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
+  WHERE d.FechaEliminacion IS NULL
+AND IdVenta LIKE "%${req.query.query}%" 
+`;
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log("ventas:",sql);
-    if (err) {
-      console.log(err);
-      res.send("Error recuperando productos");
-    } else {
-      res.json({ ventas: regs });
-      console.log( "todas las ventas", regs );
-    }
+      console.log(sql);
+      if (err) {
+          console.log(err);
+          res.send("Error recuperando detalle de venta");
+      } else {
+          res.json({ prodventas: regs });
+      }
   });
 });
 

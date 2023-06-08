@@ -102,6 +102,7 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   };
+
   getClientes = () => {
     let _this = this;
     var config = {
@@ -118,6 +119,7 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   };
+
   getProductos = () => {
     let _this = this;
     var config = {
@@ -139,27 +141,6 @@ class DashboardContent extends React.Component {
       });
   };
 
-  redirectHandlerOpen = () => {
-    this.setState({ redirect: true });
-    this.renderRedirectOpen();
-  };
-  renderRedirectOpen = () => {
-    if (this.state.redirect) {
-      return <Redirect to="/groups-A" />;
-    }
-  };
-  makeid = (length) => {
-    const result = "";
-    const characters = "0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    this.setState.numeroVenta = result(5);
-    console.log(this.numeroVenta);
-  };
-
   calcularSubtotal = () => {
     let subtotal = 0;
     this.state.ventaProductos.map((item) => {
@@ -169,43 +150,27 @@ class DashboardContent extends React.Component {
   };
 
   calcularTotal = () => {
-    /* let DESCUENTO = this.state.Descuento / 100;
-    let subtotal = this.state.Subtotal * DESCUENTO;
-    let total= this.state.Subtotal - subtotal;
-     
-    console.log("DESCUENTO ES:", DESCUENTO);
-    console.log("TOTAL ES:", total);
-    this.setState({ Total: total }); */
     if (this.state.Interes == 0 & this.state.Descuento == 0) {
       let subtotal = 0;
       this.state.ventaProductos.map((item) => {
         subtotal += parseInt(item.PrecioVenta);
       });
       this.setState({ Total: subtotal });
-      console.log("total es", subtotal );
+      console.log("total es", subtotal);
     }
     else if (this.state.Descuento > 0) {
       let DESCUENTO = this.state.Descuento / 100;
       let subtotal = this.state.Subtotal * DESCUENTO;
       let total = this.state.Subtotal - subtotal;
-
-      console.log("DESCUENTO this:", this.state.Descuento);
-      console.log("DESCUENTO ES:", DESCUENTO);
-      console.log("TOTAL ES:", total);
       this.setState({ Total: total });
     }
     else if (this.state.Interes > 0) {
       let INTERES = this.state.Interes / 100;
       let subtotal = this.state.Subtotal * INTERES;
       let total = this.state.Subtotal + subtotal;
-
-      console.log("Interes this :",  this.state.Interes);
-      console.log("Interes :", INTERES);
-      console.log("TOTAL ES:", total);
       this.setState({ Total: total });
     }
-     };
-
+  };
 
   handleBorrarProducto = async (index) => {
     this.state.ventaProductos.splice(index, 1);
@@ -250,23 +215,21 @@ class DashboardContent extends React.Component {
   };
 
   onDescuentoChange = async (event) => {
-
     await this.setState({ Descuento: event.target.value });
 
     this.calcularSubtotal();
     this.calcularTotal();
 
   };
+
   onInteresChange = async (event) => {
-
     await this.setState({ Interes: event.target.value });
-
     this.calcularSubtotal();
     this.calcularTotal();
 
   };
-  onSubtotalChange = async (event) => {
 
+  onSubtotalChange = async (event) => {
     await this.calcularTotal();
     this.calcularSubtotal();
     this.calcularTotal();
@@ -316,11 +279,11 @@ class DashboardContent extends React.Component {
       FormaPago_Id: this.state.IdFormaPago,
       Total: this.state.Total,
       Subtotal: this.state.Subtotal,
-      Entregado: this.state.Entregado === "" ? "2":this.state.Entregado,
-      Pagado: this.state.Pagado === "" ? "2":this.state.Pagado,
-      Observacion: this.state.Observacion  === "" ? "ninguna":this.state.Observacion,
-      Descuento: this.state.Descuento === "" ? "0":this.state.Descuento,
-      Interes: this.state.Interes === "" ? "0":this.state.Interes,
+      Entregado: this.state.Entregado === "" ? "2" : this.state.Entregado,
+      Pagado: this.state.Pagado === "" ? "2" : this.state.Pagado,
+      Observacion: this.state.Observacion === "" ? "ninguna" : this.state.Observacion,
+      Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
+      Interes: this.state.Interes === "" ? "0" : this.state.Interes,
       productos: this.state.ventaProductos,
     };
     let _this = this;
@@ -328,25 +291,25 @@ class DashboardContent extends React.Component {
       .post("http://localhost:9000/ventas", ventaData)
       .then(function (response) {
         console.log(response);
-        console.log("datos de venta",ventaData);
+        console.log("datos de venta", ventaData);
         alert("Se guardó correctamente");
-        
+
       })
       .catch(function (error) {
         console.log(error);
         alert("No se guardo la venta");
       });
-      this.setState({ IdVendedor: "" });
-      this.setState({ Cliente_Id: "" });
-      this.setState({ IdFormaPago: "" });
-      this.setState({ Subtotal: "" });
-      this.setState({ Total: "" });
-      this.setState({ Entregado: "" });
-      this.setState({ Pagado: "" });
-      this.setState({ Observacion: "" });
-      this.setState({ Descuento: "" });
-      this.setState({ Interes: "" });
-      this.setState({ ventaProductos: [] });
+    this.setState({ IdVendedor: "" });
+    this.setState({ Cliente_Id: "" });
+    this.setState({ IdFormaPago: "" });
+    this.setState({ Subtotal: "" });
+    this.setState({ Total: "" });
+    this.setState({ Entregado: "" });
+    this.setState({ Pagado: "" });
+    this.setState({ Observacion: "" });
+    this.setState({ Descuento: "" });
+    this.setState({ Interes: "" });
+    this.setState({ ventaProductos: [] });
   };
 
   render() {
@@ -381,6 +344,38 @@ class DashboardContent extends React.Component {
                   }}
                 >
                   <Autocomplete
+                    
+                    options={this.state.productos}
+                    autoHighlight
+                    getOptionLabel={(option) => option.Detalle}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          height="80px" width="80px"
+                          src={option.ImagenURL}
+                          alt=""
+                        />
+                         {option.IdProducto} - {option.Detalle} - {option.marca} - ${option.PrecioMenor}
+                      </Box>
+                      
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Buscar producto"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                      />
+                      
+                    )}
+                    onChange={this.handleProductChange}
+                    onInputChange={this.handleProductInputChange}
+                  />
+
+                  {/*  <Autocomplete
                     disablePortal
                     id="combo-box-producto"
                     size="small"
@@ -391,7 +386,7 @@ class DashboardContent extends React.Component {
                     )}
                     onChange={this.handleProductChange}
                     onInputChange={this.handleProductInputChange}
-                  />
+                  /> */}
                 </Paper>
               </Grid>
 
@@ -470,7 +465,7 @@ class DashboardContent extends React.Component {
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <FilledInput
                                 value={item.PrecioVenta}
-                                 onChange={(e) => {
+                                onChange={(e) => {
                                   this.onPrecioChange(index, e.target.value);
                                 }}
                                 startAdornment={

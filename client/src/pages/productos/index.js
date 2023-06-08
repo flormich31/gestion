@@ -9,11 +9,7 @@ import AppBar from "../../components/AppBar";
 import Copyright from "../../components/Copyright";
 import axios from "axios";
 import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import FormHelperText from "@mui/material/FormHelperText";
 import { Paper, Button, Typography } from "@mui/material";
-import { Redirect } from "react-router";
 import TextField from "@mui/material/TextField";
 import Table from "@mui/material/Table";
 import Select from "@mui/material/Select";
@@ -24,11 +20,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { pink } from "@mui/material/colors";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Modal from "@mui/material/Modal";
 import Pagination from "../../components/Pagination";
 import NativeSelect from "@mui/material/NativeSelect";
@@ -52,8 +46,9 @@ class Productos extends React.Component {
       open: false,
       query: "",
       idedit: "",
+      imagenedit: "",
       detalleedit: "",
-      Observacion:"",
+      Observacion: "",
       categoriaedit: "",
       IdCategoriaedit: "",
       marcaedit: "",
@@ -102,7 +97,7 @@ class Productos extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-  }; 
+  };
 
   getTodasCategorias = () => {
     let _this = this;
@@ -154,7 +149,6 @@ class Productos extends React.Component {
   };
 
   handleChangeId = (event) => {
-    console.log(event.target.value);
     this.setState({ id: event.target.value });
   };
   handleChangeDetalle = (event) => {
@@ -163,7 +157,7 @@ class Productos extends React.Component {
   handleChangeCategoria = (event) => {
     this.setState({ IdCategoria: event.target.value });
   };
-  handleChangeObservacion =  (event) => {
+  handleChangeObservacion = (event) => {
     this.setState({ Observacion: event.target.value });
   };
   handleChangeMarca = (event) => {
@@ -217,10 +211,23 @@ class Productos extends React.Component {
     this.setState({ IdProveedor: "" });
   };
 
-  //Para editar una categoria
- 
+  //Para editar un producto
+
   handleChangeEditDetalle = (event) => {
     this.setState({ detalleedit: event.target.value });
+  };
+  handleChangeEditImagen = async (event) => {
+    console.log("imagen:", event.target.files[0]);
+
+    let archivo = event.target.files[0];
+    let archivo2 = archivo.name
+    console.log("Nombre del archivo:", archivo2);
+    await this.setState(() => ({ imagenedit: archivo2 }));
+    await console.log(this.imagenedit);
+
+    /* 
+  console.log("Tipo de archivo:", archivo.type);
+  console.log("Tamaño del archivo:", archivo.size, "bytes"); */
   };
   handleChangeEditIdCategoria = (event) => {
     this.setState({ IdCategoriaedit: event.target.value });
@@ -256,11 +263,13 @@ class Productos extends React.Component {
     Observacion,
     Proveedor_Id,
     RazonSocial,
+    ImagenURL,
     event
   ) => {
     this.setState({ open: true });
     this.setState({ idedit: IdProducto });
     this.setState({ detalleedit: Detalle });
+    this.setState({ imagenedit: ImagenURL });
     this.setState({ categoriaedit: categoria });
     this.setState({ IdCategoriaedit: Categoria_Id });
     this.setState({ IdMarcaedit: Marca_Id });
@@ -280,6 +289,7 @@ class Productos extends React.Component {
     axios
       .put("http://localhost:9000/productos", {
         id: this.state.idedit,
+        ImagenURL: this.state.imagenedit,
         detalle: this.state.detalleedit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
@@ -311,7 +321,6 @@ class Productos extends React.Component {
 
   handleChangeSearch = async (event) => {
     await this.setState({ query: event.target.value });
-    console.log(this.state.query);
     this.getProductos();
   };
   handleClickSearch = (event) => {
@@ -347,7 +356,7 @@ class Productos extends React.Component {
           console.log(error);
         });
     }
-  }; 
+  };
 
 
   render() {
@@ -366,7 +375,7 @@ class Productos extends React.Component {
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
-          <CssBaseline/>
+          <CssBaseline />
           <AppBar />
           <Box
             component="main"
@@ -381,7 +390,7 @@ class Productos extends React.Component {
             }}
           >
             <Toolbar />
-
+           
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Paper
                 elevation={10}
@@ -403,7 +412,7 @@ class Productos extends React.Component {
                   <Grid item>
                     <Grid container direction="row">
                       <Grid item xs container direction="column">
-                       
+
                         <Grid item xs>
                           <TextField
                             id="standard-read-only-input"
@@ -414,16 +423,16 @@ class Productos extends React.Component {
                           />
                         </Grid>
                         <Grid item xs>
-                        <TextField
+                          <TextField
                             id="standard-basic"
                             label="Observaciones"
                             variant="standard"
                             value={this.state.Observacion}
                             onChange={this.handleChangeObservacion}
                           />
-                          </Grid>
+                        </Grid>
                         <Grid item xs>
-                        <TextField
+                          <TextField
                             id="standard-read-only-input"
                             value={this.state.costo}
                             onChange={this.handleChangeCosto}
@@ -431,11 +440,11 @@ class Productos extends React.Component {
                             variant="standard"
                           />
                         </Grid>
-                        
+
                       </Grid>
                       <Grid item xs container direction="column">
                         <Grid item xs>
-                        <TextField
+                          <TextField
                             id="standard-read-only-input"
                             value={this.state.PrecioMenor}
                             onChange={this.handleChangePrecioMenor}
@@ -445,7 +454,7 @@ class Productos extends React.Component {
                         </Grid>
 
                         <Grid item xs>
-                        <TextField
+                          <TextField
                             id="standard-read-only-input"
                             value={this.state.PrecioMayor}
                             onChange={this.handleChangePrecioMayor}
@@ -453,9 +462,9 @@ class Productos extends React.Component {
                             variant="standard"
                           />
                         </Grid>
-                        
+
                         <Grid item xs>
-                        <InputLabel
+                          <InputLabel
                             variant="standard"
                             htmlFor="uncontrolled-native"
                           >
@@ -464,17 +473,17 @@ class Productos extends React.Component {
                           <NativeSelect
                             //input={<OutlinedInput id="select-multiple-chip" label="clientes" />}
                             value={this.state.IdCategoria}
-                          onChange={this.handleChangeCategoria}
+                            onChange={this.handleChangeCategoria}
                             inputProps={{
                               id: "uncontrolled-native",
                             }}
                           >
                             {this.state.categorias.map((item, index) => (
                               <option
-                              key={item.IdCategoria}
-                              value={item.IdCategoria}
-                            >
-                              {item.Categoria}
+                                key={item.IdCategoria}
+                                value={item.IdCategoria}
+                              >
+                                {item.Categoria}
                               </option>
                             ))}
                           </NativeSelect>
@@ -482,8 +491,8 @@ class Productos extends React.Component {
                       </Grid>
 
                       <Grid item xs container direction="column">
-                      <Grid item xs>
-                      <InputLabel
+                        <Grid item xs>
+                          <InputLabel
                             variant="standard"
                             htmlFor="uncontrolled-native"
                           >
@@ -505,7 +514,7 @@ class Productos extends React.Component {
                         </Grid>
 
                         <Grid item xs>
-                        <InputLabel
+                          <InputLabel
                             variant="standard"
                             htmlFor="uncontrolled-native"
                           >
@@ -513,31 +522,31 @@ class Productos extends React.Component {
                           </InputLabel>
                           <NativeSelect
                             value={this.state.IdProveedor}
-                          onChange={this.handleChangeProveedor}
+                            onChange={this.handleChangeProveedor}
                             inputProps={{
                               id: "uncontrolled-native",
                             }}
                           >
                             {this.state.proveedores.map((item, index) => (
-                            <option
-                              key={item.IdProveedor}
-                              value={item.IdProveedor}
-                            >
-                              {item.RazonSocial}
+                              <option
+                                key={item.IdProveedor}
+                                value={item.IdProveedor}
+                              >
+                                {item.RazonSocial}
                               </option>
                             ))}
                           </NativeSelect>
 
                         </Grid>
                         <Grid item xs>
-                        <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{ mt: 1, mb: 1 }}
-                        onClick={this.handleSubmit}
-                      >
-                        {"Guardar"}
-                      </Button>
+                          <Button
+                            type="button"
+                            variant="contained"
+                            sx={{ mt: 1, mb: 1 }}
+                            onClick={this.handleSubmit}
+                          >
+                            {"Guardar"}
+                          </Button>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -546,349 +555,385 @@ class Productos extends React.Component {
               </Paper>
 
 
-                <Grid m={0} pt={1}>
-                  <Paper
-                     elevation={10}
+              <Grid m={0} pt={1}>
+                <Paper
+                  elevation={10}
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    alignItems: "column",
+                  }}
+                >
+                  {/* BUSCADOR */}
+                  <div
+                    component="form"
+                    className="search"
+                    onSubmit={this.handleClickSearch}
+                  >
+                    <input
+                      type="text"
+                      name="query"
+                      placeholder={`Buscar...`}
+                      className="searchTerm"
+                      value={this.state.query}
+                      onChange={this.handleChangeSearch}
+                    />
+                    <button
+                      type="submit"
+                      className="searchButton"
+                      onClick={this.handleClickSearch}
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                </Paper>
+              </Grid>
+
+              <Grid m={0} pt={1}>
+                <TableContainer component={Paper}>
+                  <div
+                    align="center"
                     sx={{
-                      p: 1,
-                      display: "flex",
-                      alignItems: "column",
+                      p: 10,
                     }}
                   >
-                    {/* BUSCADOR */}
-                    <div
-                      component="form"
-                      className="search"
-                      onSubmit={this.handleClickSearch}
-                    >
-                      <input
-                        type="text"
-                        name="query"
-                        placeholder={`Buscar...`}
-                        className="searchTerm"
-                        value={this.state.query}
-                        onChange={this.handleChangeSearch}
-                      />
-                      <button
-                        type="submit"
-                        className="searchButton"
-                        onClick={this.handleClickSearch}
-                      >
-                        Buscar
-                      </button>
-                    </div>
-                  </Paper>
-                </Grid>
-
-                <Grid m={0} pt={1}>
-                <TableContainer component={Paper}>
-                <div
-                      align="center"
-                      sx={{
-                        p: 10,
-                      }}
-                    >
-                      <Typography variant="body" component="div">
-                        <b>{totalProductos} Productos</b>
-                        <br />
-                        {/* <b>Pagina:{currentPage}</b> */}
-                        <b>{totalPages}</b>
-                      </Typography>
-                      </div>
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell bgcolor="pink">
-                            {" "}
-                            <b>Codigo</b>
+                    <Typography variant="body" component="div">
+                      <b>{totalProductos} Productos</b>
+                      <br />
+                      {/* <b>Pagina:{currentPage}</b> */}
+                      <b>{totalPages}</b>
+                    </Typography>
+                  </div>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell bgcolor="pink">
+                          {" "}
+                          <b>Codigo</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink">
+                          {" "}
+                          <b>Imagen</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink">
+                          {" "}
+                          <b>Descripcion del producto</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Observacion</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Marca</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Categoria</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Costo</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Precio Menor</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Precio Mayor</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Proveedor</b>
+                        </TableCell>
+                        <TableCell bgcolor="pink" align="right">
+                          <b>Acciones</b>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {this.state.productos.map((item, index) => (
+                        <TableRow
+                          key={item.IdProducto}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell align="left" component="th" scope="row">
+                            {item.IdProducto}
                           </TableCell>
-                          <TableCell bgcolor="pink">
-                            {" "}
-                            <b>Descripcion del producto</b>
+                          <TableCell component="th" scope="row">
+                            <img src={item.ImagenURL} height="80px" width="80px" />
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Observacion</b>
+                          <TableCell component="th" scope="row">
+                            {item.Detalle}
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Marca</b>
+                          <TableCell component="th" scope="row">
+                            {item.Observacion}
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Categoria</b>
+                          <TableCell align="right">{item.marca}</TableCell>
+                          <TableCell align="right">
+                            {item.categoria}
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Costo</b>
+                          <TableCell align="right">${item.Costo}</TableCell>
+                          <TableCell align="right">${item.PrecioMenor}</TableCell>
+                          <TableCell align="right">${item.PrecioMayor}</TableCell>
+                          <TableCell align="right">
+                            {item.RazonSocial}
                           </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Precio Menor</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Precio Mayor</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Proveedor</b>
-                          </TableCell>
-                          <TableCell bgcolor="pink" align="right">
-                            <b>Acciones</b>
+                          <TableCell align="right">
+                            <EditIcon
+                              sx={{ color: pink[200] }}
+                              key={item.IdProducto}
+                              value={this.state.idedit}
+                              onClick={() => {
+                                this.showModal(
+                                  item.IdProducto,
+                                  item.Detalle,
+                                  item.categoria,
+                                  item.Categoria_Id,
+                                  item.marca,
+                                  item.Marca_Id,
+                                  item.Costo,
+                                  item.PrecioMenor,
+                                  item.PrecioMayor,
+                                  item.Observacion,
+                                  item.Proveedor_Id,
+                                  item.RazonSocial,
+                                  item.ImagenURL
+                                );
+                              }}
+                            />
+                            <DeleteIcon
+                              sx={{ color: pink[600] }}
+                              align="left"
+                              onClick={() => {
+                                this.handleRemove(item.IdProducto);
+                              }}
+                            />
                           </TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {this.state.productos.map((item, index) => (
-                          <TableRow
-                            key={item.IdProducto}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
+                      ))}
+
+                      <Modal open={this.state.open} onClose={this.hideModal}>
+                        <Box
+                          sx={{
+                            maxHeight: "100%",
+                            overflowY: "auto",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            width: 800,
+                            bgcolor: "background.paper",
+                            border: "2px solid #<000",
+                            boxShadow: 24,
+                            p: 4,
+                          }}
+                        >
+                          <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
                           >
-                            <TableCell align="left" component="th" scope="row">
-                              {item.IdProducto}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {item.Detalle}
-                            </TableCell>
-                             <TableCell component="th" scope="row">
-                              {item.Observacion}
-                            </TableCell>
-                            <TableCell align="right">{item.marca}</TableCell>
-                            <TableCell align="right">
-                              {item.categoria}
-                            </TableCell>
-                            <TableCell align="right">${item.Costo}</TableCell>
-                            <TableCell align="right">${item.PrecioMenor}</TableCell>
-                            <TableCell align="right">${item.PrecioMayor}</TableCell>
-                            <TableCell align="right">
-                              {item.RazonSocial}
-                            </TableCell>
-                            <TableCell align="right">
-                              <EditIcon
-                                sx={{ color: pink[200] }}
-                                key={item.IdProducto}
-                                value={this.state.idedit}
-                                onClick={() => {
-                                  this.showModal(
-                                    item.IdProducto,
-                                    item.Detalle,
-                                    item.categoria,
-                                    item.Categoria_Id,
-                                    item.marca,
-                                    item.Marca_Id,
-                                    item.Costo,
-                                    item.PrecioMenor,
-                                    item.PrecioMayor,
-                                    item.Observacion,
-                                    item.Proveedor_Id,
-                                    item.RazonSocial
-                                  );
-                                }}
-                              />
-                              <DeleteIcon
-                                sx={{ color: pink[600] }}
-                                align="left"
-                                onClick={() => {
-                                  this.handleRemove(item.IdProducto);
-                                }}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                        <Modal open={this.state.open} onClose={this.hideModal}>
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              top: "50%",
-                              left: "50%",
-                              transform: "translate(-50%, -50%)",
-                              width: 400,
-                              bgcolor: "background.paper",
-                              border: "2px solid #<000",
-                              boxShadow: 24,
-                              p: 4,
-                            }}
+                            <b>Editar producto</b>
+                          </Typography>
+                          <Typography
+                            id="modal-modal-description"
+                            sx={{ mt: 2 }}
                           >
-                            <Typography
-                              id="modal-modal-title"
-                              variant="h6"
-                              component="h2"
-                            >
-                              <b>Editar producto</b>
-                            </Typography>
-                            <Typography
-                              id="modal-modal-description"
-                              sx={{ mt: 2 }}
-                            >
-                              Codigo: {this.state.idedit}
-                            </Typography>
+                            Codigo: {this.state.idedit}
+                          </Typography>
 
-                            <FormControl
-                              variant="standard"
-                              onSubmit={this.handleEdit}
-                              fullWidth
-                            >
-                              <TextField
-                                label="Producto"
-                                id="detalleedit"
-                                size="small"
-                                margin="normal"
-                                value={this.state.detalleedit}
-                                onChange={this.handleChangeEditDetalle}
-                              />
-                            </FormControl>
-                            <FormControl
-                              variant="standard"
-                              onSubmit={this.handleEdit}
-                              fullWidth
-                            >
-                              <TextField
-                                label="Observacion"
-                                id="Observacion"
-                                size="small"
-                                margin="normal"
-                                value={this.state.editObservacion}
-                                onChange={this.handleChangeEditObservacion}
-                              />
-                            </FormControl>
-                            <FormControl
-                              variant="standard"
-                              onSubmit={this.handleEdit}
-                              fullWidth
-                            >
-                              <TextField
-                                label="Costo"
-                                id="Costo"
-                                size="small"
-                                margin="normal"
-                                value={this.state.costoedit}
-                                onChange={this.handleChangeEditCosto}
-                              />
-                            </FormControl>
-                            <FormControl
-                              variant="standard"
-                              onSubmit={this.handleEdit}
-                              fullWidth
-                            >
-                              <TextField
-                                label="Precio"
-                                id="Precio"
-                                size="small"
-                                margin="normal"
-                                value={this.state.editPrecioMenor}
-                                onChange={this.handleChangeEditPrecioMenor}
-                              />
-                            </FormControl>
-                            <FormControl
-                              variant="standard"
-                              onSubmit={this.handleEdit}
-                              fullWidth
-                            >
-                              <TextField
-                                label="Precio Mayorista"
-                                id="PrecioMayor"
-                                size="small"
-                                margin="normal"
-                                value={this.state.editPrecioMayor}
-                                onChange={this.handleChangeEditPrecioMayor}
-                              />
-                            </FormControl>
-                            {/* arreglar ID de categoria , marca y proveedor con select */}
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
+                            <TextField
+                              label="Producto"
+                              id="detalleedit"
+                              size="small"
+                              margin="normal"
+                              value={this.state.detalleedit}
+                              onChange={this.handleChangeEditDetalle}
+                            />
+                          </FormControl>
+                          <form
+                            action="http://localhost:4500/" method="post" enctype="multipart/form-data"
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
 
-                            <FormControl fullWidth size="small" margin="normal">
-                              <InputLabel id="edit-select-categoria-label">
-                                Categoría
-                              </InputLabel>
-                              <Select
-                                labelId="edit-select-categoria-label"
-                                id="edit-select-categoria"
-                                value={this.state.IdCategoriaedit}
-                                label="Categoría"
-                                onChange={this.handleChangeEditIdCategoria}
-                              >
-                                {this.state.categorias.map((item, index) => (
-                                  <MenuItem
-                                    key={item.IdCategoria}
-                                    value={item.IdCategoria}
-                                  >
-                                    {item.Categoria}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
+                            <img src={this.state.imagenedit}
+                              height="80px" width="80px" value={this.state.imagenedit}
+                              onChange={this.handleChangeEditImagen} />
 
-                            <FormControl fullWidth size="small" margin="normal">
-                              <InputLabel id="edit-select-marca-label">
-                                Marca
-                              </InputLabel>
-                              <Select
-                                labelId="edit-select-marca-label"
-                                id="edit-select-marca"
-                                value={this.state.IdMarcaedit}
-                                label="Marca"
-                                onChange={this.handleChangeEditIdMarca}
-                              >
-                                {this.state.marcas.map((item, index) => (
-                                  <MenuItem
-                                    key={item.IdMarca}
-                                    value={item.IdMarca}
-                                  >
-                                    {item.Marca}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-
-                            <FormControl fullWidth size="small" margin="normal">
-                              <InputLabel id="edit-select-proveedor-label">
-                                Proveedor
-                              </InputLabel>
-                              <Select
-                                labelId="edit-select-proveedor-label"
-                                id="edit-select-proveedor"
-                                value={this.state.IdProveedoredit}
-                                label="Proveedor"
-                                onChange={this.handleChangeEditIdProveedor}
-                              >
-                                {this.state.proveedores.map((item, index) => (
-                                  <MenuItem
-                                    key={item.IdProveedor}
-                                    value={item.IdProveedor}
-                                  >
-                                    {item.RazonSocial}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-
-                            <Button
+                            <input type="file" id="file"
+                              name="image" accept="image/*" capture="user" onChange={this.handleChangeEditImagen} />
+                            <input type="submit" value="subir" />
+                            {/* value={this.state.imagenedit}
+                              onChange={this.handleChangeEditImagen}  */}
+                            {/* <Button
                               sx={{ mt: 2, left: "5%" }}
                               margin
                               variant="contained"
-                              onClick={this.handleEdit}
+                             onClick={this.openFolder}
                             >
-                              EDITAR
-                            </Button>
-                            <Button
-                              sx={{ mt: 2, left: "30%" }}
-                              variant="outlined"
-                              color="error"
-                              onClick={() => {
-                                this.setState({ open: false });
-                              }}
-                            >
-                              CANCELAR
-                            </Button>
-                          </Box>
-                        </Modal>
-                      </TableBody>
-                    </Table>
+                              Subir foto
+                            </Button> */}
+                          </form>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
+                            <TextField
+                              label="Observacion"
+                              id="Observacion"
+                              size="small"
+                              margin="normal"
+                              value={this.state.editObservacion}
+                              onChange={this.handleChangeEditObservacion}
+                            />
+                          </FormControl>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
+                            <TextField
+                              label="Costo"
+                              id="Costo"
+                              size="small"
+                              margin="normal"
+                              value={this.state.costoedit}
+                              onChange={this.handleChangeEditCosto}
+                            />
+                          </FormControl>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
+                            <TextField
+                              label="Precio"
+                              id="Precio"
+                              size="small"
+                              margin="normal"
+                              value={this.state.editPrecioMenor}
+                              onChange={this.handleChangeEditPrecioMenor}
+                            />
+                          </FormControl>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+                            fullWidth
+                          >
+                            <TextField
+                              label="Precio Mayorista"
+                              id="PrecioMayor"
+                              size="small"
+                              margin="normal"
+                              value={this.state.editPrecioMayor}
+                              onChange={this.handleChangeEditPrecioMayor}
+                            />
+                          </FormControl>
+                          {/* arreglar ID de categoria , marca y proveedor con select */}
 
-                    {/* <Pagination
+                          <FormControl fullWidth size="small" margin="normal">
+                            <InputLabel id="edit-select-categoria-label">
+                              Categoría
+                            </InputLabel>
+                            <Select
+                              labelId="edit-select-categoria-label"
+                              id="edit-select-categoria"
+                              value={this.state.IdCategoriaedit}
+                              label="Categoría"
+                              onChange={this.handleChangeEditIdCategoria}
+                            >
+                              {this.state.categorias.map((item, index) => (
+                                <MenuItem
+                                  key={item.IdCategoria}
+                                  value={item.IdCategoria}
+                                >
+                                  {item.Categoria}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <FormControl fullWidth size="small" margin="normal">
+                            <InputLabel id="edit-select-marca-label">
+                              Marca
+                            </InputLabel>
+                            <Select
+                              labelId="edit-select-marca-label"
+                              id="edit-select-marca"
+                              value={this.state.IdMarcaedit}
+                              label="Marca"
+                              onChange={this.handleChangeEditIdMarca}
+                            >
+                              {this.state.marcas.map((item, index) => (
+                                <MenuItem
+                                  key={item.IdMarca}
+                                  value={item.IdMarca}
+                                >
+                                  {item.Marca}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <FormControl fullWidth size="small" margin="normal">
+                            <InputLabel id="edit-select-proveedor-label">
+                              Proveedor
+                            </InputLabel>
+                            <Select
+                              labelId="edit-select-proveedor-label"
+                              id="edit-select-proveedor"
+                              value={this.state.IdProveedoredit}
+                              label="Proveedor"
+                              onChange={this.handleChangeEditIdProveedor}
+                            >
+                              {this.state.proveedores.map((item, index) => (
+                                <MenuItem
+                                  key={item.IdProveedor}
+                                  value={item.IdProveedor}
+                                >
+                                  {item.RazonSocial}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <Button
+                            sx={{ mt: 2, left: "5%" }}
+                            margin
+                            variant="contained"
+                            onClick={this.handleEdit}
+                          >
+                            EDITAR
+                          </Button>
+                          <Button
+                            sx={{ mt: 2, left: "30%" }}
+                            variant="outlined"
+                            color="error"
+                            onClick={() => {
+                              this.setState({ open: false });
+                            }}
+                          >
+                            CANCELAR
+                          </Button>
+                        </Box>
+                      </Modal>
+                    </TableBody>
+                  </Table>
+
+                  {/* <Pagination
                     totalRecords={totalProductos}
                     pageLimit={10}
                     pageNeighbours={1}
                     onPageChanged={this.onPageChanged}
                   /> */}
-                  </TableContainer>
-                    
-                </Grid>
+                </TableContainer>
+
+              </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>
