@@ -7,6 +7,7 @@ var logger = require("morgan");
 var cors = require("cors"); 
 
 var indexRouter = require("./routes/index");
+var uploadRouter = require("./routes/upload");
 var usersRouter = require("./routes/users");
 var loginRouter = require("./routes/login");
 var productosRouter = require("./routes/productos");
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/upload", uploadRouter);
 app.use("/login", loginRouter);
 app.use("/productos", productosRouter);
 app.use("/categorias", categoriasRouter);

@@ -47,6 +47,7 @@ class Productos extends React.Component {
       query: "",
       idedit: "",
       imagenedit: "",
+      imageneditURL: "",
       detalleedit: "",
       Observacion: "",
       categoriaedit: "",
@@ -221,8 +222,9 @@ class Productos extends React.Component {
 
     let archivo = event.target.files[0];
     let archivo2 = archivo.name
-    console.log("Nombre del archivo:", archivo2);
-    await this.setState(() => ({ imagenedit: archivo2 }));
+    console.log("Nombre del archivo:", archivo);
+    await this.setState(() => ({ imagenedit: archivo }));
+    await this.setState(() => ({ imageneditURL: archivo2 }));
     await console.log(this.imagenedit);
 
     /* 
@@ -282,6 +284,13 @@ class Productos extends React.Component {
     this.setState({ razonsocialedit: RazonSocial });
   };
 
+  handleEditImagen = (event) => {
+   console.log(event.target.files[0])
+   let archivo= event.target.files[0];
+   let archivo2= archivo.name
+    this.setState({ imagenedit: event.target.files[0] });
+  }
+
   // This is the put request
   handleEdit = (event) => {
     let _this = this;
@@ -289,7 +298,7 @@ class Productos extends React.Component {
     axios
       .put("http://localhost:9000/productos", {
         id: this.state.idedit,
-        ImagenURL: this.state.imagenedit,
+        ImagenURL: this.state.imageneditURL,
         detalle: this.state.detalleedit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
@@ -315,6 +324,20 @@ class Productos extends React.Component {
     this.setState({ IdMarca: "" });
     this.setState({ IdProveedor: "" });
     this.setState({ open: false });
+
+    const formData = new FormData();
+    formData.append('file', this.state.imagenedit);
+
+    axios.post("http://localhost:9000/upload", formData)
+      .then(response => {
+        // Manejar la respuesta del servidor
+        console.log(response);
+      })
+      .catch(error => {
+        // Manejar errores
+        console.log(error);
+      });
+
   };
 
   //Para buscar un producto
@@ -753,10 +776,9 @@ class Productos extends React.Component {
                               onChange={this.handleChangeEditDetalle}
                             />
                           </FormControl>
-                          <form
-                            action="http://localhost:4500/" method="post" enctype="multipart/form-data"
+                          <FormControl
+                            onSubmit={this.handleEditImagen} 
                             variant="standard"
-                            onSubmit={this.handleEdit}
                             fullWidth
                           >
 
@@ -766,18 +788,8 @@ class Productos extends React.Component {
 
                             <input type="file" id="file"
                               name="image" accept="image/*" capture="user" onChange={this.handleChangeEditImagen} />
-                            <input type="submit" value="subir" />
-                            {/* value={this.state.imagenedit}
-                              onChange={this.handleChangeEditImagen}  */}
-                            {/* <Button
-                              sx={{ mt: 2, left: "5%" }}
-                              margin
-                              variant="contained"
-                             onClick={this.openFolder}
-                            >
-                              Subir foto
-                            </Button> */}
-                          </form>
+                          
+                          </FormControl>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}

@@ -89,7 +89,7 @@ router.put("/", function (req, res, next) {
   const sql = `
   UPDATE \`productos\`
   SET detalle='${req.body.detalle}',
-  ImagenURL='http://localhost:3000/${req.body.ImagenURL}',
+  ImagenURL='http://localhost:9000/${req.body.ImagenURL}',
   Categoria_Id='${req.body.Categoria_Id}',
   Marca_Id='${req.body.Marca_Id}',
   Costo='${req.body.costo}',
