@@ -26,6 +26,7 @@ import { pink } from "@mui/material/colors";
 import Modal from "@mui/material/Modal";
 import Pagination from "../../components/Pagination";
 import NativeSelect from "@mui/material/NativeSelect";
+import Stack from '@mui/material/Stack';
 
 const mdTheme = createTheme();
 
@@ -46,6 +47,7 @@ class Productos extends React.Component {
       open: false,
       query: "",
       idedit: "",
+      imagePreview: "",
       imagenedit: "",
       imageneditURL: "",
       detalleedit: "",
@@ -58,7 +60,6 @@ class Productos extends React.Component {
       editPrecioMenor: "",
       editPrecioMayor: "",
       editObservacion: "",
-      costoedit: "",
       razonsocialedit: "",
       IdProveedoredit: "",
     };
@@ -184,6 +185,7 @@ class Productos extends React.Component {
     axios
       .post("http://localhost:9000/productos", {
         id: this.state.id,
+        ImagenURL: this.state.imageneditURL,
         detalle: this.state.detalle,
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
@@ -210,6 +212,20 @@ class Productos extends React.Component {
     this.setState({ PrecioMenor: "" });
     this.setState({ PrecioMayor: "" });
     this.setState({ IdProveedor: "" });
+
+    const formData = new FormData();
+    formData.append('file', this.state.imagenedit);
+
+    axios.post("http://localhost:9000/upload", formData)
+      .then(response => {
+        // Manejar la respuesta del servidor
+        console.log(response);
+      })
+      .catch(error => {
+        // Manejar errores
+        console.log(error);
+      });
+
   };
 
   //Para editar un producto
@@ -219,6 +235,22 @@ class Productos extends React.Component {
   };
   handleChangeEditImagen = async (event) => {
     console.log("imagen:", event.target.files[0]);
+
+    let file = event.target.files[0];
+
+    if (file) {
+      let reader = new FileReader();
+
+      let ar = URL.createObjectURL(event.target.files[0])
+      console.log(ar);
+      reader.onloadend = async () => {
+        //await this.setState({ imagePreview: [reader.result] });
+        await this.setState({ imagePreview: [URL.createObjectURL(event.target.files[0])] });
+        await console.log("imagePreview", this.state.imagePreview);
+      };
+
+      reader.readAsDataURL(file);
+    }
 
     let archivo = event.target.files[0];
     let archivo2 = archivo.name
@@ -285,9 +317,9 @@ class Productos extends React.Component {
   };
 
   handleEditImagen = (event) => {
-   console.log(event.target.files[0])
-   let archivo= event.target.files[0];
-   let archivo2= archivo.name
+    console.log(event.target.files[0])
+    let archivo = event.target.files[0];
+    let archivo2 = archivo.name
     this.setState({ imagenedit: event.target.files[0] });
   }
 
@@ -413,7 +445,7 @@ class Productos extends React.Component {
             }}
           >
             <Toolbar />
-           
+
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Paper
                 elevation={10}
@@ -426,8 +458,8 @@ class Productos extends React.Component {
                   <Grid item>
                     <Grid container direction="row">
                       <Grid item xs={12}>
-                        <Typography variant="h5" component="div" p={1}>
-                          Creador de productos
+                        <Typography variant="h6" component="div" >
+                          Agregar nuevo producto
                         </Typography>
                       </Grid>
                     </Grid>
@@ -437,129 +469,203 @@ class Productos extends React.Component {
                       <Grid item xs container direction="column">
 
                         <Grid item xs>
-                          <TextField
-                            id="standard-read-only-input"
-                            value={this.state.detalle}
-                            onChange={this.handleChangeDetalle}
-                            label="Descripcion del producto"
+                          <FormControl
                             variant="standard"
-                          />
-                        </Grid>
-                        <Grid item xs>
-                          <TextField
-                            id="standard-basic"
-                            label="Observaciones"
-                            variant="standard"
-                            value={this.state.Observacion}
-                            onChange={this.handleChangeObservacion}
-                          />
-                        </Grid>
-                        <Grid item xs>
-                          <TextField
-                            id="standard-read-only-input"
-                            value={this.state.costo}
-                            onChange={this.handleChangeCosto}
-                            label="Costo del producto"
-                            variant="standard"
-                          />
-                        </Grid>
+                            onSubmit={this.handleSubmit}
 
-                      </Grid>
-                      <Grid item xs container direction="column">
-                        <Grid item xs>
-                          <TextField
-                            id="standard-read-only-input"
-                            value={this.state.PrecioMenor}
-                            onChange={this.handleChangePrecioMenor}
-                            label="Precio del producto"
-                            variant="standard"
-                          />
-                        </Grid>
-
-                        <Grid item xs>
-                          <TextField
-                            id="standard-read-only-input"
-                            value={this.state.PrecioMayor}
-                            onChange={this.handleChangePrecioMayor}
-                            label="Precio Mayorista del producto"
-                            variant="standard"
-                          />
-                        </Grid>
-
-                        <Grid item xs>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
                           >
-                            Categoria
-                          </InputLabel>
-                          <NativeSelect
-                            //input={<OutlinedInput id="select-multiple-chip" label="clientes" />}
-                            value={this.state.IdCategoria}
-                            onChange={this.handleChangeCategoria}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            {this.state.categorias.map((item, index) => (
-                              <option
-                                key={item.IdCategoria}
-                                value={item.IdCategoria}
-                              >
-                                {item.Categoria}
-                              </option>
-                            ))}
-                          </NativeSelect>
+                            <TextField
+                              id="standard-read-only-input"
+                              value={this.state.detalle}
+                              onChange={this.handleChangeDetalle}
+                              label="Descripcion del producto"
+                              variant="standard"
+                              required
+                            />
+                          </FormControl>
                         </Grid>
+                        <Grid item xs>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+
+                          >
+                            <TextField
+                              id="standard-basic"
+                              label="Observaciones"
+                              variant="standard"
+                              value={this.state.Observacion}
+                              onChange={this.handleChangeObservacion}
+                            />
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs>
+                          <FormControl
+                            onSubmit={this.handleSubmit}
+
+                          >
+                            <TextField
+                              label="Costo"
+                              id="standard-basic"
+                              variant="standard"
+
+                              value={this.state.costo}
+                              onChange={this.handleChangeCosto}
+                            />
+                          </FormControl>
+                        </Grid>
+
                       </Grid>
 
                       <Grid item xs container direction="column">
                         <Grid item xs>
-                          <InputLabel
+                          <FormControl
                             variant="standard"
-                            htmlFor="uncontrolled-native"
+                            onSubmit={this.handleSubmit}
                           >
-                            Marca
-                          </InputLabel>
-                          <NativeSelect
-                            value={this.state.IdMarca}
-                            onChange={this.handleChangeMarca}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            {this.state.marcas.map((item, index) => (
-                              <option key={item.IdMarca} value={item.IdMarca}>
-                                {item.Marca}
-                              </option>
-                            ))}
-                          </NativeSelect>
+                            <TextField
+                              id="standard-read-only-input"
+                              value={this.state.PrecioMenor}
+                              onChange={this.handleChangePrecioMenor}
+                              label="Precio del producto"
+                              variant="standard"
+                              required
+                            />
+                          </FormControl>
                         </Grid>
 
                         <Grid item xs>
-                          <InputLabel
+                          <FormControl
                             variant="standard"
-                            htmlFor="uncontrolled-native"
+                            onSubmit={this.handleSubmit}
                           >
-                            Proveedor
-                          </InputLabel>
-                          <NativeSelect
-                            value={this.state.IdProveedor}
-                            onChange={this.handleChangeProveedor}
-                            inputProps={{
-                              id: "uncontrolled-native",
-                            }}
-                          >
-                            {this.state.proveedores.map((item, index) => (
-                              <option
-                                key={item.IdProveedor}
-                                value={item.IdProveedor}
-                              >
-                                {item.RazonSocial}
-                              </option>
-                            ))}
-                          </NativeSelect>
+                            <TextField
+                              id="standard-read-only-input"
+                              value={this.state.PrecioMayor}
+                              onChange={this.handleChangePrecioMayor}
+                              label="Precio Mayorista del producto"
+                              variant="standard"
+                            />
+                          </FormControl>
+                        </Grid>
 
+                        <Grid item xs>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleSubmit}
+                            nmethod="post"
+                          >
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                              
+                            >
+                              Categoria
+                            </InputLabel>
+                            <NativeSelect
+                              //input={<OutlinedInput id="select-multiple-chip" label="clientes" />}
+                              required
+                              value={this.state.IdCategoria}
+                              onChange={this.handleChangeCategoria}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.categorias.map((item, index) => (
+                                <option
+                                  key={item.IdCategoria}
+                                  value={item.IdCategoria}
+                                >
+                                  {item.Categoria}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+
+                      <Grid item xs container direction="column">
+                        <Grid item xs>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleSubmit}
+                          >
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                              required
+                            >
+                              Marca
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.IdMarca}
+                              onChange={this.handleChangeMarca}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.marcas.map((item, index) => (
+                                <option key={item.IdMarca} value={item.IdMarca}>
+                                  {item.Marca}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </Grid>
+
+                        <Grid item xs>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleSubmit}
+                          >
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                              required
+                            >
+                              Proveedor
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.IdProveedor}
+                              onChange={this.handleChangeProveedor}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.proveedores.map((item, index) => (
+                                <option
+                                  key={item.IdProveedor}
+                                  value={item.IdProveedor}
+                                >
+                                  {item.RazonSocial}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs>
+
+                        </Grid>
+                      </Grid>
+
+                      <Grid item xs container direction="column">
+                        <Grid item xs>
+                        </Grid>
+
+                        <Grid item xs>
+                          <FormControl
+                            onSubmit={this.handleSubmit}
+                            variant="standard"
+                          >
+
+                            <input type="file" accept="image/*"
+                              onChange={this.handleChangeEditImagen} />
+                            <img src={this.state.imagePreview}
+                              height="100px" width="100px"
+                              value={this.state.imagenedit}
+                              onChange={this.handleChangeEditImagen} />
+
+                          </FormControl>
                         </Grid>
                         <Grid item xs>
                           <Button
@@ -627,31 +733,28 @@ class Productos extends React.Component {
                       <b>{totalPages}</b>
                     </Typography>
                   </div>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <Table sx={{ minWidth: 650 }} aria-label="a dense table">
                     <TableHead>
-                      <TableRow>
-                        <TableCell bgcolor="pink">
-                          {" "}
+                      <TableRow >
+                        <TableCell bgcolor="pink" align="center" >
                           <b>Codigo</b>
                         </TableCell>
-                        <TableCell bgcolor="pink">
-                          {" "}
+                        <TableCell bgcolor="pink"align="center"  >
                           <b>Imagen</b>
                         </TableCell>
-                        <TableCell bgcolor="pink">
-                          {" "}
-                          <b>Descripcion del producto</b>
+                        <TableCell bgcolor="pink" align="center">
+                          <b>Descripcion </b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center" >
                           <b>Observacion</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="center">
                           <b>Marca</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="right" >
                           <b>Categoria</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        <TableCell bgcolor="pink" align="right" >
                           <b>Costo</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
@@ -733,19 +836,20 @@ class Productos extends React.Component {
                       ))}
 
                       <Modal open={this.state.open} onClose={this.hideModal}>
-                        <Box
+                        <Box  m={1}
                           sx={{
-                            maxHeight: "100%",
+                            maxHeight: "85%",
                             overflowY: "auto",
                             position: "absolute",
                             top: "50%",
                             left: "50%",
                             transform: "translate(-50%, -50%)",
-                            width: 800,
+                            width: 500,
                             bgcolor: "background.paper",
                             border: "2px solid #<000",
                             boxShadow: 24,
-                            p: 4,
+                            margin: "5px",
+                            p: 2,
                           }}
                         >
                           <Typography
@@ -757,7 +861,7 @@ class Productos extends React.Component {
                           </Typography>
                           <Typography
                             id="modal-modal-description"
-                            sx={{ mt: 2 }}
+                            sx={{ margin: "5px" }}
                           >
                             Codigo: {this.state.idedit}
                           </Typography>
@@ -771,14 +875,17 @@ class Productos extends React.Component {
                               label="Producto"
                               id="detalleedit"
                               size="small"
-                              margin="normal"
+                              margin="dense"
                               value={this.state.detalleedit}
                               onChange={this.handleChangeEditDetalle}
+                              inputProps={{style: {fontSize: 12}}}
+                              
                             />
                           </FormControl>
                           <FormControl
-                            onSubmit={this.handleEditImagen} 
+                            onSubmit={this.handleEditImagen}
                             variant="standard"
+                            margin="dense"
                             fullWidth
                           >
 
@@ -788,73 +895,75 @@ class Productos extends React.Component {
 
                             <input type="file" id="file"
                               name="image" accept="image/*" capture="user" onChange={this.handleChangeEditImagen} />
-                          
+
                           </FormControl>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             fullWidth
+                            
                           >
                             <TextField
                               label="Observacion"
                               id="Observacion"
                               size="small"
-                              margin="normal"
+                              margin="dense"
                               value={this.state.editObservacion}
                               onChange={this.handleChangeEditObservacion}
+                              inputProps={{style: {fontSize: 12}}}
                             />
                           </FormControl>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
-                            fullWidth
+                            margin="dense"
                           >
                             <TextField
                               label="Costo"
                               id="Costo"
+                              style={{ marginRight: 11 }}
                               size="small"
-                              margin="normal"
                               value={this.state.costoedit}
                               onChange={this.handleChangeEditCosto}
+                              inputProps={{style: {fontSize: 12}}}
                             />
                           </FormControl>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
-                            fullWidth
+                            margin="dense"
                           >
                             <TextField
                               label="Precio"
                               id="Precio"
                               size="small"
-                              margin="normal"
+                              
                               value={this.state.editPrecioMenor}
                               onChange={this.handleChangeEditPrecioMenor}
+                              inputProps={{style: {fontSize: 12}}}
                             />
                           </FormControl>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
-                            fullWidth
+                            margin="dense"
                           >
                             <TextField
                               label="Precio Mayorista"
                               id="PrecioMayor"
                               size="small"
-                              margin="normal"
+                              style={{ marginRight: 11 }}
                               value={this.state.editPrecioMayor}
                               onChange={this.handleChangeEditPrecioMayor}
+                              inputProps={{style: {fontSize: 12}}}
                             />
                           </FormControl>
-                          {/* arreglar ID de categoria , marca y proveedor con select */}
 
-                          <FormControl fullWidth size="small" margin="normal">
+                          <FormControl size="small"  margin="dense">
                             <InputLabel id="edit-select-categoria-label">
                               Categoría
                             </InputLabel>
                             <Select
-                              labelId="edit-select-categoria-label"
-                              id="edit-select-categoria"
                               value={this.state.IdCategoriaedit}
                               label="Categoría"
                               onChange={this.handleChangeEditIdCategoria}
@@ -870,16 +979,15 @@ class Productos extends React.Component {
                             </Select>
                           </FormControl>
 
-                          <FormControl fullWidth size="small" margin="normal">
-                            <InputLabel id="edit-select-marca-label">
+                          <FormControl size="small" margin="dense">
+                            <InputLabel >
                               Marca
                             </InputLabel>
                             <Select
-                              labelId="edit-select-marca-label"
-                              id="edit-select-marca"
                               value={this.state.IdMarcaedit}
                               label="Marca"
                               onChange={this.handleChangeEditIdMarca}
+                              style={{ marginRight: 11 }}
                             >
                               {this.state.marcas.map((item, index) => (
                                 <MenuItem
@@ -892,15 +1000,13 @@ class Productos extends React.Component {
                             </Select>
                           </FormControl>
 
-                          <FormControl fullWidth size="small" margin="normal">
-                            <InputLabel id="edit-select-proveedor-label">
+                          <FormControl size="small" margin="dense">
+                            <InputLabel >
                               Proveedor
                             </InputLabel>
                             <Select
-                              labelId="edit-select-proveedor-label"
-                              id="edit-select-proveedor"
-                              value={this.state.IdProveedoredit}
                               label="Proveedor"
+                              value={this.state.IdProveedoredit}
                               onChange={this.handleChangeEditIdProveedor}
                             >
                               {this.state.proveedores.map((item, index) => (
@@ -914,17 +1020,20 @@ class Productos extends React.Component {
                             </Select>
                           </FormControl>
 
+                          <Stack direction="row" spacing={2} alignItems="center"
+                          >
                           <Button
-                            sx={{ mt: 2, left: "5%" }}
-                            margin
                             variant="contained"
+                            
+                            color="success"
+                            size="small"
                             onClick={this.handleEdit}
                           >
                             EDITAR
                           </Button>
                           <Button
-                            sx={{ mt: 2, left: "30%" }}
-                            variant="outlined"
+                            variant="contained"
+                            size="small"
                             color="error"
                             onClick={() => {
                               this.setState({ open: false });
@@ -932,6 +1041,7 @@ class Productos extends React.Component {
                           >
                             CANCELAR
                           </Button>
+                          </Stack>
                         </Box>
                       </Modal>
                     </TableBody>

@@ -74,9 +74,9 @@ class Clientes extends React.Component {
   getClientes = () => {
     let _this = this;
     var config = {
-        method: "get",
-        url: `http://localhost:9000/clientes?query=${this.state.query}`,
-        headers: {},
+      method: "get",
+      url: `http://localhost:9000/clientes?query=${this.state.query}`,
+      headers: {},
     };
     axios(config)
       .then(function (response) {
@@ -139,10 +139,10 @@ class Clientes extends React.Component {
   }
 
   //Para editar un cliente
-  showModal = (IdCliente, Nombre, Cuit, Domicilio, Celular, Email, CodigoPostal) => {
+  showModal = (IdCliente, Nombre_Cliente, Cuit, Domicilio, Celular, Email, CodigoPostal) => {
     this.setState({ open: true })
     this.setState({ idedit: IdCliente });
-    this.setState({ nombredit: Nombre });
+    this.setState({ nombredit: Nombre_Cliente });
     this.setState({ cuitedit: Cuit });
     this.setState({ domicilioedit: Domicilio });
     this.setState({ celuedit: Celular });
@@ -206,27 +206,27 @@ class Clientes extends React.Component {
     this.setState({ open: false });
   }
 
-//Para buscar una clientes
+  //Para buscar una clientes
 
-handleChangeSearch = async event => {
-  await this.setState({ query: event.target.value });
-  console.log(this.state.query);
-  this.getClientes();
-}
-handleClickSearch = (event) => {
-  event.preventDefault();
-  let _this = this;
+  handleChangeSearch = async event => {
+    await this.setState({ query: event.target.value });
+    console.log(this.state.query);
+    this.getClientes();
+  }
+  handleClickSearch = (event) => {
+    event.preventDefault();
+    let _this = this;
 
-  axios.get("http://localhost:9000/clientes", {
+    axios.get("http://localhost:9000/clientes", {
       query: this.state.query,
-  })
+    })
       .then((res) => {
-          console.log(res);
+        console.log(res);
       })
       .catch((err) => {
-          console.log(err);
+        console.log(err);
       });
-}
+  }
 
   //Borrar cliente
   handleRemove = (IdCliente) => {
@@ -395,30 +395,30 @@ handleClickSearch = (event) => {
                   </Paper>
                 </Grid>
 
-                 {/* BUSCADOR */}
-                 <Grid item xs={12}  >
-                                    <Paper
-                                        component="form" class="paper"
-                                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 1040 }
-                                        }
-                                    >
-                     <div component="form" class="search" onSubmit={this.handleClickSearch}>
-                                            <input
-                                                type="text"
-                                                name="query"
-                                                placeholder={`Buscar cliente...`}
-                                                class="searchTerm"
-                                                value={this.state.query}
-                                                onChange={this.handleChangeSearch}
-                                            />
-                                            <button type="submit"
-                                                class="searchButton"
-                                                onClick={this.handleClickSearch}
+                {/* BUSCADOR */}
+                <Grid item xs={12}  >
+                  <Paper
+                    component="form" class="paper"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 1040 }
+                    }
+                  >
+                    <div component="form" class="search" onSubmit={this.handleClickSearch}>
+                      <input
+                        type="text"
+                        name="query"
+                        placeholder={`Buscar cliente...`}
+                        class="searchTerm"
+                        value={this.state.query}
+                        onChange={this.handleChangeSearch}
+                      />
+                      <button type="submit"
+                        class="searchButton"
+                        onClick={this.handleClickSearch}
 
-                                            >
-                                                Buscar
-                                            </button>
-                                        </div>
+                      >
+                        Buscar
+                      </button>
+                    </div>
                   </Paper>
                 </Grid>
 
@@ -465,7 +465,7 @@ handleClickSearch = (event) => {
                                 sx={{ color: pink[200] }}
                                 key={item.IdCliente}
                                 value={this.state.IdCliente}
-                                onClick={() => { this.showModal(item.IdCliente, item.Nombre, item.Cuit, item.Domicilio, item.Celular, item.Email, item.CodigoPostal); }}
+                                onClick={() => { this.showModal(item.IdCliente, item.Nombre_Cliente, item.Cuit, item.Domicilio, item.Celular, item.Email, item.CodigoPostal); }}
                               />
                               <DeleteIcon
                                 sx={{ color: pink[600] }}
@@ -589,7 +589,7 @@ handleClickSearch = (event) => {
                     </div> */}
                     </div>
                   </TableContainer>
-                  
+
                 </Grid>
 
               </Grid>

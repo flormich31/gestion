@@ -53,7 +53,7 @@ router.post("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   INSERT INTO \`productos\`
-  ( IdProducto, ImagenURL, Detalle, Categoria_Id, Marca_Id, Costo, PrecioMenor, PrecioMayor, Observacion, Proveedor_Id) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.PrecioMenor}','${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
+  ( IdProducto, ImagenURL, Detalle, Categoria_Id, Marca_Id, Costo, PrecioMenor, PrecioMayor, Observacion, Proveedor_Id) values ('${codigo}', 'http://localhost:9000/${req.body.ImagenURL}','${req.body.detalle}', '${req.body.IdCategoria}','${req.body.IdMarca}','${req.body.costo}','${req.body.PrecioMenor}','${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);

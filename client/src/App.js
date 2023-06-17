@@ -8,7 +8,6 @@ import Categorias from "./pages/categorias";
 import Clientes from "./pages/clientes";
 import Proveedores from "./pages/Proveedores";
 import ListadoVentas from "./pages/listadoVentas";
-import DetalleVentas from "./pages/detalleVentas";
 import Profile from "./pages/profile";
 import Productos from "./pages/productos";
 import ProductoNuevo from "./pages/productoNuevo";
@@ -52,9 +51,6 @@ export default function App() {
           </Route>
           <Route path="/listadoVentas">
             <ListadoVentas />
-          </Route>
-          <Route path="/detalleVentas">
-            <DetalleVentas/>
           </Route>
           <Route path="/profile">
             <Profile />
