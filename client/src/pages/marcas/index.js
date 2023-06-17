@@ -70,7 +70,7 @@ class Marcas extends React.Component {
     let _this = this;
          var config = {
             method: "get",
-            url: `http://localhost:9000/marcas?query=${this.state.query}`,
+            url: `${process.env.REACT_APP_API}marcas?query=${this.state.query}`,
             headers: {},
         };
     axios(config)
@@ -101,7 +101,7 @@ class Marcas extends React.Component {
     event.preventDefault();
     let _this = this;
 
-    axios.post("http://localhost:9000/marcas", {
+    axios.post(`${process.env.REACT_APP_API}marcas`, {
       marca: this.state.marca,
     })
       .then((res) => {
@@ -129,7 +129,7 @@ class Marcas extends React.Component {
   handleEdit = event => {
     let _this = this;
 
-    axios.put("http://localhost:9000/marcas", {
+    axios.put(`${process.env.REACT_APP_API}marcas`, {
       id: this.state.idedit,
       marca: this.state.marcaedit,
     })
@@ -156,7 +156,7 @@ handleClickSearch = (event) => {
   event.preventDefault();
   let _this = this;
 
-  axios.get("http://localhost:9000/marcas", {
+  axios.get(`${process.env.REACT_APP_API}marcas`, {
       query: this.state.query,
   })
       .then((res) => {
@@ -172,7 +172,7 @@ handleClickSearch = (event) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/marcas/" + IdMarca,
+      url: `${process.env.REACT_APP_API}marcas/` + IdMarca,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar esta marca?")) {

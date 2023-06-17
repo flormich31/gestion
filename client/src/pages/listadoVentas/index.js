@@ -110,7 +110,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/ventas?query=${this.state.startDateMysql}&query2=${this.state.endDateMysql}`,
+      url: `${process.env.REACT_APP_API}ventas?query=${this.state.startDateMysql}&query2=${this.state.endDateMysql}`,
       headers: {},
     };
     axios(config)
@@ -133,7 +133,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
 
     axios
-      .get("http://localhost:9000/ventas", {
+      .get(`${process.env.REACT_APP_API}ventas`, {
         startDate: this.state.startDate,
         endDate: this.state.endDate,
       })
@@ -157,7 +157,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/datosVenta?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}datosVenta?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -179,7 +179,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/listadoVentas?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}listadoVentas?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -199,7 +199,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/totalVentas?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}totalVentas?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -253,7 +253,7 @@ class ListadoVentas extends React.Component {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/ventas/" + IdVenta,
+      url: `${process.env.REACT_APP_API}ventas/` + IdVenta,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar esta venta?")) {
@@ -279,7 +279,7 @@ class ListadoVentas extends React.Component {
     if (window.confirm("¿Realmente desea editar esta venta?")) {
       let _this = this;
       axios
-        .put("http://localhost:9000/ventas/", {
+        .put(`${process.env.REACT_APP_API}ventas/`, {
           IdVenta: this.state.IdVenta,
           Entregado: this.state.Entregado,
           Pagado: this.state.Pagado,

@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Home from "./pages/home";
+import Compras from "./pages/compras";
 import Ventas from "./pages/ventas";
 import Marcas from "./pages/marcas";
 import Categorias from "./pages/categorias";
@@ -15,7 +16,7 @@ import Vendedores from "./pages/vendedores";
 
 export default function App() {
   document.title = "Diva Forever";
-
+  // alert(process.env.REACT_APP_API)
   return (
     <Router>
       <div>
@@ -24,6 +25,9 @@ export default function App() {
         <Switch>
           <Route path="/home">
             <Home />
+          </Route>
+          <Route path="/compras">
+            <Compras/>
           </Route>
           <Route path="/ventas">
             <Ventas/>

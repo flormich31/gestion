@@ -70,7 +70,7 @@ class Categorias extends React.Component {
         let _this = this;
         var config = {
             method: "get",
-            url: `http://localhost:9000/categorias?query=${this.state.query}`,
+            url: `${process.env.REACT_APP_API}categorias?query=${this.state.query}`,
             headers: {},
         };
 
@@ -102,7 +102,7 @@ class Categorias extends React.Component {
         event.preventDefault();
         let _this = this;
 
-        axios.post("http://localhost:9000/categorias", {
+        axios.post(`${process.env.REACT_APP_API}categorias`, {
             id: this.state.id,
             categoria: this.state.categoria,
 
@@ -134,7 +134,7 @@ class Categorias extends React.Component {
     handleEdit = event => {
         let _this = this;
 
-        axios.put("http://localhost:9000/categorias", {
+        axios.put(`${process.env.REACT_APP_API}categorias`, {
             id: this.state.idedit,
             categoria: this.state.catedit,
         })
@@ -161,7 +161,7 @@ class Categorias extends React.Component {
         event.preventDefault();
         let _this = this;
 
-        axios.get("http://localhost:9000/categorias", {
+        axios.get(`${process.env.REACT_APP_API}categorias`, {
             query: this.state.query,
         })
             .then((res) => {
@@ -176,7 +176,7 @@ class Categorias extends React.Component {
         let _this = this;
         var config = {
             method: "delete",
-            url: "http://localhost:9000/categorias/" + IdCategoria,
+            url: `${process.env.REACT_APP_API}categorias/` + IdCategoria,
             headers: {},
         };
         if (window.confirm("¿Realmente desea borrar esta categoría?")) {

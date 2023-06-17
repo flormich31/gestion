@@ -75,7 +75,7 @@ class Clientes extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/clientes?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}clientes?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -113,7 +113,7 @@ class Clientes extends React.Component {
     event.preventDefault();
     let _this = this;
 
-    axios.post("http://localhost:9000/clientes", {
+    axios.post(`${process.env.REACT_APP_API}clientes`, {
       nombre: this.state.nombre,
       cuit: this.state.cuit,
       domicilio: this.state.domicilio,
@@ -180,7 +180,7 @@ class Clientes extends React.Component {
   handleEdit = event => {
     let _this = this;
 
-    axios.put("http://localhost:9000/clientes", {
+    axios.put(`${process.env.REACT_APP_API}clientes`, {
       id: this.state.idedit,
       nombre: this.state.nombredit,
       cuit: this.state.cuitedit,
@@ -217,7 +217,7 @@ class Clientes extends React.Component {
     event.preventDefault();
     let _this = this;
 
-    axios.get("http://localhost:9000/clientes", {
+    axios.get(`${process.env.REACT_APP_API}clientes`, {
       query: this.state.query,
     })
       .then((res) => {
@@ -233,7 +233,7 @@ class Clientes extends React.Component {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/clientes/" + IdCliente,
+      url: `${process.env.REACT_APP_API}clientes/` + IdCliente,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar este cliente?")) {

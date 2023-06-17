@@ -39,7 +39,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9000/productos",
+							"raw": `${process.env.REACT_APP_API}productos`,
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -67,7 +67,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9000/productos",
+							"raw": `${process.env.REACT_APP_API}productos`,
 							"protocol": "http",
 							"host": [
 								"localhost"

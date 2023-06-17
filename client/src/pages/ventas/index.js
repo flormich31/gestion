@@ -73,7 +73,7 @@ class DashboardContent extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/vendedores",
+      url: `${process.env.REACT_APP_API}vendedores`,
       headers: {},
     };
     axios(config)
@@ -90,7 +90,7 @@ class DashboardContent extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/formaPago",
+      url: `${process.env.REACT_APP_API}formaPago`,
       headers: {},
     };
     axios(config)
@@ -107,7 +107,7 @@ class DashboardContent extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/clientes?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}clientes?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -124,7 +124,7 @@ class DashboardContent extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/productos?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -288,7 +288,7 @@ class DashboardContent extends React.Component {
     };
     let _this = this;
     axios
-      .post("http://localhost:9000/ventas", ventaData)
+      .post(`${process.env.REACT_APP_API}ventas`, ventaData)
       .then(function (response) {
         console.log(response);
         console.log("datos de venta", ventaData);

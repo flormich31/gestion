@@ -84,7 +84,7 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: `http://localhost:9000/productos?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
@@ -105,7 +105,7 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/categorias",
+      url: `${process.env.REACT_APP_API}categorias`,
       headers: {},
     };
     axios(config)
@@ -121,7 +121,7 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/marcas",
+      url: `${process.env.REACT_APP_API}marcas`,
       headers: {},
     };
     axios(config)
@@ -137,7 +137,7 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "get",
-      url: "http://localhost:9000/proveedores",
+      url: `${process.env.REACT_APP_API}proveedores`,
       headers: {},
     };
     axios(config)
@@ -183,7 +183,7 @@ class Productos extends React.Component {
     let _this = this;
 
     axios
-      .post("http://localhost:9000/productos", {
+      .post(`${process.env.REACT_APP_API}productos`, {
         id: this.state.id,
         ImagenURL: this.state.imageneditURL,
         detalle: this.state.detalle,
@@ -216,7 +216,7 @@ class Productos extends React.Component {
     const formData = new FormData();
     formData.append('file', this.state.imagenedit);
 
-    axios.post("http://localhost:9000/upload", formData)
+    axios.post(`${process.env.REACT_APP_API}upload`, formData)
       .then(response => {
         // Manejar la respuesta del servidor
         console.log(response);
@@ -328,7 +328,7 @@ class Productos extends React.Component {
     let _this = this;
 
     axios
-      .put("http://localhost:9000/productos", {
+      .put(`${process.env.REACT_APP_API}productos`, {
         id: this.state.idedit,
         ImagenURL: this.state.imageneditURL,
         detalle: this.state.detalleedit,
@@ -360,7 +360,7 @@ class Productos extends React.Component {
     const formData = new FormData();
     formData.append('file', this.state.imagenedit);
 
-    axios.post("http://localhost:9000/upload", formData)
+    axios.post(`${process.env.REACT_APP_API}upload`, formData)
       .then(response => {
         // Manejar la respuesta del servidor
         console.log(response);
@@ -383,7 +383,7 @@ class Productos extends React.Component {
     let _this = this;
 
     axios
-      .get("http://localhost:9000/productos", {
+      .get(`${process.env.REACT_APP_API}productos`, {
         query: this.state.query,
       })
       .then((res) => {
@@ -398,7 +398,7 @@ class Productos extends React.Component {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/productos/" + IdProducto,
+      url: `${process.env.REACT_APP_API}productos/` + IdProducto,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar este producto?")) {
@@ -746,7 +746,7 @@ class Productos extends React.Component {
                           <b>Descripcion </b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center" >
-                          <b>Observacion</b>
+                          <b>Stock</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
                           <b>Marca</b>
@@ -789,7 +789,7 @@ class Productos extends React.Component {
                             {item.Detalle}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Observacion}
+                            {item.Stock}
                           </TableCell>
                           <TableCell align="right">{item.marca}</TableCell>
                           <TableCell align="right">

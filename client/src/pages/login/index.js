@@ -41,7 +41,7 @@ export default function Login({ }) {
   const handleSubmit = async e => {
     e.preventDefault();
     axios
-      .post("http://localhost:9000/login", {
+      .post(`${process.env.REACT_APP_API}login`, {
         usuario: usuario,
         clave: clave,
       })

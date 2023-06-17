@@ -43,7 +43,7 @@ export default function ProductoNuevo() {
       proveedorId: proveedorId,
     };
     axios
-      .post("http://localhost:9000/productos", data)
+      .post(`${process.env.REACT_APP_API}productos`, data)
       .then((res) => {
         setData(res.data);
         setId("");

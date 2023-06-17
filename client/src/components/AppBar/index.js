@@ -103,6 +103,7 @@ export default function AppBar() {
               <div>
                 <Switch>
                   <Route path="/home">Inicio</Route>
+                  <Route path="/compras">Compras</Route>
                   <Route path="/ventas">Ventas</Route>
                   <Route path="/productos">Productos</Route>
                   <Route path="/categorias">Categorias</Route>

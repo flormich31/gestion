@@ -76,7 +76,7 @@ class Vendedores extends React.Component {
     let _this = this;
         var config = {
             method: "get",
-            url: `http://localhost:9000/vendedores?query=${this.state.query}`,
+            url: `${process.env.REACT_APP_API}vendedores?query=${this.state.query}`,
             headers: {},
         };
     axios(config)
@@ -110,7 +110,7 @@ class Vendedores extends React.Component {
     event.preventDefault();
     let _this = this;
 
-    axios.post("http://localhost:9000/vendedores", {
+    axios.post(`${process.env.REACT_APP_API}vendedores`, {
       nombre: this.state.nombre,
       domicilio: this.state.domicilio,
       celular: this.state.celular,
@@ -169,7 +169,7 @@ class Vendedores extends React.Component {
   handleEdit = event => {
     let _this = this;
 
-    axios.put("http://localhost:9000/vendedores", {
+    axios.put(`${process.env.REACT_APP_API}vendedores`, {
       id: this.state.idedit,
       nombre: this.state.nombredit,
       domicilio: this.state.domicilioedit,
@@ -203,7 +203,7 @@ handleClickSearch = (event) => {
   event.preventDefault();
   let _this = this;
 
-  axios.get("http://localhost:9000/vendedores", {
+  axios.get(`${process.env.REACT_APP_API}vendedores`, {
       query: this.state.query,
   })
       .then((res) => {
@@ -220,7 +220,7 @@ handleClickSearch = (event) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: "http://localhost:9000/vendedores/" + IdVendedor,
+      url: `${process.env.REACT_APP_API}vendedores/` + IdVendedor,
       headers: {},
     };
     if (window.confirm("¿Realmente desea borrar este vendedor?")) {
