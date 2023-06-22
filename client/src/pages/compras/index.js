@@ -29,7 +29,7 @@ import {
     TableContainer,
     Typography,
 } from "@mui/material";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import ButtonCreateProduct from "../../components/ButtonCreateProduct";
 import DataTableVenta from "../../components/DataTableVenta";
 import TextField from "@mui/material/TextField";
@@ -38,12 +38,12 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddButton from "../../components/AddButton";
 
 const mdTheme = createTheme();
-
 class DashboardContent extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            redirect: false,
             productos: [],
             ventaProductos: [],
             vendedores: [],
@@ -312,6 +312,21 @@ class DashboardContent extends React.Component {
         this.setState({ ventaProductos: [] });
     };
 
+    redirectHandlerOpen = () => {
+        this.setState({ redirect: true });
+        this.renderRedirectOpen();
+    };
+    renderRedirectOpen = () => {
+        if (this.state.redirect) {
+            return <Redirect to="/productos" />;
+
+        }
+    }
+    openInNewTab = () => {
+        window.open('/productos', '_blank');
+    }
+
+
     render() {
         return (
             <ThemeProvider theme={mdTheme}>
@@ -343,8 +358,11 @@ class DashboardContent extends React.Component {
                                         flexDirection: "column",
                                     }}
                                 >
-                                    <Autocomplete
+                                    <Button size="small" onClick={this.openInNewTab}>
+                                        Ingresar producto
+                                    </Button>
 
+                                    <Autocomplete
                                         options={this.state.productos}
                                         autoHighlight
                                         getOptionLabel={(option) => option.Detalle}
@@ -630,10 +648,10 @@ class DashboardContent extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        </Grid>
+                                    </Grid>
                                 </Paper>
                             </Grid>
-                            <AddButton />
+                            <AddButton onClick={this.openInNewTab} />
                             <Copyright sx={{ pt: 4 }} />
                         </Container>
                     </Box>
