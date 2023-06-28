@@ -209,7 +209,7 @@ class Productos extends React.Component {
              alert("No se encontraron productos, complete los campos: ");
           } else {
             _this.getProductos();
-            alert("Producto agregado, exitosamente");
+            alert("Producto agregado exitosamente");
           }
         })
       .catch((err) => {
@@ -369,6 +369,7 @@ console.log('imagenedit',this.state.imagenedit);
         detalle: this.state.detalleedit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
+        Descuento: this.state.descuentoedit,
         costo: this.state.costoedit,
         PrecioMenor: this.state.editPrecioMenor,
         PrecioMayor: this.state.editPrecioMayor,
@@ -384,6 +385,7 @@ console.log('imagenedit',this.state.imagenedit);
       });
     this.setState({ id: "" });
     this.setState({ detalle: "" });
+    this.setState({ Descuento: "" });
     this.setState({ costo: "" });
     this.setState({ PrecioMenor: "" });
     this.setState({ PrecioMayor: "" });
