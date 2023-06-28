@@ -47,6 +47,8 @@ class Productos extends React.Component {
       open: false,
       query: "",
       idedit: "",
+      imagenNew: "",
+      imagen: "",
       imagePreview: "",
       imagenedit: "",
       imageneditURL: "",
@@ -56,7 +58,7 @@ class Productos extends React.Component {
       IdCategoriaedit: "",
       marcaedit: "",
       IdMarcaedit: "",
-      descuentoedit:"",
+      descuentoedit: "",
       costoedit: "",
       editPrecioMenor: "",
       editPrecioMayor: "",
@@ -92,7 +94,7 @@ class Productos extends React.Component {
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data.productos.length === 0) {
-         alert("No se encontraron productos");
+          alert("No se encontraron productos");
         } else {
           _this.setState(response.data);
         }
@@ -204,14 +206,14 @@ class Productos extends React.Component {
       .then((res) => {
         console.log(res);
         console.log(res.data);
-          // console.log(JSON.stringify(response.data));
-          if (res.data.productos.length === 0) {
-             alert("No se encontraron productos, complete los campos: ");
-          } else {
-            _this.getProductos();
-            alert("Producto agregado exitosamente");
-          }
-        })
+        // console.log(JSON.stringify(response.data));
+        if (res.data.productos.length === 0) {
+          alert("No se encontraron productos, complete los campos: ");
+        } else {
+          _this.getProductos();
+          alert("Producto agregado exitosamente");
+        }
+      })
       .catch((err) => {
         console.log(err);
         alert("Asegurese de completar los campos: Descripcion - Precio - Categoria - Marca - Proveedor")
@@ -237,7 +239,7 @@ class Productos extends React.Component {
   handleChangeEditDetalle = (event) => {
     this.setState({ detalleedit: event.target.value });
   };
-  handleChangeEditImagen = async (event) => {
+  handleChangeImagen = async (event) => {
     console.log("imagen:", event.target.files[0]);
 
     let file = event.target.files[0];
@@ -260,8 +262,8 @@ class Productos extends React.Component {
     let archivo2 = archivo.name
     console.log("Nombre del archivo:", archivo);
     await this.setState(() => ({ imageneditURL: archivo }));
-    await this.setState(() => ({ imagenedit: archivo2 }));
-    await console.log(this.imagenedit);
+    await this.setState(() => ({ imagenNew: archivo2 }));
+    await console.log(this.imagenNew);
 
     /* 
   console.log("Tipo de archivo:", archivo.type);
@@ -311,7 +313,7 @@ class Productos extends React.Component {
     this.setState({ open: true });
     this.setState({ idedit: IdProducto });
     this.setState({ detalleedit: Detalle });
-    this.setState({ imagenedit: ImagenURL });
+    this.setState({ imagen: ImagenURL });
     this.setState({ categoriaedit: categoria });
     this.setState({ IdCategoriaedit: Categoria_Id });
     this.setState({ IdMarcaedit: Marca_Id });
@@ -325,38 +327,43 @@ class Productos extends React.Component {
     this.setState({ razonsocialedit: RazonSocial });
   };
 
+  //Editar imagen 
   handleEditImagen = (event) => {
-     let _this = this;
-console.log('imagenedit',this.state.imagenedit);
-    axios
-      .put(`${process.env.REACT_APP_API}imagenes`, {
-        id: this.state.idedit,
-        ImagenURL: this.state.imagenedit,
-      })
-      .then(function (response) {
-        _this.getProductos();
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-   
-    this.setState({ open: false });
+    let _this = this;
+    
+    let imagen = this.state.imagenNew;
+console.log("imagen", imagen);
+    if (imagen === '') {
+      alert("No se ha seleccionado una nueva imagen");
+      console.log("No se ha seleccionado una nueva imagen");
+    }
+    else {
+      axios
+        .put(`${process.env.REACT_APP_API}imagenes`, {
+          id: this.state.idedit,
+          ImagenURL: this.state.imagenNew,
+        })
+        .then(function (response) {
+          _this.getProductos();
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      const formData = new FormData();
+      formData.append('file', this.state.imageneditURL);
+      console.log('imageneditURL', this.state.imageneditURL);
 
-    const formData = new FormData();
-    formData.append('file', this.state.imageneditURL);
-    console.log('imageneditURL',this.state.imageneditURL);
-
-    axios.post(`${process.env.REACT_APP_API}upload`, formData)
-      .then(response => {
-        // Manejar la respuesta del servidor
-        console.log(response);
-      })
-      .catch(error => {
-        // Manejar errores
-        console.log(error);
-      });
-
+      axios.post(`${process.env.REACT_APP_API}upload`, formData)
+        .then(response => {
+          // Manejar la respuesta del servidor
+          console.log(response);
+        })
+        .catch(error => {
+          // Manejar errores
+          console.log(error);
+        });
+    }
   };
 
   // This is the put request
@@ -668,7 +675,7 @@ console.log('imagenedit',this.state.imagenedit);
                           </FormControl>
                         </Grid>
                         <Grid item xs>
-                        <FormControl
+                          <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
                           >
@@ -678,7 +685,7 @@ console.log('imagenedit',this.state.imagenedit);
                               onChange={this.handleChangeDescuento}
                               label="Descuento"
                               variant="standard"
-                              
+
                             />
                           </FormControl>
                         </Grid>
@@ -695,11 +702,11 @@ console.log('imagenedit',this.state.imagenedit);
                           >
 
                             <input type="file" accept="image/*"
-                              onChange={this.handleChangeEditImagen} />
+                              onChange={this.handleChangeImagen} />
                             <img src={this.state.imagePreview}
                               height="100px" width="100px"
                               value={this.state.imagenedit}
-                              onChange={this.handleChangeEditImagen} />
+                              onChange={this.handleChangeImagen} />
 
                           </FormControl>
                         </Grid>
@@ -896,14 +903,14 @@ console.log('imagenedit',this.state.imagenedit);
                             p: 2,
                           }}
                         >
-                         {/* <CancelIcon/> */}
+                          {/* <CancelIcon/> */}
                           <Typography
                             id="modal-modal-description"
                             sx={{ margin: "5px" }}
                           >
                           </Typography>
 
-                        
+
                           <Typography
                             id="modal-modal-title"
                             variant="h6"
@@ -918,23 +925,23 @@ console.log('imagenedit',this.state.imagenedit);
                             fullWidth
                           >
 
-                            <img src={this.state.imagenedit}
-                              height="80px" width="80px" value={this.state.imagenedit}
-                              onChange={this.handleChangeEditImagen} />
+                            <img src={this.state.imagen}
+                              height="80px" width="80px" value={this.state.imagenNew}
+                              onChange={this.handleChangeImagen} />
 
                             <input type="file" id="file"
-                              name="image" accept="image/*" capture="user" onChange={this.handleChangeEditImagen} />
+                              name="image" accept="image/*" capture="user" onChange={this.handleChangeImagen} />
 
                           </FormControl>
                           <Button
-                             variant="outlined"
+                            variant="outlined"
 
-                              color="success"
-                              size="small"
-                              onClick={this.handleEditImagen}
-                            >
-                              Editar imagen
-                            </Button>
+                            color="success"
+                            size="small"
+                            onClick={this.handleEditImagen}
+                          >
+                            Editar imagen
+                          </Button>
 
 
                           <Typography
