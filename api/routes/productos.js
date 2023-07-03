@@ -108,7 +108,7 @@ router.put("/", function (req, res, next) {
   WHERE IdProducto='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log(sql);
+    console.log("sql",sql);
     if (err) {
       res.send("Error editando producto");
     } else {

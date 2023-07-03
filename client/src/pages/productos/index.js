@@ -376,7 +376,7 @@ console.log("imagen", imagen);
         detalle: this.state.detalleedit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
-        Descuento: this.state.descuentoedit,
+        Descuento: this.state.descuentoedit === "" ? "0" : this.state.Descuento,
         costo: this.state.costoedit,
         PrecioMenor: this.state.editPrecioMenor,
         PrecioMayor: this.state.editPrecioMayor,
