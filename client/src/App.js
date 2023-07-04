@@ -12,7 +12,7 @@ import ListadoVentas from "./pages/listadoVentas";
 import Profile from "./pages/profile";
 import Productos from "./pages/productos";
 import ProductoNuevo from "./pages/productoNuevo";
-import Vendedores from "./pages/vendedores";
+import Usuarios from "./pages/usuarios";
 
 export default function App() {
   document.title = "Diva Forever";
@@ -50,8 +50,8 @@ export default function App() {
           <Route path="/proveedores">
             <Proveedores />
           </Route>
-          <Route path="/vendedores">
-            <Vendedores />
+          <Route path="/usuarios">
+            <Usuarios />
           </Route>
           <Route path="/listadoVentas">
             <ListadoVentas />

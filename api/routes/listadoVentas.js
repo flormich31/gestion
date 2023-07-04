@@ -11,7 +11,7 @@ v.Total, v.Subtotal
   FROM \`detalle_ventas\` as d 
   INNER JOIN \`ventas\` as v on v.IdVenta = d.Venta_Id
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
-  INNER JOIN \`vendedores\` as vv on vv.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`usuarios\` as vv on vv.Id = v.Usuario_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
   INNER JOIN \`productos\` as p on p.IdProducto = d.Producto_Id
   INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id

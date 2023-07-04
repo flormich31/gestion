@@ -74,11 +74,11 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Proveedores" />
       </ListItem>
-      <ListItem onClick={() => goto("/vendedores")}>
+      <ListItem onClick={() => goto("/usuarios")}>
         <ListItemIcon>
           <AssignmentIndIcon />
         </ListItemIcon>
-        <ListItemText primary="Vendedores" />
+        <ListItemText primary="Usuarios" />
       </ListItem>
       <ListItem  onClick={() => goto("/listadoVentas")}>
         <ListItemIcon>

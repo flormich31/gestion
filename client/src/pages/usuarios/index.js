@@ -35,15 +35,15 @@ import Pagination from '../../components/Pagination';
 const mdTheme = createTheme();
 
 
-class Vendedores extends React.Component {
+class Usuarios extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      vendedores: [],
+      usuarios: [],
 
-      currentVendedores: [],
+      currentusuarios: [],
       currentPage: null,
       totalPages: null,
 
@@ -51,32 +51,29 @@ class Vendedores extends React.Component {
       query:'',
       idedit: '',
       nombredit: '',
-      domicilioedit: '',
-      celuedit: '',
-      emailedit: '',
-      cpedit: '',
+      apellidoedit: '',
     };
   }
 
   componentDidMount() {
-    this.getVendedores();
+    this.getUsuarios();
   }
 
   onPageChanged = data => {
-    const { vendedores } = this.state;
+    const { usuarios } = this.state;
     const { currentPage, totalPages, pageLimit } = data;
 
     const offset = (currentPage - 1) * pageLimit;
-    const currentVendedores = vendedores.slice(offset, offset + pageLimit);
+    const currentusuarios = usuarios.slice(offset, offset + pageLimit);
 
-    this.setState({ currentPage, currentVendedores, totalPages });
+    this.setState({ currentPage, currentusuarios, totalPages });
   };
 
-  getVendedores = () => {
+  getUsuarios = () => {
     let _this = this;
         var config = {
             method: "get",
-            url: `${process.env.REACT_APP_API}vendedores?query=${this.state.query}`,
+            url: `${process.env.REACT_APP_API}usuarios?query=${this.state.query}`,
             headers: {},
         };
     axios(config)
@@ -92,93 +89,65 @@ class Vendedores extends React.Component {
   handleChangeNombre = event => {
     this.setState({ nombre: event.target.value });
   }
-  handleChangeDomicilio = event => {
-    this.setState({ domicilio: event.target.value });
+  handleChangeApellido = event => {
+    this.setState({ apellido: event.target.value });
   }
-  handleChangeCelular = event => {
-    this.setState({ celular: event.target.value });
-  }
-  handleChangeEmail = event => {
-    this.setState({ email: event.target.value });
-  }
-  handleChangeCodigoPostal = event => {
-    this.setState({ codigoPostal: event.target.value });
-  }
+  
 
 
   handleSubmit = event => {
     event.preventDefault();
     let _this = this;
 
-    axios.post(`${process.env.REACT_APP_API}vendedores`, {
+    axios.post(`${process.env.REACT_APP_API}usuarios`, {
       nombre: this.state.nombre,
-      domicilio: this.state.domicilio,
-      celular: this.state.celular,
-      email: this.state.email,
-      codigoPostal: this.state.codigoPostal
+      apellido: this.state.apellido,
     })
       .then((res) => {
         console.log(res);
         console.log(res.data);
-        _this.getVendedores();
+        _this.getUsuarios();
       })
       .catch((err) => {
         console.log(err);
       });
     this.setState({ nombre: "" });
-    this.setState({ domicilio: "" });
-    this.setState({ celular: "" });
-    this.setState({ email: "" });
-    this.setState({ codigoPostal: "" });
+    this.setState({ apellido: "" });
   }
 
-  //Para editar un vendedor
-  showModal = (IdVendedor, Nombre, Domicilio, CodigoPostal, Celular, Correo) => {
+  //Para editar un usuario
+  showModal = (Id, Nombre, Apellidos) => {
     this.setState({ open: true })
-    this.setState({ idedit: IdVendedor });
+    this.setState({ idedit: Id });
     this.setState({ nombredit: Nombre });
-    this.setState({ domicilioedit: Domicilio });
-    this.setState({ cpedit: CodigoPostal });
-    this.setState({ celuedit: Celular });
-    this.setState({ emailedit: Correo });
-    console.log(IdVendedor);
+    this.setState({ apellidoedit: Apellidos });
+    console.log(Id);
     console.log(this.state.idedit);
     console.log(this.state.nombredit);
   }
-  //Para editar un vendedor
+  //Para editar un usuario
   handleChangeIdE = event => {
     this.setState({ idedit: event.target.value });
   }
   handleChangeNombreE = event => {
     this.setState({ nombredit: event.target.value });
   }
-  handleChangeDomicilioE = event => {
-    this.setState({ domicilioedit: event.target.value });
+  handleChangeApellidoE = event => {
+    this.setState({ apellidoedit: event.target.value });
   }
-  handleChangeCpE = event => {
-    this.setState({ cpedit: event.target.value });
-  }
-  handleChangeCeluE = event => {
-    this.setState({ celuedit: event.target.value });
-  }
-  handleChangeEmailE = event => {
-    this.setState({ emailedit: event.target.value });
-  }
+ 
 
   // This is the put request
   handleEdit = event => {
     let _this = this;
 
-    axios.put(`${process.env.REACT_APP_API}vendedores`, {
+    axios.put(`${process.env.REACT_APP_API}usuarios`, {
       id: this.state.idedit,
       nombre: this.state.nombredit,
-      domicilio: this.state.domicilioedit,
-      celular: this.state.celuedit,
-      email: this.state.emailedit,
-      codigoPostal: this.state.cpedit,
+      apellido: this.state.apellidoedit,
     })
       .then(function (response) {
-        _this.getVendedores();
+        _this.getUsuarios();
         console.log(response);
       })
       .catch(function (error) {
@@ -186,24 +155,21 @@ class Vendedores extends React.Component {
       });
     this.setState({ idedit: "" });
     this.setState({ nombredit: "" });
-    this.setState({ domicilioedit: "" });
-    this.setState({ celuedit: "" });
-    this.setState({ emailedit: "" });
-    this.setState({ cpedit: "" });
+    this.setState({ apellidoedit: "" });
     this.setState({ open: false });
   }
 
-//Para buscar una vendedores
+//Para buscar una usuarios
 handleChangeSearch = async event => {
   await this.setState({ query: event.target.value });
   console.log(this.state.query);
-  this.getVendedores();
+  this.getUsuarios();
 }
 handleClickSearch = (event) => {
   event.preventDefault();
   let _this = this;
 
-  axios.get(`${process.env.REACT_APP_API}vendedores`, {
+  axios.get(`${process.env.REACT_APP_API}usuarios`, {
       query: this.state.query,
   })
       .then((res) => {
@@ -214,19 +180,19 @@ handleClickSearch = (event) => {
       });
 }
 
-  //Borrar vendedor
+  //Borrar usuario
 
-  handleRemove = (IdVendedor) => {
+  handleRemove = (Id) => {
     let _this = this;
     var config = {
       method: "delete",
-      url: `${process.env.REACT_APP_API}vendedores/` + IdVendedor,
+      url: `${process.env.REACT_APP_API}usuarios/` + Id,
       headers: {},
     };
-    if (window.confirm("¿Realmente desea borrar este vendedor?")) {
+    if (window.confirm("¿Realmente desea borrar este usuario?")) {
       axios(config)
         .then(function (response) {
-          _this.getVendedores();
+          _this.getUsuarios();
           console.log(response);
         })
         .catch(function (error) {
@@ -249,14 +215,14 @@ handleClickSearch = (event) => {
   render() {
 
     const {
-      vendedores,
-      currentVendedores,
+      usuarios,
+      currentusuarios,
       currentPage,
       totalPages
     } = this.state;
-    const totalVendedores = this.state.vendedores.length;
+    const totalusuarios = this.state.usuarios.length;
 
-    if (totalVendedores === 0) return null;
+    if (totalusuarios === 0) return null;
 
     const headerClass = [
       "text-dark py-2 pr-4 m-0",
@@ -289,7 +255,7 @@ handleClickSearch = (event) => {
 
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-                {/* Editor de vendedores */}
+                {/* Editor de usuarios */}
                 <Grid item xs={12} >
                   <Paper elevation={23}
                     sx={{
@@ -299,7 +265,7 @@ handleClickSearch = (event) => {
                     }}>
 
                     <Typography variant="h8" component="div">
-                      <b>Crear nuevo vendedor</b>
+                      <b>Crear nuevo usuario</b>
                     </Typography>
 
                     <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -309,8 +275,8 @@ handleClickSearch = (event) => {
                           margin="normal"
                           required
                           fullWidth
-                          id="vendedor"
-                          label="Nombre del vendedor"
+                          id="usuario"
+                          label="Nombre del usuario"
                           size="small"
                           value={this.state.nombre}
                           onChange={this.handleChangeNombre}
@@ -321,52 +287,13 @@ handleClickSearch = (event) => {
                           margin="normal"
                           required
                           fullWidth
-                          id="domicilio"
-                          label="Domicilio"
+                          id="apellidos"
+                          label="Apellido"
                           size="small"
-                          value={this.state.domicilio}
-                          onChange={this.handleChangeDomicilio}
+                          value={this.state.apellido}
+                          onChange={this.handleChangeApellido}
                         />
                       </FormControl>
-                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="celular"
-                          label="Celular"
-                          size="small"
-                          value={this.state.celular}
-                          onChange={this.handleChangeCelular}
-                        />
-
-                      </FormControl>
-                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="email"
-                          label="Email"
-                          size="small"
-                          value={this.state.email}
-                          onChange={this.handleChangeEmail}
-                        />
-                      </FormControl>
-                      <FormControl variant="filled" sx={{ m: 0.5, minWidth: 120 }} onSubmit={this.handleSubmit} >
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="codigoPostal"
-                          label="Codigo Postal"
-                          size="small"
-                          value={this.state.codigoPostal}
-                          onChange={this.handleChangeCodigoPostal}
-                        />
-                      </FormControl>
-
-
                       <br />
                       <Button
                         type="submit"
@@ -392,7 +319,7 @@ handleClickSearch = (event) => {
                                             <input
                                                 type="text"
                                                 name="query"
-                                                placeholder={`Buscar vendedor...`}
+                                                placeholder={`Buscar usuario...`}
                                                 class="searchTerm"
                                                 value={this.state.query}
                                                 onChange={this.handleChangeSearch}
@@ -414,15 +341,12 @@ handleClickSearch = (event) => {
                       <TableHead>
                         <TableRow>
                           <TableCell bgcolor="pink" > <b>Nombre</b></TableCell>
-                          <TableCell bgcolor="pink" > <b>Domicilio</b></TableCell>
-                          <TableCell bgcolor="pink" > <b>Celular</b></TableCell>
-                          <TableCell bgcolor="pink" > <b>Email</b></TableCell>
-                          <TableCell bgcolor="pink" > <b>Codigo Postal</b></TableCell>
+                          <TableCell bgcolor="pink" > <b>Apellido</b></TableCell>
                           <TableCell bgcolor="pink" > <b>Acciones</b></TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {this.state.vendedores.map((item, index) => (
+                        {this.state.usuarios.map((item, index) => (
                           <TableRow
                             key={item.Nombre}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -431,26 +355,17 @@ handleClickSearch = (event) => {
                               {item.Nombre}
                             </TableCell>
                             <TableCell component="th" scope="row">
-                              {item.Domicilio}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {item.Celular}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {item.Correo}
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="center">
-                              {item.CodigoPostal}
+                              {item.Apellidos}
                             </TableCell>
                             <TableCell align="center">
                               <EditIcon
                                 sx={{ color: pink[200] }}
                                 key={item.IdVendedor}
                                 value={this.state.IdVendedor}
-                                onClick={() => { this.showModal(item.IdVendedor, item.Nombre, item.Domicilio, item.CodigoPostal, item.Celular, item.Correo); }}
+                                onClick={() => { this.showModal(item.Id, item.Nombre, item.Apellidos); }}
                               />
                               <DeleteIcon sx={{ color: pink[600] }}
-                                onClick={() => { this.handleRemove(item.IdVendedor); }} />
+                                onClick={() => { this.handleRemove(item.Id); }} />
                             </TableCell>
                           </TableRow>
                         ))}
@@ -467,7 +382,7 @@ handleClickSearch = (event) => {
                             p: 4,
                           }}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                              <b>Editor de vendedores</b>
+                              <b>Editor de usuarios</b>
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                               Codigo: {this.state.idedit}
@@ -485,44 +400,15 @@ handleClickSearch = (event) => {
                             </FormControl>
                             <FormControl variant="standard" onSubmit={this.handleEdit}>
                               <TextField
-                                id="domicilioedit"
-                                label="Domicilio"
+                                id="apellidoedit"
+                                label="Apellido"
                                 size="small"
                                 margin="normal"
-                                value={this.state.domicilioedit}
-                                onChange={this.handleChangeDomicilioE}
+                                value={this.state.apellidoedit}
+                                onChange={this.handleChangeApellidoE}
                               />
                             </FormControl>
-                            <FormControl variant="standard" onSubmit={this.handleEdit}>
-                              <TextField
-                                id="cpedit"
-                                label="Codigo Postal"
-                                size="small"
-                                margin="normal"
-                                value={this.state.cpedit}
-                                onChange={this.handleChangeCpE}
-                              />
-                            </FormControl>
-                            <FormControl variant="standard" onSubmit={this.handleEdit}>
-                              <TextField
-                                id="emailedit"
-                                label="Email"
-                                size="small"
-                                margin="normal"
-                                value={this.state.emailedit}
-                                onChange={this.handleChangeEmailE}
-                              />
-                            </FormControl>
-                            <FormControl variant="standard" onSubmit={this.handleEdit}>
-                              <TextField
-                                id="celuedit"
-                                label="Celular"
-                                size="small"
-                                margin="normal"
-                                value={this.state.celuedit}
-                                onChange={this.handleChangeCeluE}
-                              />
-                            </FormControl>
+                            
                             <Button
                               sx={{ mt: 2, left: '5%', }}
                               margin variant="contained"
@@ -540,7 +426,7 @@ handleClickSearch = (event) => {
                     </Table>
                     <div className="container mb-5">
                       <div className="textPag ">
-                        <b>{totalVendedores}</b> {" "} Vendedores
+                        <b>{totalusuarios}</b> {" "} usuarios
                         {currentPage && (
                           <span> {" "} <b>|</b>{" "} Pagina {" "}
                             <span><b>{currentPage}</b></span><b>/</b>
@@ -550,7 +436,7 @@ handleClickSearch = (event) => {
                       </div>
                       <div>
                     <Pagination
-                      totalRecords={totalVendedores}
+                      totalRecords={totalusuarios}
                       pageLimit={10}
                       pageNeighbours={1}
                       onPageChanged={this.onPageChanged}
@@ -573,5 +459,5 @@ handleClickSearch = (event) => {
   }
 }
 
-export default Vendedores;
+export default Usuarios;
 

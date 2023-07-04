@@ -50,7 +50,7 @@ router.get("/", function (req, res, next) {
   v.Total, v.Subtotal, v.Observacion, v.Descuento, CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
   CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
   FROM \`ventas\` as v 
-  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`usuarios\` as vd on vd.Id = v.Usuario_Id
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
   WHERE v.FechaEliminacion IS NULL
@@ -59,7 +59,7 @@ router.get("/", function (req, res, next) {
   `:`SELECT v.IdVenta, DATE_FORMAT(v.Fecha, "%d-%m-%Y %r ") as Fecha, vd.Nombre, v.Pagado, c.Nombre_Cliente,
   f.FormaPago, v.Total, v.Observacion, v.Descuento, v.Interes , CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
     FROM ventas as v 
-    INNER JOIN vendedores as vd on vd.IdVendedor = v.Vendedor_Id
+    INNER JOIN usuarios as vd on vd.Id = v.Usuario_Id
     INNER JOIN clientes as c on c.IdCliente = v.Cliente_Id
     INNER JOIN forma_pago as f on f.IdFormaPago = v.FormaPago_Id
     WHERE v.FechaEliminacion IS NULL

@@ -21,7 +21,7 @@ var proveedoresRouter = require("./routes/proveedores");
 var datosVentaRouter = require("./routes/datosVenta");
 var listadoVentasRouter = require("./routes/listadoVentas");
 var totalVentasRouter = require("./routes/totalVentas");
-var vendedoresRouter = require("./routes/vendedores");
+var usuariosRouter = require("./routes/usuarios");
 var formaPagoRouter = require("./routes/formaPago");
 var testAPIRouter = require("./routes/testAPI");
 
@@ -67,7 +67,7 @@ app.use("/categorias", categoriasRouter);
 app.use("/marcas", marcasRouter);
 app.use("/clientes", clientesRouter);
 app.use("/proveedores", proveedoresRouter);
-app.use("/vendedores", vendedoresRouter);
+app.use("/usuarios", usuariosRouter);
 app.use("/formaPago", formaPagoRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/compras", comprasRouter);

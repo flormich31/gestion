@@ -50,7 +50,7 @@ router.get("/", function (req, res, next) {
   v.Total, v.Subtotal, v.Observacion, v.Descuento, CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
   CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
   FROM \`ventas\` as v 
-  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`usuarios\` as vd on vd.Id = v.Usuario_Id
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
   WHERE v.FechaEliminacion IS NULL
@@ -60,7 +60,7 @@ router.get("/", function (req, res, next) {
   v.Total, v.Subtotal, v.Observacion, v.Descuento , CASE WHEN v.Pagado = 1 THEN 'Si' ELSE 'No' END AS Pagado, 
   CASE WHEN v.Entregado = 1 THEN 'Si' ELSE 'No' END AS Entregado
   FROM \`ventas\` as v 
-  INNER JOIN \`vendedores\` as vd on vd.IdVendedor = v.Vendedor_Id
+  INNER JOIN \`usuarios\` as vd on vd.Id = v.Usuario_Id
   INNER JOIN \`clientes\` as c on c.IdCliente = v.Cliente_Id
   INNER JOIN \`forma_pago\` as f on f.IdFormaPago = v.FormaPago_Id
   WHERE v.FechaEliminacion IS NULL
@@ -87,7 +87,7 @@ router.post("/", function (req, res, next) {
 
   const ventaParams = [
     new Date(),
-    ventaData.Vendedor_Id,
+    ventaData.Usuario_Id,
     ventaData.Cliente_Id,
     ventaData.FormaPago_Id,
     ventaData.Total,
@@ -100,7 +100,7 @@ router.post("/", function (req, res, next) {
   ];
   const sql = `
   INSERT INTO ventas
-  ( Fecha, Vendedor_Id, Cliente_Id, FormaPago_Id, Total, Subtotal, Entregado, Pagado, Observacion, Descuento, Interes) 
+  ( Fecha, Usuario_Id, Cliente_Id, FormaPago_Id, Total, Subtotal, Entregado, Pagado, Observacion, Descuento, Interes) 
   VALUES (?,?,?,?,?,?,?,?,?,?,?);
   `;
   
@@ -108,6 +108,7 @@ router.post("/", function (req, res, next) {
     console.log(sql, ventaParams);
     if (err) {
       res.status(500).send("Error insertando venta");
+      console.log(err);
     } else {
       ventaData.IdVenta = result.insertId;
       const paramsDetalleVenta = [];

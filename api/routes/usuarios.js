@@ -6,12 +6,12 @@ router.get("/", function (req, res, next) {
   == '' || req.query.query
   == 'undefined' || !req.query || !req.query.query ? `
     SELECT *
-    FROM \`vendedores\`
+    FROM \`usuarios\`
     WHERE FechaEliminacion IS NULL 
     ORDER BY Nombre ASC
   `:`
   SELECT *
-  FROM \`vendedores\`
+  FROM \`usuarios\`
   WHERE FechaEliminacion IS NULL 
   AND
   Nombre LIKE "%${req.query.query}%"
@@ -21,9 +21,9 @@ router.get("/", function (req, res, next) {
     console.log(sql);
     if (err) {
       console.log(err);
-      res.send("Error recuperando vendedores");
+      res.send("Error recuperando usuarios");
     } else {
-      res.json({ vendedores: regs });
+      res.json({ usuarios: regs });
     }
   });
 });
@@ -45,15 +45,15 @@ router.post("/", function (req, res, next) {
   console.log(codigo);
   console.log(req.body);
   const sql = `
-  INSERT INTO \`vendedores\`
-  ( IdVendedor, Nombre, Domicilio, CodigoPostal,Celular,Correo) values ('${codigo}','${req.body.nombre}', '${req.body.domicilio}', '${req.body.codigoPostal}','${req.body.celular}','${req.body.email}');
+  INSERT INTO \`usuarios\`
+  ( Id, Nombre, Apellidos, FechaCreacion) values ('${codigo}','${req.body.nombre}', '${req.body.apellido}','${new Date()}');
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error creando nuevo vendedor");
+      res.send("Error creando nuevo usuarios");
     } else {
-      res.json({ vendedores: regs });
+      res.json({ usuarios: regs });
     }
   });
 });
@@ -61,36 +61,33 @@ router.post("/", function (req, res, next) {
 router.put("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
-  UPDATE \`vendedores\`
+  UPDATE \`usuarios\`
   SET Nombre='${req.body.nombre}',
-  Domicilio='${req.body.domicilio}',
-  CodigoPostal='${req.body.codigoPostal}',
-  Celular='${req.body.celular}',
-  Correo='${req.body.email}'
-  WHERE IdVendedor='${req.body.id}';
+  Apellidos='${req.body.apellido}',
+  WHERE Id='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
     if (err) {
-      res.send("Error editando vendedor");
+      res.send("Error editando usuarios");
     } else {
-      res.json({ vendedores: regs });
+      res.json({ usuarios: regs });
     }
   });
 });
 
 router.delete("/:IdVendedor", function (req, res, next) {
   const sql = `
-  UPDATE \`vendedores\`
+  UPDATE \`usuarios\`
   SET FechaEliminacion= now()
-  WHERE IdVendedor = ?
+  WHERE Id = ?
   `;
-  console.log("Delete IdVendedor > " + req.params.IdVendedor);
-  global.dbConnection.query(sql, [req.params.IdVendedor], (err, regs) => {
+  console.log("Delete IdVendedor > " + req.params.Id);
+  global.dbConnection.query(sql, [req.params.Id], (err, regs) => {
     if (err) {
-      res.send("Error eliminando vendedor");
+      res.send("Error eliminando usuario");
     } else {
-      res.json({ vendedores: regs });
+      res.json({ usuarios: regs });
     }
   });
 });

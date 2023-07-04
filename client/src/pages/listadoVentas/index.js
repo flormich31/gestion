@@ -70,7 +70,7 @@ class ListadoVentas extends React.Component {
       prodventas: [],
       productos: [],
       ventaProductos: [],
-      vendedores: [],
+      usuarios: [],
       totalVenta: [],
       currentPage: null,
       totalPages: null,

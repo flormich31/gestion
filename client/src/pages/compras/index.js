@@ -46,8 +46,11 @@ class DashboardContent extends React.Component {
             redirect: false,
             productos: [],
             ventaProductos: [],
-            vendedores: [],
-            IdVendedor: '',
+            usuarios: [],
+            proveedores: [],
+
+            IdProveedor: "",
+            Id: '',
             IdFormaPago: '',
             Entregado: '',
             Pagado: '',
@@ -64,16 +67,17 @@ class DashboardContent extends React.Component {
     }
 
     componentDidMount() {
-        this.getVendedores();
+        this.getUsuarios();
         this.getFormaPago();
         this.getClientes();
+        this.getTodosProveedores();
     }
 
-    getVendedores = () => {
+    getUsuarios = () => {
         let _this = this;
         var config = {
             method: "get",
-            url: `${process.env.REACT_APP_API}vendedores`,
+            url: `${process.env.REACT_APP_API}usuarios`,
             headers: {},
         };
         axios(config)
@@ -140,6 +144,23 @@ class DashboardContent extends React.Component {
                 console.log(error);
             });
     };
+
+    getTodosProveedores = () => {
+        let _this = this;
+        var config = {
+          method: "get",
+          url: `${process.env.REACT_APP_API}proveedores`,
+          headers: {},
+        };
+        axios(config)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            _this.setState(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
 
     calcularSubtotal = () => {
         let subtotal = 0;
@@ -244,10 +265,14 @@ class DashboardContent extends React.Component {
         this.calcularTotal();
     };
 
-    handleChangeIdVendedor = async (event) => {
-        this.setState({ IdVendedor: event.target.value });
+    handleChangeIdUsuario = async (event) => {
+        this.setState({ Id: event.target.value });
     };
-    handleChangeIdFormaPago = async (event) => {
+
+    handleChangeProveedor = (event) => {
+        this.setState({ Proveedor_Id: event.target.value });
+      };
+/*     handleChangeIdFormaPago = async (event) => {
         this.setState({ IdFormaPago: event.target.value });
     };
     handleChangeEntregado = async (event) => {
@@ -261,55 +286,56 @@ class DashboardContent extends React.Component {
     };
     handleChangeInteres = async (event) => {
         this.setState({ Interes: event.target.value });
-    };
-    handleChangeCliente_Id = async (event) => {
+    }; */
+   /*  handleChangeCliente_Id = async (event) => {
         this.setState({ Cliente_Id: event.target.value });
-    };
+    }; */
     handleChangeObservacion = async (event) => {
         this.setState({ Observacion: event.target.value });
     };
 
-    handleGuardarVenta = () => {
+    handleGuardarCompra = () => {
         if (this.state.ventaProductos.length === 0) {
             return alert("No hay productos");
         }
         const ventaData = {
-            Vendedor_Id: this.state.IdVendedor,
-            Cliente_Id: this.state.Cliente_Id,
-            FormaPago_Id: this.state.IdFormaPago,
+            Usuario_Id: this.state.Id,
+            //Cliente_Id: this.state.Cliente_Id,
+            //FormaPago_Id: this.state.IdFormaPago,
+            Proveedor_Id: this.state.Proveedor_Id,
             Total: this.state.Total,
             Subtotal: this.state.Subtotal,
-            Entregado: this.state.Entregado === "" ? "2" : this.state.Entregado,
-            Pagado: this.state.Pagado === "" ? "2" : this.state.Pagado,
+            //Entregado: this.state.Entregado === "" ? "2" : this.state.Entregado,
+            //Pagado: this.state.Pagado === "" ? "2" : this.state.Pagado,
             Observacion: this.state.Observacion === "" ? "ninguna" : this.state.Observacion,
-            Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
-            Interes: this.state.Interes === "" ? "0" : this.state.Interes,
+           // Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
+            //Interes: this.state.Interes === "" ? "0" : this.state.Interes,
             productos: this.state.ventaProductos,
         };
         let _this = this;
         axios
-            .post(`${process.env.REACT_APP_API}ventas`, ventaData)
+            .post(`${process.env.REACT_APP_API}compras`, ventaData)
             .then(function (response) {
                 console.log(response);
                 console.log("datos de venta", ventaData);
                 alert("Se guardó correctamente");
-
+                this.setState({ Id: "" });
+                //this.setState({ Cliente_Id: "" });
+                //this.setState({ IdFormaPago: "" });
+                this.setState({ Subtotal: "" });
+                this.setState({ Total: "" });
+               // this.setState({ Entregado: "" });
+               // this.setState({ Pagado: "" });
+                this.setState({ Observacion: "" });
+                //this.setState({ Descuento: "" });
+               // this.setState({ Interes: "" });
+                this.setState({ ventaProductos: [] });
             })
             .catch(function (error) {
                 console.log(error);
-                alert("No se guardo la venta");
+                alert("Asegurese de completar los campos: Usuario - Proveedor")
             });
-        this.setState({ IdVendedor: "" });
-        this.setState({ Cliente_Id: "" });
-        this.setState({ IdFormaPago: "" });
-        this.setState({ Subtotal: "" });
-        this.setState({ Total: "" });
-        this.setState({ Entregado: "" });
-        this.setState({ Pagado: "" });
-        this.setState({ Observacion: "" });
-        this.setState({ Descuento: "" });
-        this.setState({ Interes: "" });
-        this.setState({ ventaProductos: [] });
+        
     };
 
     redirectHandlerOpen = () => {
@@ -322,10 +348,6 @@ class DashboardContent extends React.Component {
 
         }
     }
-    openInNewTab = () => {
-        window.open('/productos', '_blank');
-    }
-
 
     render() {
         return (
@@ -349,6 +371,129 @@ class DashboardContent extends React.Component {
 
                         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
+                        <Grid m={0} pt={2}>
+                <Paper
+                  elevation={10}
+                  sx={{
+                    p: 2,
+                    display: "flex",
+                  }}
+                >
+
+                  <Grid container direction="column" >
+                    <Grid item>
+                      <Grid container direction="row">
+                        <Grid item xs={12}>
+                          <Typography variant="h5" component="div" p={1}>
+                            Detalle de compra
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction="row">
+                        <Grid item xs container direction="column">
+                          <Grid item xs>
+                          </Grid>
+
+                          <Grid item xs>
+                            <TextField
+                              id="standard-read-only-input"
+                              defaultValue={new Date().toLocaleString()}
+                              label="Fecha"
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              variant="standard"
+                            />
+                          </Grid>
+                          <Grid item xs>
+                            
+                          </Grid>
+                        </Grid>
+                        <Grid item xs container direction="column">
+                          <Grid item xs>
+
+                          <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                            >
+                              Usuario
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.Id}
+                              onChange={this.handleChangeIdUsuario}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.usuarios.map((item, index) => (
+                                <option
+                                  key={item.Id}
+                                  value={item.Id}
+                                >
+                                  {item.Nombre}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </Grid>
+                          <Grid item xs>
+                          </Grid>
+                          <Grid item xs>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs container direction="column">
+                          <Grid item xs>
+                          <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                            >
+                              Proveedor
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.Usuario_Id_Id}
+                              onChange={this.handleChangeProveedor}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.proveedores.map((item, index) => (
+                                <option
+                                  key={item.IdProveedor}
+                                  value={item.IdProveedor}
+                                >
+                                  {item.RazonSocial}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </Grid>
+                          </Grid>
+                        <Grid item xs container direction="column">
+                          <Grid item xs>
+                          </Grid>
+                          <Grid item xs>
+                          </Grid>
+                          <Grid item xs>
+                          </Grid>
+                          <Grid item xs>
+                           
+                          </Grid>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ mt: 1, mb: 1 }}
+                            size="small"
+                            onClick={this.handleGuardarCompra}
+                          >
+                            {"Guardar"}
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+
                             <Grid m={0} pt={2}>
                                 <Paper
                                     elevation={10}
@@ -358,10 +503,6 @@ class DashboardContent extends React.Component {
                                         flexDirection: "column",
                                     }}
                                 >
-                                    <Button size="small" onClick={this.openInNewTab}>
-                                        Ingresar producto
-                                    </Button>
-
                                     <Autocomplete
                                         options={this.state.productos}
                                         autoHighlight
@@ -393,18 +534,6 @@ class DashboardContent extends React.Component {
                                         onInputChange={this.handleProductInputChange}
                                     />
 
-                                    {/*  <Autocomplete
-                    disablePortal
-                    id="combo-box-producto"
-                    size="small"
-                    options={this.state.productos}
-                    getOptionLabel={(option) => option.Detalle}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Buscar producto..." />
-                    )}
-                    onChange={this.handleProductChange}
-                    onInputChange={this.handleProductInputChange}
-                  /> */}
                                 </Paper>
                             </Grid>
 
@@ -509,7 +638,7 @@ class DashboardContent extends React.Component {
                                             <TableRow>
                                                 <TableCell rowSpan={4} />
                                                 <TableCell size="small" colSpan={2}>
-                                                    <FormControl fullWidth sx={{ m: 1 }} size="small">
+                                                    {/* <FormControl fullWidth sx={{ m: 1 }} size="small">
                                                         Subtotal:
                                                         <FilledInput
                                                             value={this.state.Subtotal}
@@ -520,11 +649,11 @@ class DashboardContent extends React.Component {
                                                                 </InputAdornment>
                                                             }
                                                         />
-                                                    </FormControl>
+                                                    </FormControl> */}
                                                 </TableCell>
                                             </TableRow>
                                             <TableRow >
-                                                <TableCell>
+                                              {/*   <TableCell>
                                                     <FormControl fullWidth sx={{ m: 1 }} size="small">
                                                         Descuento:<Input
                                                             id="filled-adornment-amount"
@@ -535,10 +664,10 @@ class DashboardContent extends React.Component {
                                                         />
                                                     </FormControl>
 
-                                                </TableCell>
+                                                </TableCell> */}
                                             </TableRow>
                                             <TableRow >
-                                                <TableCell>
+                                              {/*   <TableCell>
                                                     <FormControl fullWidth sx={{ m: 1 }} size="small">
                                                         Interes:<Input
                                                             id="filled-adornment-amount"
@@ -549,7 +678,7 @@ class DashboardContent extends React.Component {
                                                         />
                                                     </FormControl>
 
-                                                </TableCell>
+                                                </TableCell> */}
                                             </TableRow>
                                             <TableRow>
                                                 <TableCell colSpan={2}>
@@ -579,7 +708,7 @@ class DashboardContent extends React.Component {
                                 </TableContainer>
                             </Grid>
 
-                            <Grid m={0} pt={2}>
+                         {/*    <Grid m={0} pt={2}>
                                 <Paper
                                     elevation={10}
                                     sx={{
@@ -616,7 +745,7 @@ class DashboardContent extends React.Component {
                                                             variant="standard"
                                                             htmlFor="uncontrolled-native"
                                                         >
-                                                            Proveedor
+                                                            Usuario
                                                         </InputLabel>
                                                         <NativeSelect
                                                             value={this.state.IdVendedor}
@@ -640,7 +769,7 @@ class DashboardContent extends React.Component {
                                                             variant="contained"
                                                             sx={{ mt: 1, mb: 1 }}
                                                             size="small"
-                                                            onClick={this.handleGuardarVenta}
+                                                            onClick={this.handleGuardarCompra}
                                                         >
                                                             {"Guardar"}
                                                         </Button>
@@ -650,8 +779,8 @@ class DashboardContent extends React.Component {
                                         </Grid>
                                     </Grid>
                                 </Paper>
-                            </Grid>
-                            <AddButton onClick={this.openInNewTab} />
+                            </Grid> */}
+                            <AddButton  />
                             <Copyright sx={{ pt: 4 }} />
                         </Container>
                     </Box>

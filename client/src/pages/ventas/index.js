@@ -46,8 +46,8 @@ class DashboardContent extends React.Component {
     this.state = {
       productos: [],
       ventaProductos: [],
-      vendedores: [],
-      IdVendedor: '',
+      usuarios: [],
+      Id: '',
       IdFormaPago: '',
       Entregado: '',
       Pagado: '',
@@ -65,16 +65,16 @@ class DashboardContent extends React.Component {
   }
 
   componentDidMount() {
-    this.getVendedores();
+    this.getUsuarios();
     this.getFormaPago();
     this.getClientes();
   }
 
-  getVendedores = () => {
+  getUsuarios = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}vendedores`,
+      url: `${process.env.REACT_APP_API}usuarios`,
       headers: {},
     };
     axios(config)
@@ -334,8 +334,8 @@ class DashboardContent extends React.Component {
     this.calcularTotal();
   };
 
-  handleChangeIdVendedor = async (event) => {
-    this.setState({ IdVendedor: event.target.value });
+  handleChangeIdUsuario = async (event) => {
+    this.setState({ Id: event.target.value });
   };
   handleChangeIdFormaPago = async (event) => {
     this.setState({ IdFormaPago: event.target.value });
@@ -364,7 +364,7 @@ class DashboardContent extends React.Component {
       return alert("No hay productos");
     }
     const ventaData = {
-      Vendedor_Id: this.state.IdVendedor,
+      Usuario_Id: this.state.Id,
       Cliente_Id: this.state.Cliente_Id,
       FormaPago_Id: this.state.IdFormaPago,
       Total: this.state.Total,
@@ -389,7 +389,7 @@ class DashboardContent extends React.Component {
         console.log(error);
         alert("No se guardo la venta");
       });
-    this.setState({ IdVendedor: "" });
+    this.setState({ Id: "" });
     this.setState({ Cliente_Id: "" });
     this.setState({ IdFormaPago: "" });
     this.setState({ Subtotal: "" });
@@ -739,16 +739,16 @@ class DashboardContent extends React.Component {
                               Vendedor
                             </InputLabel>
                             <NativeSelect
-                              value={this.state.IdVendedor}
-                              onChange={this.handleChangeIdVendedor}
+                              value={this.state.Id}
+                              onChange={this.handleChangeIdUsuario}
                               inputProps={{
                                 id: "uncontrolled-native",
                               }}
                             >
-                              {this.state.vendedores.map((item, index) => (
+                              {this.state.usuarios.map((item, index) => (
                                 <option
-                                  key={item.IdVendedor}
-                                  value={item.IdVendedor}
+                                  key={item.Id}
+                                  value={item.Id}
                                 >
                                   {item.Nombre}
                                 </option>
