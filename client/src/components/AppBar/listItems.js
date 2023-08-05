@@ -1,6 +1,7 @@
 import * as React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import ListItemText from "@mui/material/ListItemText";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import HomeIcon from "@mui/icons-material/Home";
@@ -85,6 +86,12 @@ export const MainListItems = () => {
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="Listado de ventas" />
+      </ListItem>
+      <ListItem  onClick={() => goto("/listadoCompras")}>
+        <ListItemIcon>
+          <PlaylistAddIcon />
+        </ListItemIcon>
+        <ListItemText primary="Listado de compras" />
       </ListItem>
     </div>
   );

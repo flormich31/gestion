@@ -416,7 +416,7 @@ class DashboardContent extends React.Component {
                   ? theme.palette.grey[100]
                   : theme.palette.grey[900],
               flexGrow: 1,
-              height: "100vh",
+              height: "150vh",
               overflow: "auto",
             }}
           >
@@ -629,9 +629,9 @@ class DashboardContent extends React.Component {
                           </FormControl>
                         </TableCell> */}
                       </TableRow>
-                      <TableRow >
+                    {/*  <TableRow >
                         <TableCell>
-                          {/* <FormControl fullWidth sx={{ m: 1 }} size="small">
+                           <FormControl fullWidth sx={{ m: 1 }} size="small">
                             Descuento:
                             <Input
                               id="filled-adornment-amount"
@@ -640,14 +640,14 @@ class DashboardContent extends React.Component {
                               size="small"
                               onChange={this.onDescuentoChange}
                             />
-                          </FormControl> */}
+                          </FormControl> 
 
                         </TableCell>
-                      </TableRow>
+                      </TableRow>*/}
                       <TableRow >
                         <TableCell>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
-                            Interes:<Input
+                            Recargo:<Input
                               id="filled-adornment-amount"
                               value={this.state.Interes}
                               label="Interes"
@@ -708,17 +708,7 @@ class DashboardContent extends React.Component {
                     <Grid item>
                       <Grid container direction="row">
                         <Grid item xs container direction="column">
-                          <Grid item xs>
-                            <TextField
-                              id="standard-read-only-input"
-                              //defaultValue={this.numeroVenta}
-                              label="Venta número"
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                              variant="standard"
-                            />
-                          </Grid>
+                         
 
                           <Grid item xs>
                             <TextField
@@ -735,11 +725,15 @@ class DashboardContent extends React.Component {
                             <InputLabel
                               variant="standard"
                               htmlFor="uncontrolled-native"
+                              color="warning"
+                              focused
                             >
                               Vendedor
                             </InputLabel>
                             <NativeSelect
                               value={this.state.Id}
+                             
+                              
                               onChange={this.handleChangeIdUsuario}
                               inputProps={{
                                 id: "uncontrolled-native",
@@ -755,95 +749,12 @@ class DashboardContent extends React.Component {
                               ))}
                             </NativeSelect>
                           </Grid>
-                        </Grid>
-                        <Grid item xs container direction="column">
-                          <Grid item xs>
-
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="uncontrolled-native"
-                            >
-                              Forma de pago
-                            </InputLabel>
-                            <NativeSelect
-                              value={this.state.IdFormaPago}
-                              onChange={this.handleChangeIdFormaPago}
-                              inputProps={{
-                                id: "uncontrolled-native",
-                              }}
-                            >
-                              {this.state.formaPago.map((item, index) => (
-                                <option
-                                  key={item.IdFormaPago}
-                                  value={item.IdFormaPago}
-                                >
-                                  {item.FormaPago}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          </Grid>
-                          <Grid item xs>
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="demo-simple-select-label"
-                            >
-                              Entregado
-                            </InputLabel>
-                            <NativeSelect
-                              value={this.state.Entregado}
-                              onChange={this.handleChangeEntregado}
-                              inputProps={{
-                                id: "uncontrolled-native",
-                              }}
-                            >
-                              <option value={0}>--</option>
-                              <option value={1}>Si</option>
-                              <option value={2}>No</option>
-                            </NativeSelect>
-                          </Grid>
-                          <Grid item xs>
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="demo-simple-select-label"
-                            >
-                              Pagado
-                            </InputLabel>
-                            <NativeSelect
-                              value={this.state.Pagado}
-                              onChange={this.handleChangePagado}
-                              inputProps={{
-                                id: "uncontrolled-native",
-                              }}
-                            >
-                              <option value={0}>--</option>
-                              <option value={1}>Si</option>
-                              <option value={2}>No</option>
-                            </NativeSelect>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs container direction="column">
-                          <Grid item xs>
-                            <TextField
-                              id="standard-basic"
-                              label="Descuento..%.."
-                              variant="standard"
-                              value={this.state.Descuento}
-                              onChange={this.handleChangeDescuento}
-                            />
-                          </Grid>
-                          <Grid item xs>
-                            <TextField
-                              id="standard-basic"
-                              label="Interes..%.."
-                              variant="standard"
-                              value={this.state.Interes}
-                              onChange={this.handleChangeInteres}
-                            />
-                          </Grid>
                           <Grid item xs>
                             <InputLabel
                               variant="standard"
                               htmlFor="uncontrolled-native"
+                              color="warning"
+                              focused
                             >
                               Clientes
                             </InputLabel>
@@ -878,6 +789,98 @@ class DashboardContent extends React.Component {
                             )}
                           /> */}
                           </Grid>
+                        </Grid>
+                        <Grid item xs container direction="column">
+                          <Grid item xs>
+
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="uncontrolled-native"
+                              color="warning"
+                              focused
+                            >
+                              Forma de pago
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.IdFormaPago}
+                              onChange={this.handleChangeIdFormaPago}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              {this.state.formaPago.map((item, index) => (
+                                <option
+                                  key={item.IdFormaPago}
+                                  value={item.IdFormaPago}
+                                >
+                                  {item.FormaPago}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </Grid>
+                          <Grid item xs>
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="demo-simple-select-label"
+                              color="warning"
+                              focused
+                            >
+                              Entregado
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.Entregado}
+                              onChange={this.handleChangeEntregado}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              <option value={0}></option>
+                              <option value={1}>Si</option>
+                              <option value={2}>No</option>
+                            </NativeSelect>
+                          </Grid>
+                          <Grid item xs>
+                            <InputLabel
+                              variant="standard"
+                              htmlFor="demo-simple-select-label"
+                              color="warning"
+                              focused
+                            >
+                              Pagado
+                            </InputLabel>
+                            <NativeSelect
+                              value={this.state.Pagado}
+                              onChange={this.handleChangePagado}
+                              inputProps={{
+                                id: "uncontrolled-native",
+                              }}
+                            >
+                              <option value={0}></option>
+                              <option value={1}>Si</option>
+                              <option value={2}>No</option>
+                            </NativeSelect>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs container direction="column">
+                          {/* <Grid item xs>
+                            <TextField
+                              id="standard-basic"
+                              label="Descuento..%.."
+                              variant="standard"
+                              value={this.state.Descuento}
+                              onChange={this.handleChangeDescuento}
+                            />
+                          </Grid> */}
+                          <Grid item xs>
+                            <TextField
+                              id="standard-basic"
+                              label="Recargo..%.."
+                              variant="standard"
+                              value={this.state.Interes}
+                              onChange={this.handleChangeInteres}
+                            />
+                          </Grid>
+                          
                           <Grid item xs>
                             <TextField
                               id="standard-basic"

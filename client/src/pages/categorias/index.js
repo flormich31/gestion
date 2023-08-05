@@ -224,7 +224,7 @@ class Categorias extends React.Component {
                                     ? theme.palette.grey[100]
                                     : theme.palette.grey[900],
                             flexGrow: 1,
-                            height: "100vh",
+                            height: "150vh",
                             overflow: "auto",
                         }}
                     >

@@ -51,25 +51,14 @@ class DashboardContent extends React.Component {
 
             IdProveedor: "",
             Id: '',
-            IdFormaPago: '',
-            Entregado: '',
-            Pagado: '',
-            Descuento: '',
-            Interes: '',
             Subtotal: '',
             Total: '',
-            Cliente_Id: "",
-            Observacion: '',
-            formaPago: [],
-            clientes: [],
             numeroVenta: "",
         };
     }
 
     componentDidMount() {
         this.getUsuarios();
-        this.getFormaPago();
-        this.getClientes();
         this.getTodosProveedores();
     }
 
@@ -171,26 +160,12 @@ class DashboardContent extends React.Component {
     };
 
     calcularTotal = () => {
-        if (this.state.Interes == 0 & this.state.Descuento == 0) {
-            let subtotal = 0;
-            this.state.ventaProductos.map((item) => {
-                subtotal += parseInt(item.PrecioVenta);
-            });
-            this.setState({ Total: subtotal });
-            console.log("total es", subtotal);
-        }
-        else if (this.state.Descuento > 0) {
-            let DESCUENTO = this.state.Descuento / 100;
-            let subtotal = this.state.Subtotal * DESCUENTO;
-            let total = this.state.Subtotal - subtotal;
-            this.setState({ Total: total });
-        }
-        else if (this.state.Interes > 0) {
-            let INTERES = this.state.Interes / 100;
-            let subtotal = this.state.Subtotal * INTERES;
-            let total = this.state.Subtotal + subtotal;
-            this.setState({ Total: total });
-        }
+        let subtotal = 0;
+      this.state.ventaProductos.map((item) => {
+        subtotal += parseInt(item.PrecioVenta);
+      });
+      this.setState({ Total: subtotal });
+      console.log("total es", subtotal);
     };
 
     handleBorrarProducto = async (index) => {
@@ -295,21 +270,15 @@ class DashboardContent extends React.Component {
     };
 
     handleGuardarCompra = () => {
-        if (this.state.ventaProductos.length === 0) {
+      if (this.state.ventaProductos.length === 0) {
             return alert("No hay productos");
         }
         const ventaData = {
             Usuario_Id: this.state.Id,
-            //Cliente_Id: this.state.Cliente_Id,
-            //FormaPago_Id: this.state.IdFormaPago,
             Proveedor_Id: this.state.Proveedor_Id,
             Total: this.state.Total,
             Subtotal: this.state.Subtotal,
-            //Entregado: this.state.Entregado === "" ? "2" : this.state.Entregado,
-            //Pagado: this.state.Pagado === "" ? "2" : this.state.Pagado,
             Observacion: this.state.Observacion === "" ? "ninguna" : this.state.Observacion,
-           // Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
-            //Interes: this.state.Interes === "" ? "0" : this.state.Interes,
             productos: this.state.ventaProductos,
         };
         let _this = this;
@@ -318,24 +287,23 @@ class DashboardContent extends React.Component {
             .then(function (response) {
                 console.log(response);
                 console.log("datos de venta", ventaData);
-                alert("Se guardó correctamente");
-                this.setState({ Id: "" });
-                //this.setState({ Cliente_Id: "" });
-                //this.setState({ IdFormaPago: "" });
-                this.setState({ Subtotal: "" });
-                this.setState({ Total: "" });
-               // this.setState({ Entregado: "" });
-               // this.setState({ Pagado: "" });
-                this.setState({ Observacion: "" });
-                //this.setState({ Descuento: "" });
-               // this.setState({ Interes: "" });
-                this.setState({ ventaProductos: [] });
+              alert("Se guardó correctamente");
+
+              _this.setState({ Id: "" });
+              _this.setState({ Total: "" });
+              _this.setState({ productos:  [] });
+              _this.setState({ usuarios:  [] });
+              _this.setState({ proveedores:  [] });
+            _this.setState({ ventaProductos: [] });
+                  
+                
             })
             .catch(function (error) {
                 console.log(error);
                 alert("Asegurese de completar los campos: Usuario - Proveedor")
             });
         
+            
     };
 
     redirectHandlerOpen = () => {
@@ -363,7 +331,7 @@ class DashboardContent extends React.Component {
                                     ? theme.palette.grey[100]
                                     : theme.palette.grey[900],
                             flexGrow: 1,
-                            height: "100vh",
+                            height: "150vh",
                             overflow: "auto",
                         }}
                     >
@@ -595,7 +563,7 @@ class DashboardContent extends React.Component {
                                                     </TableCell>
                                                     <TableCell align="right">
                                                         <FormControl fullWidth sx={{ m: 1 }} size="small">
-                                                            <Input
+                                                       $ {item.PrecioMenor}{/* <Input
                                                                 defaultValue={item.PrecioMenor}
                                                                 onChange={(e) => {
                                                                     this.onPrecioChange(index, e.target.value);
@@ -605,7 +573,7 @@ class DashboardContent extends React.Component {
                                                                         $
                                                                     </InputAdornment>
                                                                 }
-                                                            />
+                                                            /> */}
                                                         </FormControl>
                                                     </TableCell>
                                                     <TableCell align="right">
@@ -637,8 +605,8 @@ class DashboardContent extends React.Component {
 
                                             <TableRow>
                                                 <TableCell rowSpan={4} />
-                                                <TableCell size="small" colSpan={2}>
-                                                    {/* <FormControl fullWidth sx={{ m: 1 }} size="small">
+                                              {/*  <TableCell size="small" colSpan={2}>
+                                                     <FormControl fullWidth sx={{ m: 1 }} size="small">
                                                         Subtotal:
                                                         <FilledInput
                                                             value={this.state.Subtotal}
@@ -649,8 +617,8 @@ class DashboardContent extends React.Component {
                                                                 </InputAdornment>
                                                             }
                                                         />
-                                                    </FormControl> */}
-                                                </TableCell>
+                                                    </FormControl>
+                                                </TableCell> */}
                                             </TableRow>
                                             <TableRow >
                                               {/*   <TableCell>
@@ -666,8 +634,8 @@ class DashboardContent extends React.Component {
 
                                                 </TableCell> */}
                                             </TableRow>
-                                            <TableRow >
-                                              {/*   <TableCell>
+                                             {/*<TableRow >
+                                                <TableCell>
                                                     <FormControl fullWidth sx={{ m: 1 }} size="small">
                                                         Interes:<Input
                                                             id="filled-adornment-amount"
@@ -678,8 +646,8 @@ class DashboardContent extends React.Component {
                                                         />
                                                     </FormControl>
 
-                                                </TableCell> */}
-                                            </TableRow>
+                                                </TableCell> 
+                                            </TableRow>*/}
                                             <TableRow>
                                                 <TableCell colSpan={2}>
                                                     <FormControl fullWidth sx={{ m: 1 }} size="small">

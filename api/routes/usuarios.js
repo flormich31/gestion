@@ -46,7 +46,7 @@ router.post("/", function (req, res, next) {
   console.log(req.body);
   const sql = `
   INSERT INTO \`usuarios\`
-  ( Id, Nombre, Apellidos, FechaCreacion) values ('${codigo}','${req.body.nombre}', '${req.body.apellido}','${new Date()}');
+  ( Id, Nombre, Apellidos, FechaCreacion) values ('${codigo}','${req.body.nombre}', '${req.body.apellido}', now());
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -63,7 +63,7 @@ router.put("/", function (req, res, next) {
   const sql = `
   UPDATE \`usuarios\`
   SET Nombre='${req.body.nombre}',
-  Apellidos='${req.body.apellido}',
+  Apellidos='${req.body.apellido}'
   WHERE Id='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
@@ -82,7 +82,7 @@ router.delete("/:IdVendedor", function (req, res, next) {
   SET FechaEliminacion= now()
   WHERE Id = ?
   `;
-  console.log("Delete IdVendedor > " + req.params.Id);
+  console.log("Delete Id > " + req.params.Id);
   global.dbConnection.query(sql, [req.params.Id], (err, regs) => {
     if (err) {
       res.send("Error eliminando usuario");

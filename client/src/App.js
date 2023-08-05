@@ -9,6 +9,7 @@ import Categorias from "./pages/categorias";
 import Clientes from "./pages/clientes";
 import Proveedores from "./pages/Proveedores";
 import ListadoVentas from "./pages/listadoVentas";
+import ListadoCompras from "./pages/listadoCompras";
 import Profile from "./pages/profile";
 import Productos from "./pages/productos";
 import ProductoNuevo from "./pages/productoNuevo";
@@ -55,6 +56,9 @@ export default function App() {
           </Route>
           <Route path="/listadoVentas">
             <ListadoVentas />
+          </Route>
+          <Route path="/listadoCompras">
+            <ListadoCompras/>
           </Route>
           <Route path="/profile">
             <Profile />

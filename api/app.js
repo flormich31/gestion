@@ -19,8 +19,11 @@ var marcasRouter = require("./routes/marcas");
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
 var datosVentaRouter = require("./routes/datosVenta");
+var datosCompraRouter = require("./routes/datosCompra");
 var listadoVentasRouter = require("./routes/listadoVentas");
+var listadoComprasRouter = require("./routes/listadoCompras");
 var totalVentasRouter = require("./routes/totalVentas");
+var totalComprasRouter = require("./routes/totalCompras");
 var usuariosRouter = require("./routes/usuarios");
 var formaPagoRouter = require("./routes/formaPago");
 var testAPIRouter = require("./routes/testAPI");
@@ -73,8 +76,11 @@ app.use("/testAPI", testAPIRouter);
 app.use("/compras", comprasRouter);
 app.use("/ventas", ventasRouter);
 app.use("/datosVenta", datosVentaRouter);
+app.use("/datosCompra", datosCompraRouter);
 app.use("/listadoVentas", listadoVentasRouter);
+app.use("/listadoCompras", listadoComprasRouter);
 app.use("/totalVentas", totalVentasRouter);
+app.use("/totalCompras", totalComprasRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

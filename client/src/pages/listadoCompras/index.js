@@ -60,24 +60,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const mdTheme = createTheme();
 
-class ListadoVentas extends React.Component {
+class ListadoCompras extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      ventas: [],
-      datosVenta: [],
-      prodventas: [],
+      compras: [],
+      datosCompra: [],
+      prodcompras: [],
       productos: [],
-      ventaProductos: [],
+      compraProductos: [],
       usuarios: [],
-      totalVenta: [],
+      totalCompra: [],
       currentPage: null,
       totalPages: null,
 
       open: false,
       query: "",
-      IdVenta: ' ',
+      IdCompra: ' ',
       IdVendedor: ' ',
       IdFormaPago: ' ',
       Entregado: ' ',
@@ -95,29 +95,29 @@ class ListadoVentas extends React.Component {
       Observacion: ' ',
       formaPago: [],
       clientes: [],
-      numeroVenta: "",
+      numeroCompra: "",
     };
   }
 
   componentDidMount() {
-    this.getVentas();
-    this.getDatosVenta();
-    this.getListadoVentas();
-    this.getTotalVentas();
+    this.getCompras();
+    this.getDatosCompra();
+    this.getListadoCompras();
+    this.getTotalCompras();
   }
 
-   getVentas = () => {
+   getCompras = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}ventas?query=${this.state.startDateMysql}&query2=${this.state.endDateMysql}`,
+      url: `${process.env.REACT_APP_API}compras?query=${this.state.startDateMysql}&query2=${this.state.endDateMysql}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
-        if (response.data.ventas.length === 0) {
-          alert("No se encontraron ventas");
+        if (response.data.compras.length === 0) {
+          alert("No se encontraron compras");
         } else {
           _this.setState(response.data);
         }
@@ -153,18 +153,18 @@ class ListadoVentas extends React.Component {
   
   }; */
 
-  getDatosVenta = () => {
+  getDatosCompra = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}datosVenta?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}datosCompra?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
-        if (response.data.datosVenta.length === 0) {
-          alert("No se encontraron datos de venta");
+        if (response.data.datosCompra.length === 0) {
+          alert("No se encontraron datos de compra");
         } else {
           _this.setState(response.data);
         }
@@ -175,17 +175,17 @@ class ListadoVentas extends React.Component {
 
   };
 
-  getListadoVentas = () => {
+  getListadoCompras = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}listadoVentas?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}listadoCompras?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
-        if (response.data.prodventas.length === 0) {
-          alert("No se encontraron productos en esta venta");
+        if (response.data.prodcompras.length === 0) {
+          alert("No se encontraron productos en esta compra");
         } else {
           _this.setState(response.data);
         }
@@ -195,17 +195,17 @@ class ListadoVentas extends React.Component {
       });
   };
 
-  getTotalVentas = () => {
+  getTotalCompras = () => {
     let _this = this;
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}totalVentas?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}totalCompras?query=${this.state.query}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
-        if (response.data.totalVenta.length === 0) {
-          alert("No se encontraron Totales en esta venta");
+        if (response.data.totalCompra.length === 0) {
+          alert("No se encontraron totales en esta compra");
         } else {
           _this.setState(response.data);
         }
@@ -215,21 +215,21 @@ class ListadoVentas extends React.Component {
       });
   };
 
-  showProductos = async (IdVenta) => {
+  showProductos = async (IdCompra) => {
 
-    await this.setState({ open: true, query: IdVenta, IdVenta: IdVenta });
+    await this.setState({ open: true, query: IdCompra, IdCompra: IdCompra });
     console.log("query es", this.state.query);
 
-    await this.getDatosVenta();
-    await this.getListadoVentas();
-    await this.getTotalVentas();
+    await this.getDatosCompra();
+    await this.getListadoCompras();
+    await this.getTotalCompras();
   }
 
   handleClose = async () => {
 
     await this.setState({ open: false });
     this.setState({ query: "", });
-    this.getVentas();
+    this.getCompras();
   }
 
   onEntregadoChange = async (event) => {
@@ -244,22 +244,22 @@ class ListadoVentas extends React.Component {
   };
 
   handleBorrarProducto = async (index) => {
-    this.state.ventaProductos.splice(index, 1);
-    await this.setState({ ventaProductos: this.state.ventaProductos });
+    this.state.compraProductos.splice(index, 1);
+    await this.setState({ compraProductos: this.state.compraProductos });
   };
 
-  handleRemove = (IdVenta) => {
+  handleRemove = (IdCompra) => {
 
     let _this = this;
     var config = {
       method: "delete",
-      url: `${process.env.REACT_APP_API}ventas/` + IdVenta,
+      url: `${process.env.REACT_APP_API}compras/` + IdCompra,
       headers: {},
     };
-    if (window.confirm("¿Realmente desea borrar esta venta?")) {
+    if (window.confirm("¿Realmente desea borrar esta compra?")) {
       axios(config)
         .then(function (response) {
-          _this.getVentas();
+          _this.getCompras();
           console.log(response);
         })
         .catch(function (error) {
@@ -276,25 +276,25 @@ class ListadoVentas extends React.Component {
 
   handleUpdate = (e) => {
 
-    if (window.confirm("¿Realmente desea editar esta venta?")) {
+    if (window.confirm("¿Realmente desea editar esta compra?")) {
       let _this = this;
       axios
-        .put(`${process.env.REACT_APP_API}ventas/`, {
-          IdVenta: this.state.IdVenta,
+        .put(`${process.env.REACT_APP_API}compras/`, {
+          IdCompra: this.state.IdCompra,
           Entregado: this.state.Entregado,
           Pagado: this.state.Pagado,
           Observacion: this.state.Observacion,
         })
         .then(function (response) {
-          _this.getVentas();
+          _this.getCompras();
           console.log(response);
         })
         .catch(function (error) {
           console.log(error);
         });
-      this.getVentas();
-      this.getListadoVentas();
-      this.getTotalVentas();
+      this.getCompras();
+      this.getListadoCompras();
+      this.getTotalCompras();
     }
 
 
@@ -306,7 +306,7 @@ class ListadoVentas extends React.Component {
     //onSearch(startDate, endDate);
     //alert("BUSQUEDA POR FECHA");
     console.log(this.state.startDate, this.state.endDate)
-    this.getVentas();
+    this.getCompras();
   };
 
   onChangeDateStart = async (date) => {
@@ -429,31 +429,16 @@ class ListadoVentas extends React.Component {
                           <b>Fecha</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
-                          <b>Vendedor</b>
+                          <b>Usuario</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
-                          <b>Cliente</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="center">
-                          <b>Forma de pago</b>
+                          <b>Proveedor</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
                           <b>Total</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
                           <b>Ver detalle</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="center">
-                          <b>Entregado</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="center">
-                          <b>Pagado</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="center">
-                          <b>Observacion</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="center">
-                          <b>Descuento</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="center">
                           <b>Acciones</b>
@@ -463,7 +448,7 @@ class ListadoVentas extends React.Component {
 
                     <TableBody>
 
-                      {this.state.ventas.map((item, index) => (
+                      {this.state.compras.map((item, index) => (
 
                         <TableRow
                           key={item.IdProducto}
@@ -473,7 +458,7 @@ class ListadoVentas extends React.Component {
 
                         >
                           <TableCell align="center" component="th" scope="row" >
-                            {item.IdVenta}
+                            {item.IdCompra}
                           </TableCell>
                           <TableCell align="center" component="th" scope="row" format="date">
                             {item.Fecha}
@@ -481,24 +466,19 @@ class ListadoVentas extends React.Component {
                           <TableCell align="center" component="th" scope="row">
                             {item.Nombre}
                           </TableCell>
-                          <TableCell align="center">{item.Nombre_Cliente}</TableCell>
-                          <TableCell align="center">{item.FormaPago}</TableCell>
+                          <TableCell align="center">{item.RazonSocial}</TableCell>
                           <TableCell align="center">${item.Total}</TableCell>
                           <TableCell align="center">
                             <AddIcon
                               aria-label="expand row"
                               size="small"
-                              key={item.IdVenta}
+                              key={item.IdCompra}
                               value={this.state.query}
                               onClick={() => {
-                                this.showProductos(item.IdVenta);
+                                this.showProductos(item.IdCompra);
                               }}
                             />
                           </TableCell>
-                          <TableCell align="center">{item.Entregado}</TableCell>
-                          <TableCell align="center">{item.Pagado}</TableCell>
-                          <TableCell align="center">{item.Observacion}</TableCell>
-                          <TableCell align="center">{item.Descuento}</TableCell>
                           <TableCell align="center">
                             {/* <EditIcon
                               sx={{ color: pink[200] }}
@@ -511,7 +491,7 @@ class ListadoVentas extends React.Component {
                               align="center"
                               value
                               onClick={() => {
-                                this.handleRemove(item.IdVenta);
+                                this.handleRemove(item.IdCompra);
                               }}
                             />
                           </TableCell>
@@ -531,12 +511,12 @@ class ListadoVentas extends React.Component {
                             color="white"
                             noWrap
                             sx={{ flexGrow: 1 }}
-                          >DETALLE DE VENTA
+                          >DETALLE DE COMPRA
                           </Typography>
                         </DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            {this.state.datosVenta.map((item) =>
+                            {this.state.datosCompra.map((item) =>
                               <Box
                                 sx={{
                                   width: 300,
@@ -544,55 +524,11 @@ class ListadoVentas extends React.Component {
                                 }}
                               >
                                 <br />
-                                <Typography color="#000000" variant="p"> <b>Número de venta:</b> {item.IdVenta}
+                                <Typography color="#000000" variant="p"> <b>Número de compra:</b> {item.IdCompra}
                                   <br />
                                   <b>Fecha:</b>  {item.Fecha}<br />
-                                  <b> Vendedor:</b>  {item.Nombre}<br />
-                                  <b>Cliente:</b>  {item.Nombre_Cliente}<br />
-                                  <b>Forma de pago:</b>   {item.FormaPago}<br />
-                                  <b>Entregado:</b>  <FormControl onSubmit={this.handleUpdate} size="small" >
-                                    <NativeSelect
-                                      size="small"
-                                      placeholder='size="small"'
-                                      value={this.state.Entregado}
-                                      onChange={this.onEntregadoChange}
-                                      inputProps={{
-                                        id: "uncontrolled-native",
-                                      }}
-                                    >
-                                      <option value={0}>{item.Entregado}</option>
-                                      <option value={1}>Si</option>
-                                      <option value={2}>No</option>
-                                    </NativeSelect>
-                                  </FormControl>
-                                  <b>Pagado:</b> <FormControl onSubmit={this.handleUpdate} size="small">
-                                    <NativeSelect
-                                      size="small"
-                                      placeholder='size="small"'
-                                      value={this.state.Pagado}
-                                      onChange={this.onPagadoChange}
-                                      inputProps={{
-                                        id: "uncontrolled-native",
-                                      }}
-                                    >
-                                      <option value={0}>{item.Pagado}</option>
-                                      <option value={1}>Si</option>
-                                      <option value={2}>No</option>
-                                    </NativeSelect>
-
-                                  </FormControl>
-                                  <b>Observacion: </b>
-                                  <FormControl onSubmit={this.handleUpdate} variant="standard" size="small">
-                                    <TextField
-                                      size="small"
-                                      placeholder='size="small"'
-                                      id="Observacion"
-                                      defaultValue={item.Observacion}
-                                      onChange={this.onObservacionChange}
-                                      autoComplete="on"
-                                    />
-                                  </FormControl>
-                                  <br />      <br />
+                                  <b> Usuario:</b>  {item.Nombre}<br />
+                                  <b>Proveedor:</b>  {item.RazonSocial}<br />
                                 </Typography>
                               </Box>)}
 
@@ -605,26 +541,24 @@ class ListadoVentas extends React.Component {
                                   <TableCell bgcolor="pink" align="right"><b>Cantidad</b></TableCell>
                                   <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
                                   <TableCell bgcolor="pink" align="right"><b>Subtotal</b></TableCell>
-                                  <TableCell bgcolor="pink" align="right"><b>Descuento</b></TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {this.state.prodventas.map((item, index) => (
+                                {this.state.prodcompras.map((item, index) => (
                                   <TableRow key={index}>
                                     <TableCell component="th" scope="row">{item.IdProducto}</TableCell>
                                     <TableCell component="th" scope="row">{item.Detalle}</TableCell>
                                     <TableCell>{item.Marca}</TableCell>
                                     <TableCell align="right">{item.cantidad}</TableCell>
-                                    <TableCell align="right">${item.PrecioVenta}</TableCell>
-                                    <TableCell align="right">${item.Subtotal}</TableCell>
-                                    <TableCell align="right">{item.Descuento}</TableCell>
+                                    <TableCell align="right">${item.PrecioMenor}</TableCell>
+                                    <TableCell align="right">${item.Precio}</TableCell>
                                   </TableRow>
                                 ))}
 
-                                {this.state.totalVenta.map((item) => (
+                                {this.state.totalCompra.map((item) => (
                                   <TableRow key={item.IdVenta}>
 
-                                    <TableCell bgcolor="pink" colSpan={6}><b>TOTAL</b></TableCell>
+                                    <TableCell bgcolor="pink" colSpan={5}><b>TOTAL</b></TableCell>
                                     <TableCell bgcolor="pink" align="right"><b>${item.Total}</b></TableCell>
                                   </TableRow>
                                 ))}
@@ -662,4 +596,4 @@ class ListadoVentas extends React.Component {
   }
 }
 
-export default ListadoVentas;
+export default ListadoCompras;

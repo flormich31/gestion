@@ -376,7 +376,7 @@ console.log("imagen", imagen);
         detalle: this.state.detalleedit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
-        Descuento: this.state.descuentoedit === "" ? "0" : this.state.Descuento,
+        Descuento: this.state.descuentoedit === ""  || "undefined" ? "0" : this.state.Descuento,
         costo: this.state.costoedit,
         PrecioMenor: this.state.editPrecioMenor,
         PrecioMayor: this.state.editPrecioMayor,
@@ -471,7 +471,7 @@ console.log("imagen", imagen);
                   ? theme.palette.grey[100]
                   : theme.palette.grey[900],
               flexGrow: 1,
-              height: "100vh",
+              height: "150vh",
               overflow: "auto",
             }}
           >

@@ -63,7 +63,7 @@ router.get("/", function (req, res, next) {
     INNER JOIN clientes as c on c.IdCliente = v.Cliente_Id
     INNER JOIN forma_pago as f on f.IdFormaPago = v.FormaPago_Id
     WHERE v.FechaEliminacion IS NULL
-     and IdVenta LIKE 16
+     and IdVenta LIKE "%${req.query.query}%" 
     ORDER BY v.Fecha ASC	`;
 
   global.dbConnection.query(sql, [], (err, regs) => {
