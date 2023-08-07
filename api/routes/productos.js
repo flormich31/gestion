@@ -55,7 +55,7 @@ function makeid(length) {
 
 router.post("/", function (req, res, next) {
   const codigo = makeid(5);
-  console.log(req.body);
+  console.log("BODY CREATE PROD",req.body);
   const sql = `
   INSERT INTO \`productos\`
   ( IdProducto, ImagenURL, Detalle, Categoria_Id, Marca_Id, Descuento, Costo, PrecioMenor, PrecioMayor, 

@@ -197,7 +197,7 @@ class Productos extends React.Component {
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
         costo: this.state.costo,
-        Descuento: this.state.Descuento,
+        Descuento: this.state.Descuento  === ""  || "undefined" ? "0" : this.state.Descuento,
         PrecioMenor: this.state.PrecioMenor,
         PrecioMayor: this.state.PrecioMayor,
         Observacion: this.state.Observacion,
