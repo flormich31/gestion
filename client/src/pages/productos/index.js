@@ -531,7 +531,7 @@ console.log("imagen", imagen);
                           </FormControl>
                         </Grid>
                         <Grid item xs>
-                          <FormControl
+                          {/* <FormControl
                             onSubmit={this.handleSubmit}
 
                           >
@@ -543,7 +543,7 @@ console.log("imagen", imagen);
                               value={this.state.costo}
                               onChange={this.handleChangeCosto}
                             />
-                          </FormControl>
+                          </FormControl> */}
                         </Grid>
 
                       </Grid>
@@ -565,7 +565,7 @@ console.log("imagen", imagen);
                           </FormControl>
                         </Grid>
 
-                        <Grid item xs>
+                        {/* <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
@@ -578,7 +578,7 @@ console.log("imagen", imagen);
                               variant="standard"
                             />
                           </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs>
                           <FormControl
@@ -674,7 +674,7 @@ console.log("imagen", imagen);
                             </NativeSelect>
                           </FormControl>
                         </Grid>
-                        <Grid item xs>
+                       {/*  <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
@@ -688,7 +688,7 @@ console.log("imagen", imagen);
 
                             />
                           </FormControl>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
 
                       <Grid item xs container direction="column">
@@ -745,7 +745,7 @@ console.log("imagen", imagen);
                     <input
                       type="text"
                       name="query"
-                      placeholder={`Buscar...`}
+                      placeholder={`Buscar por codigo o nombre del producto...`}
                       className="searchTerm"
                       value={this.state.query}
                       onChange={this.handleChangeSearch}
@@ -798,18 +798,18 @@ console.log("imagen", imagen);
                         <TableCell bgcolor="pink" align="right" >
                           <b>Categoria</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right" >
+                       {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Porc-Desc</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="right" >
+                        </TableCell> */}
+                       {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Costo</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>P.Menor</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        {/* <TableCell bgcolor="pink" align="right">
                           <b>P.Mayor</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>Prov</b>
                         </TableCell>
@@ -842,10 +842,10 @@ console.log("imagen", imagen);
                           <TableCell align="right">
                             {item.categoria}
                           </TableCell>
-                          <TableCell align="right">{item.Descuento}%</TableCell>
-                          <TableCell align="right">${item.Costo}</TableCell>
+                          {/* <TableCell align="right">{item.Descuento}%</TableCell> */}
+                          {/* <TableCell align="right">${item.Costo}</TableCell> */}
                           <TableCell align="right">${item.PrecioMenor}</TableCell>
-                          <TableCell align="right">${item.PrecioMayor}</TableCell>
+                          {/* <TableCell align="right">${item.PrecioMayor}</TableCell> */}
                           <TableCell align="right">
                             {item.RazonSocial}
                           </TableCell>
@@ -984,7 +984,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          <FormControl
+                          {/* <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -998,8 +998,8 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditDescuento}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
-                          <FormControl
+                          </FormControl> */}
+                          {/* <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -1013,7 +1013,7 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditCosto}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
+                          </FormControl> */}
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -1029,7 +1029,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          <FormControl
+                         {/*  <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -1043,7 +1043,7 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditPrecioMayor}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
+                          </FormControl> */}
 
                           <FormControl size="small" margin="dense">
                             <InputLabel id="edit-select-categoria-label">

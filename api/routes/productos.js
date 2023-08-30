@@ -27,7 +27,10 @@ router.get("/", function (req, res, next) {
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE p.FechaEliminacion IS NULL
     AND
+      IdProducto LIKE "%${req.query.query}%" or
 						Detalle LIKE "%${req.query.query}%"
+            
+           
     ORDER BY p.Detalle ASC 
   `;
   console.log(sql);

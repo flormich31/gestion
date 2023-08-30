@@ -132,7 +132,7 @@ class DashboardContent extends React.Component {
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data.productos.length === 0) {
-          // alert("No se encontraron productos");
+          alert("No se encontraron productos");
         } else {
           _this.setState(response.data);
         }
@@ -282,7 +282,7 @@ class DashboardContent extends React.Component {
 
   handleProductInputChange = async (event) => {
     await this.setState({ query: event.target.value });
-    this.getProductos();
+    await this.getProductos();
   };
   handleProductChange = async (event, selectedProduct) => {
     if (selectedProduct) {
