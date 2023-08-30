@@ -496,18 +496,15 @@ class DashboardContent extends React.Component {
                         <TableCell bgcolor="pink" align="right">
                           <b>Marca</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                       {/*  <TableCell bgcolor="pink" align="right">
                           <b>Descuento</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>Cant</b>
                         </TableCell>
                         <TableCell bgcolor="pink" align="right">
                           <b>Precio</b>
                         </TableCell>
-                       {/*  <TableCell bgcolor="pink" align="right">
-                          <b>Descuento</b>
-                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>Subtotal</b>
                         </TableCell>
@@ -531,7 +528,7 @@ class DashboardContent extends React.Component {
                             {item.Detalle}
                           </TableCell>
                           <TableCell align="right">{item.marca}</TableCell>
-                          <TableCell align="right">
+                          {/* <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <Input
                                 id="filled-adornment-amount"
@@ -540,7 +537,7 @@ class DashboardContent extends React.Component {
                                   this.onDescuentoChange(index, e.target.value);
                                 }}
                               />
-                            </FormControl></TableCell>
+                            </FormControl></TableCell> */}
                           <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <Input
@@ -554,37 +551,9 @@ class DashboardContent extends React.Component {
                           </TableCell>
                           <TableCell align="right">
                          ${item.PrecioMenor}
-                            {/* <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <Input
-                                defaultValue={item.PrecioMenor}
-                                onChange={(e) => {
-                                  this.onPrecioChange(index, e.target.value);
-                                }}
-                                startAdornment={
-                                  <InputAdornment position="start">
-                                    $
-                                  </InputAdornment>
-                                }
-                              />
-                            </FormControl> */}
+                          
                           </TableCell>
-                          {/* <TableCell align="right">
-                            <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <Input
-                                value={this.state.EditDescuento}
-                                defaultValue={item.Descuento}
-                                onChange={(e) => {
-                                  this.onDescuentoChange(index, e.target.value);
-                                }}
-                                
-                                startAdornment={
-                                  <InputAdornment position="start">
-                                    %
-                                  </InputAdornment>
-                                }
-                              />
-                            </FormControl>
-                          </TableCell> */}
+                         
                           <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <FilledInput
@@ -614,37 +583,8 @@ class DashboardContent extends React.Component {
 
                       <TableRow>
                         <TableCell rowSpan={4} />
-                        {/* <TableCell size="small" colSpan={2}>
-                          <FormControl fullWidth sx={{ m: 1 }} size="small">
-                            Subtotal:
-                            <FilledInput
-                              value={this.state.Subtotal}
-                              onChange={this.onSubtotalChange}
-                              startAdornment={
-                                <InputAdornment position="start">
-                                  $
-                                </InputAdornment>
-                              }
-                            />
-                          </FormControl>
-                        </TableCell> */}
                       </TableRow>
-                    {/*  <TableRow >
-                        <TableCell>
-                           <FormControl fullWidth sx={{ m: 1 }} size="small">
-                            Descuento:
-                            <Input
-                              id="filled-adornment-amount"
-                              value={this.state.Descuento}
-                              label="Descuento"
-                              size="small"
-                              onChange={this.onDescuentoChange}
-                            />
-                          </FormControl> 
-
-                        </TableCell>
-                      </TableRow>*/}
-                      <TableRow >
+                     {/* <TableRow >
                         <TableCell>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
                             Recargo:<Input
@@ -657,7 +597,7 @@ class DashboardContent extends React.Component {
                           </FormControl>
 
                         </TableCell>
-                      </TableRow>
+                      </TableRow> */}
                       <TableRow>
                         <TableCell colSpan={2}>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
@@ -862,15 +802,7 @@ class DashboardContent extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs container direction="column">
-                          {/* <Grid item xs>
-                            <TextField
-                              id="standard-basic"
-                              label="Descuento..%.."
-                              variant="standard"
-                              value={this.state.Descuento}
-                              onChange={this.handleChangeDescuento}
-                            />
-                          </Grid> */}
+                       {/*    
                           <Grid item xs>
                             <TextField
                               id="standard-basic"
@@ -879,7 +811,7 @@ class DashboardContent extends React.Component {
                               value={this.state.Interes}
                               onChange={this.handleChangeInteres}
                             />
-                          </Grid>
+                          </Grid> */}
                           
                           <Grid item xs>
                             <TextField

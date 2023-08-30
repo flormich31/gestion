@@ -452,9 +452,9 @@ class ListadoVentas extends React.Component {
                         <TableCell bgcolor="pink" align="center">
                           <b>Observacion</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="center">
+                       {/*  <TableCell bgcolor="pink" align="center">
                           <b>Descuento</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="center">
                           <b>Acciones</b>
                         </TableCell>
@@ -498,7 +498,7 @@ class ListadoVentas extends React.Component {
                           <TableCell align="center">{item.Entregado}</TableCell>
                           <TableCell align="center">{item.Pagado}</TableCell>
                           <TableCell align="center">{item.Observacion}</TableCell>
-                          <TableCell align="center">{item.Descuento}</TableCell>
+                          {/* <TableCell align="center">{item.Descuento}</TableCell> */}
                           <TableCell align="center">
                             {/* <EditIcon
                               sx={{ color: pink[200] }}
@@ -521,7 +521,7 @@ class ListadoVentas extends React.Component {
                       <TableRow>
                       </TableRow>
                       <Dialog
-                        fullScreen
+                        
                         open={this.state.open}
                       >
                         <DialogTitle style={{ backgroundColor: "#f73378" }} >
@@ -539,12 +539,18 @@ class ListadoVentas extends React.Component {
                             {this.state.datosVenta.map((item) =>
                               <Box
                                 sx={{
-                                  width: 300,
+                                  width: 500,
                                   bgcolor: "background.paper",
                                 }}
                               >
                                 <br />
-                                <Typography color="#000000" variant="p"> <b>Número de venta:</b> {item.IdVenta}
+                                <Typography  color="#000000" variant="p" align="center">
+                                <b>DIVA FOREVER</b>  <br />
+                                Av. 9 de Julio 158, N3378 Puerto Esperanza, Misiones  <br />
+                                </Typography>
+                                <Typography color="#000000" variant="p"> 
+                                
+                                <b>Número de ticket:</b> {item.IdVenta}
                                   <br />
                                   <b>Fecha:</b>  {item.Fecha}<br />
                                   <b> Vendedor:</b>  {item.Nombre}<br />
@@ -581,6 +587,7 @@ class ListadoVentas extends React.Component {
                                     </NativeSelect>
 
                                   </FormControl>
+                                  <br/>
                                   <b>Observacion: </b>
                                   <FormControl onSubmit={this.handleUpdate} variant="standard" size="small">
                                     <TextField
@@ -605,7 +612,7 @@ class ListadoVentas extends React.Component {
                                   <TableCell bgcolor="pink" align="right"><b>Cantidad</b></TableCell>
                                   <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
                                   <TableCell bgcolor="pink" align="right"><b>Subtotal</b></TableCell>
-                                  <TableCell bgcolor="pink" align="right"><b>Descuento</b></TableCell>
+                                 {/*  <TableCell bgcolor="pink" align="right"><b>Descuento</b></TableCell> */}
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -615,16 +622,16 @@ class ListadoVentas extends React.Component {
                                     <TableCell component="th" scope="row">{item.Detalle}</TableCell>
                                     <TableCell>{item.Marca}</TableCell>
                                     <TableCell align="right">{item.cantidad}</TableCell>
+                                    <TableCell align="right">${item.PrecioMenor}</TableCell>
                                     <TableCell align="right">${item.PrecioVenta}</TableCell>
-                                    <TableCell align="right">${item.Subtotal}</TableCell>
-                                    <TableCell align="right">{item.Descuento}</TableCell>
+                                  {/*   <TableCell align="right">{item.Descuento}</TableCell> */}
                                   </TableRow>
                                 ))}
 
                                 {this.state.totalVenta.map((item) => (
                                   <TableRow key={item.IdVenta}>
 
-                                    <TableCell bgcolor="pink" colSpan={6}><b>TOTAL</b></TableCell>
+                                    <TableCell bgcolor="pink" colSpan={5}><b>TOTAL</b></TableCell>
                                     <TableCell bgcolor="pink" align="right"><b>${item.Total}</b></TableCell>
                                   </TableRow>
                                 ))}

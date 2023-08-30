@@ -29,8 +29,6 @@ router.get("/", function (req, res, next) {
     AND
       IdProducto LIKE "%${req.query.query}%" or
 						Detalle LIKE "%${req.query.query}%"
-            
-           
     ORDER BY p.Detalle ASC 
   `;
   console.log(sql);
