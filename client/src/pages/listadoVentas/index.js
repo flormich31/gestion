@@ -76,6 +76,7 @@ class ListadoVentas extends React.Component {
       totalPages: null,
 
       open: false,
+      openEdit: false,
       query: "",
       IdVenta: ' ',
       IdVendedor: ' ',
@@ -232,6 +233,13 @@ class ListadoVentas extends React.Component {
     this.getVentas();
   }
 
+  handleCloseEdit= async () => {
+
+    await this.setState({ openEdit: false });
+    this.setState({ query: "", });
+    this.getVentas();
+  }
+
   onEntregadoChange = async (event) => {
     this.setState({ Entregado: event.target.value });
   };
@@ -241,6 +249,7 @@ class ListadoVentas extends React.Component {
 
   onObservacionChange = async (e) => {
     this.setState({ Observacion: e.target.value });
+    console.log(this.state.Observacion)
   };
 
   handleBorrarProducto = async (index) => {
@@ -274,14 +283,28 @@ class ListadoVentas extends React.Component {
     this.setState({ dateEnd: event.target.value });
   };
 
-  handleUpdate = (e) => {
+  handleUpdate = async (IdVenta, Entregado, Pagado, Observacion) => {
 
+    await this.setState({ openEdit: true, query: IdVenta,
+      IdVenta: IdVenta ,
+      Entregado: Entregado,
+      Pagado: Pagado,
+      Observacion: Observacion});
+    console.log("query es", this.state.query);
+
+    await this.getDatosVenta();
+    await this.getListadoVentas();
+    await this.getTotalVentas();
+  }
+
+  handleUpdateVenta = (e) => {
+console.log("E:",this.state.Entregado, "P:",this.state.Pagado,"O:",this.state.Observacion)
     if (window.confirm("¿Realmente desea editar esta venta?")) {
       let _this = this;
       axios
         .put(`${process.env.REACT_APP_API}ventas/`, {
           IdVenta: this.state.IdVenta,
-          Entregado: this.state.Entregado,
+          Entregado: this.state.Entregado === "No" ? "2" :this.state.Entregado,
           Pagado: this.state.Pagado,
           Observacion: this.state.Observacion,
         })
@@ -296,10 +319,8 @@ class ListadoVentas extends React.Component {
       this.getListadoVentas();
       this.getTotalVentas();
     }
-
-
-
   };
+
 
   handleSearch = async (e) => {
     // Llamar a la función de búsqueda con las fechas seleccionadas
@@ -500,12 +521,12 @@ class ListadoVentas extends React.Component {
                           <TableCell align="center">{item.Observacion}</TableCell>
                           {/* <TableCell align="center">{item.Descuento}</TableCell> */}
                           <TableCell align="center">
-                            {/* <EditIcon
+                             <EditIcon
                               sx={{ color: pink[200] }}
                               onClick={() => {
-                                this.handleUpdate(item.IdVenta);
+                                this.handleUpdate(item.IdVenta,item.Entregado,item.Pagado, item.Observacion);
                               }}
-                            />*/}
+                            />
                             <DeleteIcon
                               sx={{ color: pink[600] }}
                               align="center"
@@ -523,6 +544,139 @@ class ListadoVentas extends React.Component {
                       <Dialog
                         
                         open={this.state.open}
+                      >
+                        <DialogTitle style={{ backgroundColor: "#f73378" }} >
+                          <Typography
+                            component="h1"
+                            variant="h6"
+                            color="white"
+                            noWrap
+                            sx={{ flexGrow: 1 }}
+                          >DIVA FOREVER
+                          </Typography>
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            {this.state.datosVenta.map((item) =>
+                              <Box
+                                sx={{
+                                  width: 500,
+                                  bgcolor: "background.paper",
+                                }}
+                              >
+                                <br />
+                                <Typography  color="#000000" variant="p" align="center">
+                                {/* <b>DIVA FOREVER</b>  <br /> */}
+                                Av. 9 de Julio 158, N3378 Puerto Esperanza, Misiones  <br />
+                                </Typography>
+                                <Typography color="#000000" variant="p"> 
+                                
+                                <b>Número de ticket:</b> {item.IdVenta}
+                                  <br />
+                                  <b>Fecha:</b>  {item.Fecha}<br />
+                                  <b> Vendedor:</b>  {item.Nombre}<br />
+                                  <b>Cliente:</b>  {item.Nombre_Cliente}<br />
+                                  <b>Forma de pago:</b>   {item.FormaPago}<br />
+                                  <b>Entregado:</b>  <FormControl onSubmit={this.handleUpdate} size="small" >
+                                    <NativeSelect
+                                      size="small"
+                                      value={this.state.Entregado}
+                                      onChange={this.onEntregadoChange}
+                                      inputProps={{
+                                        id: "uncontrolled-native",
+                                      }}
+                                    >
+                                      <option value={0}>{item.Entregado}</option>
+                                      <option value={1}>Si</option>
+                                      <option value={2}>No</option>
+                                    </NativeSelect>
+                                  </FormControl>
+                                  <b>Pagado:</b> <FormControl onSubmit={this.handleUpdate} size="small">
+                                    <NativeSelect
+                                      size="small"
+                                      value={this.state.Pagado}
+                                      onChange={this.onPagadoChange}
+                                      inputProps={{
+                                        id: "uncontrolled-native",
+                                      }}
+                                    >
+                                      <option value={0}>{item.Pagado}</option>
+                                      <option value={1}>Si</option>
+                                      <option value={2}>No</option>
+                                    </NativeSelect>
+
+                                  </FormControl>
+                                  <br/>
+                                  <b>Observacion: </b>
+                                  <FormControl onSubmit={this.handleUpdate} variant="standard" size="small">
+                                    <TextField
+                                      size="small"
+                                      id="Observacion"
+                                      defaultValue={item.Observacion}
+                                      onChange={this.onObservacionChange}
+                                      autoComplete="on"
+                                    />
+                                  </FormControl>
+                                  <br />      <br />
+                                </Typography>
+                              </Box>)}
+
+                            <Table size="small" aria-label="purchases">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell bgcolor="pink"><b>Código</b></TableCell>
+                                  <TableCell bgcolor="pink"><b>Descripcion</b></TableCell>
+                                  <TableCell bgcolor="pink"><b>Marca</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Cantidad</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Precio</b></TableCell>
+                                  <TableCell bgcolor="pink" align="right"><b>Subtotal</b></TableCell>
+                                 {/*  <TableCell bgcolor="pink" align="right"><b>Descuento</b></TableCell> */}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {this.state.prodventas.map((item, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell component="th" scope="row">{item.IdProducto}</TableCell>
+                                    <TableCell component="th" scope="row">{item.Detalle}</TableCell>
+                                    <TableCell>{item.Marca}</TableCell>
+                                    <TableCell align="right">{item.cantidad}</TableCell>
+                                    <TableCell align="right">${item.PrecioMenor}</TableCell>
+                                    <TableCell align="right">${item.PrecioVenta}</TableCell>
+                                  {/*   <TableCell align="right">{item.Descuento}</TableCell> */}
+                                  </TableRow>
+                                ))}
+
+                                {this.state.totalVenta.map((item) => (
+                                  <TableRow key={item.IdVenta}>
+
+                                    <TableCell bgcolor="pink" colSpan={5}><b>TOTAL</b></TableCell>
+                                    <TableCell bgcolor="pink" align="right"><b>${item.Total}</b></TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                            <br/>
+                            ¡GRACIAS POR SU COMPRA!
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          {/* <Button 
+                          variant="contained" 
+                          size="small" 
+                          bgcolor="pink" 
+                          onClick={this.handleUpdate}>
+                            Guardar cambios
+                          </Button> */}
+                          <Button 
+                          bgcolor="pink" 
+                          onClick={this.handleClose}>
+                            Cerrar
+                            </Button>
+                        </DialogActions>
+                      </Dialog>
+                      <Dialog
+                        
+                        open={this.state.openEdit}
                       >
                         <DialogTitle style={{ backgroundColor: "#f73378" }} >
                           <Typography
@@ -559,7 +713,6 @@ class ListadoVentas extends React.Component {
                                   <b>Entregado:</b>  <FormControl onSubmit={this.handleUpdate} size="small" >
                                     <NativeSelect
                                       size="small"
-                                      placeholder='size="small"'
                                       value={this.state.Entregado}
                                       onChange={this.onEntregadoChange}
                                       inputProps={{
@@ -571,10 +724,9 @@ class ListadoVentas extends React.Component {
                                       <option value={2}>No</option>
                                     </NativeSelect>
                                   </FormControl>
-                                  <b>Pagado:</b> <FormControl onSubmit={this.handleUpdate} size="small">
+                                  <b>Pagado:</b> <FormControl onSubmit={this.handleUpdateVenta} size="small">
                                     <NativeSelect
                                       size="small"
-                                      placeholder='size="small"'
                                       value={this.state.Pagado}
                                       onChange={this.onPagadoChange}
                                       inputProps={{
@@ -589,12 +741,11 @@ class ListadoVentas extends React.Component {
                                   </FormControl>
                                   <br/>
                                   <b>Observacion: </b>
-                                  <FormControl onSubmit={this.handleUpdate} variant="standard" size="small">
+                                  <FormControl onSubmit={this.handleUpdateVenta} variant="standard" size="small">
                                     <TextField
                                       size="small"
-                                      placeholder='size="small"'
                                       id="Observacion"
-                                      defaultValue={item.Observacion}
+                                      placeholder={item.Observacion}
                                       onChange={this.onObservacionChange}
                                       autoComplete="on"
                                     />
@@ -644,12 +795,12 @@ class ListadoVentas extends React.Component {
                           variant="contained" 
                           size="small" 
                           bgcolor="pink" 
-                          onClick={this.handleUpdate}>
+                          onClick={this.handleUpdateVenta}>
                             Guardar cambios
                           </Button>
                           <Button 
                           bgcolor="pink" 
-                          onClick={this.handleClose}>
+                          onClick={this.handleCloseEdit}>
                             Cerrar
                             </Button>
                         </DialogActions>
