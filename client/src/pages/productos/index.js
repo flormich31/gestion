@@ -54,6 +54,7 @@ class Productos extends React.Component {
       imageneditURL: "",
       detalleedit: "",
       Observacion: "",
+      Codigo:"",
       categoriaedit: "",
       IdCategoriaedit: "",
       marcaedit: "",
@@ -85,9 +86,10 @@ class Productos extends React.Component {
 
   getProductos = () => {
     let _this = this;
+    const limit = String(this.state.query).trim() !== "" ? "":"&limit=15";
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}${limit}`,
       headers: {},
     };
     axios(config)
@@ -165,6 +167,9 @@ class Productos extends React.Component {
   handleChangeObservacion = (event) => {
     this.setState({ Observacion: event.target.value });
   };
+  handleChangeCodigo = (event) => {
+    this.setState({ Codigo: event.target.value });
+  };
   handleChangeMarca = (event) => {
     this.setState({ IdMarca: event.target.value });
   };
@@ -188,18 +193,21 @@ class Productos extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let _this = this;
-
+    function _preventUndefined(value){
+      return value === ""  || value === "undefined" || !value ? "" : value;
+    }
     axios
       .post(`${process.env.REACT_APP_API}productos`, {
         id: this.state.id,
         ImagenURL: this.state.imagenedit,
         detalle: this.state.detalle,
+        Codigo: this.state.Codigo,
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
-        costo: this.state.costo,
+        costo: _preventUndefined(this.state.costo),
         Descuento: this.state.Descuento  === ""  || "undefined" ? "0" : this.state.Descuento,
-        PrecioMenor: this.state.PrecioMenor,
-        PrecioMayor: this.state.PrecioMayor,
+        PrecioMenor: _preventUndefined(this.state.PrecioMenor),
+        PrecioMayor: _preventUndefined(this.state.PrecioMayor),
         Observacion: this.state.Observacion,
         IdProveedor: this.state.IdProveedor,
       })
@@ -271,6 +279,7 @@ class Productos extends React.Component {
   };
   handleChangeEditIdCategoria = (event) => {
     this.setState({ IdCategoriaedit: event.target.value });
+    console.log(`handleChangeEditIdCategoria: ${event.target.value}`)
   };
   handleChangeEditIdMarca = (event) => {
     this.setState({ IdMarcaedit: event.target.value });
@@ -296,6 +305,7 @@ class Productos extends React.Component {
   showModal = (
     IdProducto,
     Detalle,
+    Codigo,
     categoria,
     Categoria_Id,
     marca,
@@ -515,7 +525,7 @@ console.log("imagen", imagen);
                             />
                           </FormControl>
                         </Grid>
-                        <Grid item xs>
+                        {/* <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -527,6 +537,21 @@ console.log("imagen", imagen);
                               variant="standard"
                               value={this.state.Observacion}
                               onChange={this.handleChangeObservacion}
+                            />
+                          </FormControl>
+                        </Grid> */}
+                         <Grid item xs>
+                          <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+
+                          >
+                            <TextField
+                              id="standard-basic"
+                              label="Código de barras"
+                              variant="standard"
+                              value={this.state.Codigo}
+                              onChange={this.handleChangeCodigo}
                             />
                           </FormControl>
                         </Grid>
@@ -858,6 +883,7 @@ console.log("imagen", imagen);
                                 this.showModal(
                                   item.IdProducto,
                                   item.Detalle,
+                                  item.Codigo,
                                   item.categoria,
                                   item.Categoria_Id,
                                   item.marca,

@@ -24,6 +24,8 @@ import axios from "axios";
 import {
   Autocomplete,
   Button,
+  CircularProgress,
+  debounce,
   FilledInput,
   Paper,
   Table,
@@ -61,8 +63,11 @@ class DashboardContent extends React.Component {
       formaPago: [],
       clientes: [],
       numeroVenta: "",
+      loading: false,
+      open: false,
     };
   }
+
 
   componentDidMount() {
     this.getUsuarios();
@@ -123,6 +128,7 @@ class DashboardContent extends React.Component {
 
   getProductos = () => {
     let _this = this;
+    this.state.loading = true;
     var config = {
       method: "get",
       url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
@@ -132,9 +138,11 @@ class DashboardContent extends React.Component {
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data.productos.length === 0) {
-          alert("No se encontraron productos");
+          // alert("No se encontraron productos");
         } else {
           _this.setState(response.data);
+          _this.state.loading = false;
+          console.log(`getProducts() OK setState done!`)
         }
       })
       .catch(function (error) {
@@ -172,73 +180,73 @@ class DashboardContent extends React.Component {
        this.setState({ Total: total });
      }
    };*/
- 
-   onCantidadChange = async (index, cantidad) => {
-     this.state.ventaProductos[index].Cantidad = cantidad;
-     this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor * cantidad;
- 
-     //this.calcularSubtotal();
-     this.onDescuentoChange();
-     this.calcularTotal();
-     //this.calcularDescInt();
- 
-     await this.setState({ ventaProductos: this.state.ventaProductos });
-   }; 
 
-   onDescuentoChange = async ( index, descuento ) => {
-   // await this.setState({ EditDescuento: e.target.value });
-   // await console.log("EditDescuento", event.target.value)
+  onCantidadChange = async (index, cantidad) => {
+    this.state.ventaProductos[index].Cantidad = cantidad;
+    this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor * cantidad;
 
-     //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
-     this.state.ventaProductos[index].Descuento = descuento;
+    //this.calcularSubtotal();
+    this.onDescuentoChange();
+    this.calcularTotal();
+    //this.calcularDescInt();
+
+    await this.setState({ ventaProductos: this.state.ventaProductos });
+  };
+
+  onDescuentoChange = async (index, descuento) => {
+    // await this.setState({ EditDescuento: e.target.value });
+    // await console.log("EditDescuento", event.target.value)
+
+    //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
+    this.state.ventaProductos[index].Descuento = descuento;
     console.log("EditDescuento:", descuento)
 
-      let DESCUENTO = descuento / 100;
-      console.log("div", DESCUENTO);
-     let subtotal = this.state.ventaProductos[index].PrecioVenta ;
-     console.log(" 1 subtotal", subtotal);
+    let DESCUENTO = descuento / 100;
+    console.log("div", DESCUENTO);
+    let subtotal = this.state.ventaProductos[index].PrecioVenta;
+    console.log(" 1 subtotal", subtotal);
 
-     let precioVenta = subtotal * DESCUENTO;
-     console.log(" desc", precioVenta);
-     //let subtotal = this.state.Subtotal * DESCUENTO;
-     let total = subtotal - precioVenta;
-     console.log(" precio con des", total);
+    let precioVenta = subtotal * DESCUENTO;
+    console.log(" desc", precioVenta);
+    //let subtotal = this.state.Subtotal * DESCUENTO;
+    let total = subtotal - precioVenta;
+    console.log(" precio con des", total);
 
-     // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
-      //console.log("subt desc", total);
-      //await this.setState({ Subtotal: total });
-      this.state.ventaProductos[index].PrecioVenta = total
-      this.calcularSubtotal();
-      this.calcularTotal();
-      await this.setState({ ventaProductos: this.state.ventaProductos });
+    // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
+    //console.log("subt desc", total);
+    //await this.setState({ Subtotal: total });
+    this.state.ventaProductos[index].PrecioVenta = total
+    this.calcularSubtotal();
+    this.calcularTotal();
+    await this.setState({ ventaProductos: this.state.ventaProductos });
 
     //await this.calcularDescInt();
     //await this.calcularSubtotal();
-   // await this.calcularTotal();
+    // await this.calcularTotal();
 
   };
 
   calcularDescInt = async (index, descuento) => {
-     console.log("EditDescuento22", this.state.EditDescuento)
-     //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
-     this.state.ventaProductos[index].Descuento = descuento;
-      let DESCUENTO = this.state.EditDescuento / 100;
-     // this.state.ventaProductos[index].PrecioVenta = precioVenta;
-     // precioVenta = this.state.ventaProductos[index].PrecioMenor * DESCUENTO;
-     let subtotal = this.state.Subtotal * DESCUENTO;
-     let total = this.state.Subtotal - subtotal;
+    console.log("EditDescuento22", this.state.EditDescuento)
+    //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
+    this.state.ventaProductos[index].Descuento = descuento;
+    let DESCUENTO = this.state.EditDescuento / 100;
+    // this.state.ventaProductos[index].PrecioVenta = precioVenta;
+    // precioVenta = this.state.ventaProductos[index].PrecioMenor * DESCUENTO;
+    let subtotal = this.state.Subtotal * DESCUENTO;
+    let total = this.state.Subtotal - subtotal;
 
-     // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
-      //console.log("subt desc", total);
-      //await this.setState({ Subtotal: total });
-      total= this.state.ventaProductos[index].PrecioVenta 
-      this.calcularSubtotal();
-      this.calcularTotal();
-      await this.setState({ ventaProductos: this.state.ventaProductos });
+    // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
+    //console.log("subt desc", total);
+    //await this.setState({ Subtotal: total });
+    total = this.state.ventaProductos[index].PrecioVenta
+    this.calcularSubtotal();
+    this.calcularTotal();
+    await this.setState({ ventaProductos: this.state.ventaProductos });
   };
 
 
-  
+
   calcularSubtotal = () => {
     let subtotal = 0;
     this.state.ventaProductos.map((item) => {
@@ -249,18 +257,18 @@ class DashboardContent extends React.Component {
   };
 
   calcularTotal = () => {
-    
-   // if (this.state.Interes === 0 ) {
-      let subtotal = 0;
-      this.state.ventaProductos.map((item) => {
-        subtotal += parseInt(item.PrecioVenta);
-      });
-      this.setState({ Total: subtotal });
-      console.log("total es", subtotal);
+
+    // if (this.state.Interes === 0 ) {
+    let subtotal = 0;
+    this.state.ventaProductos.map((item) => {
+      subtotal += parseInt(item.PrecioVenta);
+    });
+    this.setState({ Total: subtotal });
+    console.log("total es", subtotal);
     //}
-    
+
     //else if (this.state.Interes > 0 ) {
-     // console.log(this.state.Interes);
+    // console.log(this.state.Interes);
     // let INTERES = this.state.Interes / 100;
     //  let subtotal = this.state.Subtotal * INTERES;
     //  let total = this.state.Subtotal + subtotal;
@@ -275,14 +283,18 @@ class DashboardContent extends React.Component {
     this.state.ventaProductos.splice(index, 1);
     await this.setState({ ventaProductos: this.state.ventaProductos });
     console.log(this.state.ventaProductos);
-   //this.calcularTotal();
+    //this.calcularTotal();
     this.handleProductChange();
-  
+
   };
 
   handleProductInputChange = async (event) => {
+    if (String(event.target.value).trim() === "" || String(event.target.value).trim().length < 2) {
+      return true;
+    }
     await this.setState({ query: event.target.value });
-    await this.getProductos();
+    console.log(`event.target.value: ${event.target.value}`);
+    this.getProductos();
   };
   handleProductChange = async (event, selectedProduct) => {
     if (selectedProduct) {
@@ -301,20 +313,20 @@ class DashboardContent extends React.Component {
     }
   };
 
-  
+
 
   onInteresChange = async (event) => {
     await this.setState({ Interes: event.target.value });
-   // this.calcularSubtotal();
-   // this.calcularTotal();
+    // this.calcularSubtotal();
+    // this.calcularTotal();
     console.log(this.state.Interes);
     let INTERES = this.state.Interes / 100;
-    console.log("paso1",INTERES);
+    console.log("paso1", INTERES);
 
     let subtotal = this.state.Total * INTERES;
-    let total = this.state.Total  + subtotal;
+    let total = this.state.Total + subtotal;
     console.log("paso3", total);
-    
+
     await this.setState({ Total: total });
 
   };
@@ -402,6 +414,8 @@ class DashboardContent extends React.Component {
     this.setState({ ventaProductos: [] });
   };
 
+
+
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -437,7 +451,16 @@ class DashboardContent extends React.Component {
 
                     options={this.state.productos}
                     autoHighlight
-                    getOptionLabel={(option) => option.Detalle}
+                    isOptionEqualToValue={(option, value) => option.Detalle === value.Detalle}
+                    getOptionLabel={(option) => option.IdProducto}
+                    filterOptions={(x) => x}
+                    open={this.state.open}
+                    onOpen={() => {
+                      this.setState({ open: true });
+                    }}
+                    onClose={() => {
+                      this.setState({ open: false });
+                    }}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img
@@ -450,19 +473,32 @@ class DashboardContent extends React.Component {
                       </Box>
 
                     )}
+                    // renderInput={(params) => (
+                    //   <TextField
+                    //     {...params}
+                    //     label="Buscar producto"
+                    //     inputProps={{
+                    //       ...params.inputProps,
+                    //       // autoComplete: 'new-password', // disable autocomplete and autofill
+                    //     }}
+                    //   />
+                    // loading={this.state.loading}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Buscar producto"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <React.Fragment>
+                              {params.InputProps.endAdornment}
+                            </React.Fragment>
+                          ),
                         }}
                       />
-
                     )}
                     onChange={this.handleProductChange}
-                    onInputChange={this.handleProductInputChange}
+                    onInputChange={debounce(this.handleProductInputChange, 200)}
                   />
 
                   {/*  <Autocomplete
@@ -496,7 +532,7 @@ class DashboardContent extends React.Component {
                         <TableCell bgcolor="pink" align="right">
                           <b>Marca</b>
                         </TableCell>
-                       {/*  <TableCell bgcolor="pink" align="right">
+                        {/*  <TableCell bgcolor="pink" align="right">
                           <b>Descuento</b>
                         </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
@@ -550,10 +586,10 @@ class DashboardContent extends React.Component {
                             </FormControl>
                           </TableCell>
                           <TableCell align="right">
-                         ${item.PrecioMenor}
-                          
+                            ${item.PrecioMenor}
+
                           </TableCell>
-                         
+
                           <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <FilledInput
@@ -584,7 +620,7 @@ class DashboardContent extends React.Component {
                       <TableRow>
                         <TableCell rowSpan={4} />
                       </TableRow>
-                     {/* <TableRow >
+                      {/* <TableRow >
                         <TableCell>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
                             Recargo:<Input
@@ -648,7 +684,7 @@ class DashboardContent extends React.Component {
                     <Grid item>
                       <Grid container direction="row">
                         <Grid item xs container direction="column">
-                         
+
 
                           <Grid item xs>
                             <TextField
@@ -672,8 +708,8 @@ class DashboardContent extends React.Component {
                             </InputLabel>
                             <NativeSelect
                               value={this.state.Id}
-                             
-                              
+
+
                               onChange={this.handleChangeIdUsuario}
                               inputProps={{
                                 id: "uncontrolled-native",
@@ -802,7 +838,7 @@ class DashboardContent extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs container direction="column">
-                       {/*    
+                          {/*    
                           <Grid item xs>
                             <TextField
                               id="standard-basic"
@@ -812,7 +848,7 @@ class DashboardContent extends React.Component {
                               onChange={this.handleChangeInteres}
                             />
                           </Grid> */}
-                          
+
                           <Grid item xs>
                             <TextField
                               id="standard-basic"
