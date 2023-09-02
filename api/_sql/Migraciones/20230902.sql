@@ -15,3 +15,6 @@ alter table gestion.productos add column FechaCreacion datetime null after Obser
 alter table gestion.productos add column FechaModificacion datetime null after FechaCreacion;
 -- establecer como fecha de creación la fecha actual para todos los productos que no tengan fecha de creación
 update gestion.productos set FechaCreacion=now() where FechaCreacion is null;
+
+-- añade una nueva columna con los valores dinámicos de otras dos columnas, optimizado para búsquedas
+alter table gestion.productos add column Busqueda TEXT AS (CONCAT( COALESCE(Codigo,''), ' ', COALESCE(Detalle,'') )) STORED;

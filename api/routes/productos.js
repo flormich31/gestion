@@ -36,7 +36,7 @@ router.get("/", function (req, res, next) {
      (
       IdProducto LIKE "%${req.query.query}%"
       OR
-			Detalle LIKE "%${req.query.query}%"
+			Busqueda LIKE "%${req.query.query}%"
      )
     ORDER BY p.Detalle ASC 
     ${limit}
