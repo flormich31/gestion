@@ -4,31 +4,43 @@ var router = express.Router();
 
 router.get("/", function (req, res, next) {
   console.log("Request", req.query);
-  
+  const limit = req.query?.limit ? `LIMIT ${req.query.limit}`:'';
   const sql = String(req.query.query).split(' ').join('')
   == '' || req.query.query
   == 'undefined' || !req.query || !req.query.query ?`
   SELECT p.IdProducto, p.Imagen, 
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL,
-    p.Detalle, p.Categoria_Id, p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    p.Detalle, p.Codigo, p.Categoria_Id, p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, 
+    P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial,
+    p.FechaCreacion, p.FechaModificacion
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
+    ${limit}
   `:`
     SELECT p.IdProducto,  p.Imagen,  
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL, 
-    p.Detalle, p.Categoria_Id,p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial
+    p.Detalle, p.Codigo, p.Categoria_Id,p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, 
+    p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial,
+    p.FechaCreacion, p.FechaModificacion,
+    p.Busqueda, CONCAT(p.IdProducto, ' ', p.Busqueda) AS IdProductoBusqueda
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
-    WHERE p.FechaEliminacion IS NULL
+    WHERE 
+    p.FechaEliminacion IS NULL
     AND
-						Detalle LIKE "%${req.query.query}%"
+     (
+      IdProducto LIKE "%${req.query.query}%"
+      OR
+			Busqueda LIKE "%${req.query.query}%"
+     )
     ORDER BY p.Detalle ASC 
+    ${limit}
   `;
   console.log(sql);
   global.dbConnection.query(sql, [], (err, regs) => {
@@ -55,13 +67,13 @@ function makeid(length) {
 
 router.post("/", function (req, res, next) {
   const codigo = makeid(5);
-  console.log(req.body);
+  console.log("BODY CREATE PROD",req.body);
   const sql = `
   INSERT INTO \`productos\`
-  ( IdProducto, ImagenURL, Detalle, Categoria_Id, Marca_Id, Descuento, Costo, PrecioMenor, PrecioMayor, 
-    Observacion, Proveedor_Id) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}', 
+  ( IdProducto, ImagenURL, Detalle, Codigo, Categoria_Id, Marca_Id, Descuento, Costo, PrecioMenor, PrecioMayor, 
+    Observacion, Proveedor_Id, FechaCreacion) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}','${req.body.Codigo}', 
     '${req.body.IdCategoria}','${req.body.IdMarca}', '${req.body.Descuento}','${req.body.costo}','${req.body.PrecioMenor}',
-    '${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}');
+    '${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}', NOW());
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -97,6 +109,7 @@ router.put("/", function (req, res, next) {
   const sql = `
   UPDATE \`productos\`
   SET detalle='${req.body.detalle}',
+  Codigo='${req.body.Codigo}',
   Categoria_Id='${req.body.Categoria_Id}',
   Marca_Id='${req.body.Marca_Id}',
   Descuento='${req.body.Descuento}',
@@ -104,7 +117,8 @@ router.put("/", function (req, res, next) {
   PrecioMenor='${req.body.PrecioMenor}',
   PrecioMayor='${req.body.PrecioMayor}',
   Observacion='${req.body.Observacion}',
-  Proveedor_Id='${req.body.Proveedor_Id}'
+  Proveedor_Id='${req.body.Proveedor_Id}',
+  FechaModificacion=NOW()
   WHERE IdProducto='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {

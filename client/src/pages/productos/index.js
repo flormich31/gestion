@@ -54,6 +54,8 @@ class Productos extends React.Component {
       imageneditURL: "",
       detalleedit: "",
       Observacion: "",
+      Codigo: "",
+      CodigoEdit:"",
       categoriaedit: "",
       IdCategoriaedit: "",
       marcaedit: "",
@@ -85,19 +87,21 @@ class Productos extends React.Component {
 
   getProductos = () => {
     let _this = this;
+    const limit = String(this.state.query).trim() !== "" ? "" : "&limit=15";
     var config = {
       method: "get",
-      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
+      url: `${process.env.REACT_APP_API}productos?query=${this.state.query}${limit}`,
       headers: {},
     };
     axios(config)
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
-        if (response.data.productos.length === 0) {
-          alert("No se encontraron productos");
-        } else {
-          _this.setState(response.data);
-        }
+        // if (response.data.productos.length === 0) {
+        //   // alert("No se encontraron productos");
+        // } else {
+        //   _this.setState(response.data);
+        // }
+        _this.setState({ productos: response.data.productos || [] });
       })
       .catch(function (error) {
         console.log(error);
@@ -165,6 +169,9 @@ class Productos extends React.Component {
   handleChangeObservacion = (event) => {
     this.setState({ Observacion: event.target.value });
   };
+  handleChangeCodigo = (event) => {
+    this.setState({ Codigo: event.target.value });
+  };
   handleChangeMarca = (event) => {
     this.setState({ IdMarca: event.target.value });
   };
@@ -188,16 +195,19 @@ class Productos extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let _this = this;
-
+    function _preventUndefined(value) {
+      return value === "" || value === "undefined" || !value ? "" : value;
+    }
     axios
       .post(`${process.env.REACT_APP_API}productos`, {
         id: this.state.id,
         ImagenURL: this.state.imagenNew,
         detalle: this.state.detalle,
+        Codigo: this.state.Codigo,
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
         costo: this.state.costo,
-        Descuento: this.state.Descuento  === ""  || "undefined" ? "0" : this.state.Descuento,
+        Descuento: this.state.Descuento,
         PrecioMenor: this.state.PrecioMenor,
         PrecioMayor: this.state.PrecioMayor,
         Observacion: this.state.Observacion,
@@ -240,6 +250,9 @@ class Productos extends React.Component {
   handleChangeEditDetalle = (event) => {
     this.setState({ detalleedit: event.target.value });
   };
+  handleChangeEditCodigo = (event) => {
+    this.setState({ CodigoEdit: event.target.value });
+  };
   handleChangeImagen = async (event) => {
 
     let file = event.target.files[0];
@@ -271,6 +284,7 @@ class Productos extends React.Component {
   };
   handleChangeEditIdCategoria = (event) => {
     this.setState({ IdCategoriaedit: event.target.value });
+    console.log(`handleChangeEditIdCategoria: ${event.target.value}`)
   };
   handleChangeEditIdMarca = (event) => {
     this.setState({ IdMarcaedit: event.target.value });
@@ -296,6 +310,7 @@ class Productos extends React.Component {
   showModal = (
     IdProducto,
     Detalle,
+    Codigo,
     categoria,
     Categoria_Id,
     marca,
@@ -313,6 +328,7 @@ class Productos extends React.Component {
     this.setState({ open: true });
     this.setState({ idedit: IdProducto });
     this.setState({ detalleedit: Detalle });
+    this.setState({ CodigoEdit: Codigo });
     this.setState({ imagen: ImagenURL });
     this.setState({ categoriaedit: categoria });
     this.setState({ IdCategoriaedit: Categoria_Id });
@@ -330,9 +346,8 @@ class Productos extends React.Component {
   //Editar imagen 
   handleEditImagen = (event) => {
     let _this = this;
-    
-    let imagen = this.state.imagenNew;
 
+    let imagen = this.state.imagenNew;
 console.log("imagen", imagen);
     if (imagen === '') {
       alert("No se ha seleccionado una nueva imagen");
@@ -376,9 +391,10 @@ console.log("imagen", imagen);
       .put(`${process.env.REACT_APP_API}productos`, {
         id: this.state.idedit,
         detalle: this.state.detalleedit,
+        Codigo: this.state.CodigoEdit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
-        Descuento: this.state.descuentoedit === ""  || "undefined" ? "0" : this.state.Descuento,
+        Descuento: this.state.descuentoedit === "" || "undefined" ? "0" : this.state.Descuento,
         costo: this.state.costoedit,
         PrecioMenor: this.state.editPrecioMenor,
         PrecioMayor: this.state.editPrecioMayor,
@@ -408,7 +424,12 @@ console.log("imagen", imagen);
   //Para buscar un producto
 
   handleChangeSearch = async (event) => {
+    console.log(`event.target.value: ${event.target.value}`)
+
     await this.setState({ query: event.target.value });
+    if (String(event.target.value).trim() === "" || String(event.target.value).trim().length < 2) {
+      return true;
+    }
     this.getProductos();
   };
   handleClickSearch = (event) => {
@@ -451,7 +472,7 @@ console.log("imagen", imagen);
     const { productos, currentProductos, currentPage, totalPages } = this.state;
     const totalProductos = this.state.productos.length;
 
-    if (totalProductos === 0) return null;
+    // if (totalProductos === 0) return null;
 
     const headerClass = [
       "text-dark py-2 pr-4 m-0",
@@ -517,7 +538,7 @@ console.log("imagen", imagen);
                             />
                           </FormControl>
                         </Grid>
-                        <Grid item xs>
+                        {/* <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -531,9 +552,24 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeObservacion}
                             />
                           </FormControl>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs>
                           <FormControl
+                            variant="standard"
+                            onSubmit={this.handleEdit}
+
+                          >
+                            <TextField
+                              id="standard-basic"
+                              label="Código de barras"
+                              variant="standard"
+                              value={this.state.Codigo}
+                              onChange={this.handleChangeCodigo}
+                            />
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs>
+                          {/* <FormControl
                             onSubmit={this.handleSubmit}
 
                           >
@@ -545,7 +581,7 @@ console.log("imagen", imagen);
                               value={this.state.costo}
                               onChange={this.handleChangeCosto}
                             />
-                          </FormControl>
+                          </FormControl> */}
                         </Grid>
 
                       </Grid>
@@ -567,7 +603,7 @@ console.log("imagen", imagen);
                           </FormControl>
                         </Grid>
 
-                        <Grid item xs>
+                        {/* <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
@@ -580,7 +616,7 @@ console.log("imagen", imagen);
                               variant="standard"
                             />
                           </FormControl>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs>
                           <FormControl
@@ -676,7 +712,7 @@ console.log("imagen", imagen);
                             </NativeSelect>
                           </FormControl>
                         </Grid>
-                        <Grid item xs>
+                        {/*  <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
@@ -690,7 +726,7 @@ console.log("imagen", imagen);
 
                             />
                           </FormControl>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
 
                       <Grid item xs container direction="column">
@@ -708,7 +744,9 @@ console.log("imagen", imagen);
                             <img src={this.state.imagePreview}
                               height="100px" width="100px"
                               value={this.state.imagenedit}
-                              onChange={this.handleChangeImagen} />
+                              onChange={this.handleChangeImagen}
+                              onError={e => e.target.style.display = 'none'}
+                            />
 
                           </FormControl>
                         </Grid>
@@ -747,18 +785,18 @@ console.log("imagen", imagen);
                     <input
                       type="text"
                       name="query"
-                      placeholder={`Buscar...`}
+                      placeholder={`Buscar por codigo o nombre del producto...`}
                       className="searchTerm"
                       value={this.state.query}
                       onChange={this.handleChangeSearch}
                     />
-                    <button
+                    {/* <button
                       type="submit"
                       className="searchButton"
                       onClick={this.handleClickSearch}
                     >
                       Buscar
-                    </button>
+                    </button> */}
                   </div>
                 </Paper>
               </Grid>
@@ -800,18 +838,18 @@ console.log("imagen", imagen);
                         <TableCell bgcolor="pink" align="right" >
                           <b>Categoria</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right" >
+                        {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Porc-Desc</b>
-                        </TableCell>
-                        <TableCell bgcolor="pink" align="right" >
+                        </TableCell> */}
+                        {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Costo</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>P.Menor</b>
                         </TableCell>
-                        <TableCell bgcolor="pink" align="right">
+                        {/* <TableCell bgcolor="pink" align="right">
                           <b>P.Mayor</b>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>Prov</b>
                         </TableCell>
@@ -832,7 +870,7 @@ console.log("imagen", imagen);
                             {item.IdProducto}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <img src={item.ImagenURL} width="80px" />
+                            <img src={item.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {item.Detalle}
@@ -844,10 +882,10 @@ console.log("imagen", imagen);
                           <TableCell align="right">
                             {item.categoria}
                           </TableCell>
-                          <TableCell align="right">{item.Descuento}%</TableCell>
-                          <TableCell align="right">${item.Costo}</TableCell>
+                          {/* <TableCell align="right">{item.Descuento}%</TableCell> */}
+                          {/* <TableCell align="right">${item.Costo}</TableCell> */}
                           <TableCell align="right">${item.PrecioMenor}</TableCell>
-                          <TableCell align="right">${item.PrecioMayor}</TableCell>
+                          {/* <TableCell align="right">${item.PrecioMayor}</TableCell> */}
                           <TableCell align="right">
                             {item.RazonSocial}
                           </TableCell>
@@ -860,6 +898,7 @@ console.log("imagen", imagen);
                                 this.showModal(
                                   item.IdProducto,
                                   item.Detalle,
+                                  item.Codigo,
                                   item.categoria,
                                   item.Categoria_Id,
                                   item.marca,
@@ -927,8 +966,8 @@ console.log("imagen", imagen);
                             fullWidth
                           >
 
-                            <img src={this.state.imagenedit}
-                              height="80px" width="80px" value={this.state.imagenedit}
+                            <img src={this.state.imagen}
+                              height="80px" width="80px" value={this.state.imagenNew}
                               onChange={this.handleChangeImagen} />
 
                             <input type="file" id="file"
@@ -977,16 +1016,16 @@ console.log("imagen", imagen);
 
                           >
                             <TextField
-                              label="Observacion"
-                              id="Observacion"
+                              label="Codigo de barras"
+                              id="Codigo"
                               size="small"
                               margin="dense"
-                              value={this.state.editObservacion}
-                              onChange={this.handleChangeEditObservacion}
+                              value={this.state.CodigoEdit}
+                              onChange={this.handleChangeEditCodigo}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          <FormControl
+                          {/* <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -1000,8 +1039,8 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditDescuento}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
-                          <FormControl
+                          </FormControl> */}
+                          {/* <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -1015,7 +1054,7 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditCosto}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
+                          </FormControl> */}
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -1031,7 +1070,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          <FormControl
+                          {/*  <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"
@@ -1045,7 +1084,7 @@ console.log("imagen", imagen);
                               onChange={this.handleChangeEditPrecioMayor}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
-                          </FormControl>
+                          </FormControl> */}
 
                           <FormControl size="small" margin="dense">
                             <InputLabel id="edit-select-categoria-label">
