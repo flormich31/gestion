@@ -65,6 +65,7 @@ class DashboardContent extends React.Component {
       numeroVenta: "",
       loading: false,
       open: false,
+      selectedValues: []
     };
   }
 
@@ -149,37 +150,6 @@ class DashboardContent extends React.Component {
         console.log(error);
       });
   };
-
-  /*  calcularSubtotal = () => {
-     let subtotal = 0;
-     this.state.ventaProductos.map((item) => {
-       subtotal += parseInt(item.PrecioVenta);
-     });
-     this.setState({ Subtotal: subtotal });
-   };
- 
-   calcularTotal = () => {
-     if (this.state.Interes == 0 & this.state.Descuento == 0) {
-       let subtotal = 0;
-       this.state.ventaProductos.map((item) => {
-         subtotal += parseInt(item.PrecioVenta);
-       });
-       this.setState({ Total: subtotal });
-       console.log("total es", subtotal);
-     }
-     else if (this.state.Descuento > 0) {
-       let DESCUENTO = this.state.Descuento / 100;
-       let subtotal = this.state.Subtotal * DESCUENTO;
-       let total = this.state.Subtotal - subtotal;
-       this.setState({ Total: total });
-     }
-     else if (this.state.Interes > 0) {
-       let INTERES = this.state.Interes / 100;
-       let subtotal = this.state.Subtotal * INTERES;
-       let total = this.state.Subtotal + subtotal;
-       this.setState({ Total: total });
-     }
-   };*/
 
   onCantidadChange = async (index, cantidad) => {
     this.state.ventaProductos[index].Cantidad = cantidad;
@@ -289,7 +259,13 @@ class DashboardContent extends React.Component {
   };
 
   handleProductInputChange = async (event) => {
-    if (String(event.target.value).trim() === "" || String(event.target.value).trim().length < 2) {
+    if (
+      String(event.target.value).trim() === "" 
+      || String(event.target.value).trim().length < 2
+      || !event.target.value
+      || event.target.value === undefined
+      || event.target.value === "undefined"
+      ) {
       return true;
     }
     await this.setState({ query: event.target.value });
@@ -310,6 +286,7 @@ class DashboardContent extends React.Component {
 
       //this.calcularSubtotal();
       this.calcularTotal();
+
     }
   };
 
@@ -448,12 +425,12 @@ class DashboardContent extends React.Component {
                   }}
                 >
                   <Autocomplete
-
+                    // values={this.state.selectedValues}
                     options={this.state.productos}
                     autoHighlight
-                    isOptionEqualToValue={(option, value) => option.Detalle === value.Detalle}
-                    getOptionLabel={(option) => option.IdProducto}
-                    filterOptions={(x) => x}
+                    // isOptionEqualToValue={(option, value) => option.Detalle === value.Detalle}
+                    getOptionLabel={(option) => option.IdProductoBusqueda}
+                    // filterOptions={(x) => x}
                     open={this.state.open}
                     onOpen={() => {
                       this.setState({ open: true });
@@ -462,27 +439,17 @@ class DashboardContent extends React.Component {
                       this.setState({ open: false });
                     }}
                     renderOption={(props, option) => (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props} key={option.IdProducto}>
                         <img
                           loading="lazy"
                           height="80px" width="80px"
                           src={option.ImagenURL}
                           alt=""
                         />
-                        {option.IdProducto} - {option.Detalle} - {option.marca} - ${option.PrecioMenor}
+                        [{option.Codigo}] {option.IdProducto} - {option.Detalle} - {option.marca} - ${option.PrecioMenor}
                       </Box>
 
                     )}
-                    // renderInput={(params) => (
-                    //   <TextField
-                    //     {...params}
-                    //     label="Buscar producto"
-                    //     inputProps={{
-                    //       ...params.inputProps,
-                    //       // autoComplete: 'new-password', // disable autocomplete and autofill
-                    //     }}
-                    //   />
-                    // loading={this.state.loading}
                     renderInput={(params) => (
                       <TextField
                         {...params}

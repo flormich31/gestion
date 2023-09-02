@@ -54,7 +54,8 @@ class Productos extends React.Component {
       imageneditURL: "",
       detalleedit: "",
       Observacion: "",
-      Codigo:"",
+      Codigo: "",
+      CodigoEdit:"",
       categoriaedit: "",
       IdCategoriaedit: "",
       marcaedit: "",
@@ -86,7 +87,7 @@ class Productos extends React.Component {
 
   getProductos = () => {
     let _this = this;
-    const limit = String(this.state.query).trim() !== "" ? "":"&limit=15";
+    const limit = String(this.state.query).trim() !== "" ? "" : "&limit=15";
     var config = {
       method: "get",
       url: `${process.env.REACT_APP_API}productos?query=${this.state.query}${limit}`,
@@ -95,11 +96,12 @@ class Productos extends React.Component {
     axios(config)
       .then(function (response) {
         // console.log(JSON.stringify(response.data));
-        if (response.data.productos.length === 0) {
-          alert("No se encontraron productos");
-        } else {
-          _this.setState(response.data);
-        }
+        // if (response.data.productos.length === 0) {
+        //   // alert("No se encontraron productos");
+        // } else {
+        //   _this.setState(response.data);
+        // }
+        _this.setState({ productos: response.data.productos || [] });
       })
       .catch(function (error) {
         console.log(error);
@@ -193,8 +195,8 @@ class Productos extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let _this = this;
-    function _preventUndefined(value){
-      return value === ""  || value === "undefined" || !value ? "" : value;
+    function _preventUndefined(value) {
+      return value === "" || value === "undefined" || !value ? "" : value;
     }
     axios
       .post(`${process.env.REACT_APP_API}productos`, {
@@ -205,7 +207,7 @@ class Productos extends React.Component {
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
         costo: _preventUndefined(this.state.costo),
-        Descuento: this.state.Descuento  === ""  || "undefined" ? "0" : this.state.Descuento,
+        Descuento: this.state.Descuento === "" || "undefined" ? "0" : this.state.Descuento,
         PrecioMenor: _preventUndefined(this.state.PrecioMenor),
         PrecioMayor: _preventUndefined(this.state.PrecioMayor),
         Observacion: this.state.Observacion,
@@ -246,6 +248,9 @@ class Productos extends React.Component {
 
   handleChangeEditDetalle = (event) => {
     this.setState({ detalleedit: event.target.value });
+  };
+  handleChangeEditCodigo = (event) => {
+    this.setState({ CodigoEdit: event.target.value });
   };
   handleChangeImagen = async (event) => {
     console.log("imagen:", event.target.files[0]);
@@ -323,6 +328,7 @@ class Productos extends React.Component {
     this.setState({ open: true });
     this.setState({ idedit: IdProducto });
     this.setState({ detalleedit: Detalle });
+    this.setState({ CodigoEdit: Codigo });
     this.setState({ imagen: ImagenURL });
     this.setState({ categoriaedit: categoria });
     this.setState({ IdCategoriaedit: Categoria_Id });
@@ -340,9 +346,9 @@ class Productos extends React.Component {
   //Editar imagen 
   handleEditImagen = (event) => {
     let _this = this;
-    
+
     let imagen = this.state.imagenNew;
-console.log("imagen", imagen);
+    console.log("imagen", imagen);
     if (imagen === '') {
       alert("No se ha seleccionado una nueva imagen");
       console.log("No se ha seleccionado una nueva imagen");
@@ -384,9 +390,10 @@ console.log("imagen", imagen);
       .put(`${process.env.REACT_APP_API}productos`, {
         id: this.state.idedit,
         detalle: this.state.detalleedit,
+        Codigo: this.state.CodigoEdit,
         Categoria_Id: this.state.IdCategoriaedit,
         Marca_Id: this.state.IdMarcaedit,
-        Descuento: this.state.descuentoedit === ""  || "undefined" ? "0" : this.state.Descuento,
+        Descuento: this.state.descuentoedit === "" || "undefined" ? "0" : this.state.Descuento,
         costo: this.state.costoedit,
         PrecioMenor: this.state.editPrecioMenor,
         PrecioMayor: this.state.editPrecioMayor,
@@ -416,7 +423,12 @@ console.log("imagen", imagen);
   //Para buscar un producto
 
   handleChangeSearch = async (event) => {
+    console.log(`event.target.value: ${event.target.value}`)
+
     await this.setState({ query: event.target.value });
+    if (String(event.target.value).trim() === "" || String(event.target.value).trim().length < 2) {
+      return true;
+    }
     this.getProductos();
   };
   handleClickSearch = (event) => {
@@ -459,7 +471,7 @@ console.log("imagen", imagen);
     const { productos, currentProductos, currentPage, totalPages } = this.state;
     const totalProductos = this.state.productos.length;
 
-    if (totalProductos === 0) return null;
+    // if (totalProductos === 0) return null;
 
     const headerClass = [
       "text-dark py-2 pr-4 m-0",
@@ -540,7 +552,7 @@ console.log("imagen", imagen);
                             />
                           </FormControl>
                         </Grid> */}
-                         <Grid item xs>
+                        <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -699,7 +711,7 @@ console.log("imagen", imagen);
                             </NativeSelect>
                           </FormControl>
                         </Grid>
-                       {/*  <Grid item xs>
+                        {/*  <Grid item xs>
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleSubmit}
@@ -732,8 +744,8 @@ console.log("imagen", imagen);
                               height="100px" width="100px"
                               value={this.state.imagenedit}
                               onChange={this.handleChangeImagen}
-                              onError = {e => e.target.style.display = 'none'}
-                               />
+                              onError={e => e.target.style.display = 'none'}
+                            />
 
                           </FormControl>
                         </Grid>
@@ -777,13 +789,13 @@ console.log("imagen", imagen);
                       value={this.state.query}
                       onChange={this.handleChangeSearch}
                     />
-                    <button
+                    {/* <button
                       type="submit"
                       className="searchButton"
                       onClick={this.handleClickSearch}
                     >
                       Buscar
-                    </button>
+                    </button> */}
                   </div>
                 </Paper>
               </Grid>
@@ -825,10 +837,10 @@ console.log("imagen", imagen);
                         <TableCell bgcolor="pink" align="right" >
                           <b>Categoria</b>
                         </TableCell>
-                       {/*  <TableCell bgcolor="pink" align="right" >
+                        {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Porc-Desc</b>
                         </TableCell> */}
-                       {/*  <TableCell bgcolor="pink" align="right" >
+                        {/*  <TableCell bgcolor="pink" align="right" >
                           <b>Costo</b>
                         </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
@@ -857,7 +869,7 @@ console.log("imagen", imagen);
                             {item.IdProducto}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <img src={item.ImagenURL} width="80px" onError = {e => e.target.style.display = 'none'} />
+                            <img src={item.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {item.Detalle}
@@ -955,9 +967,9 @@ console.log("imagen", imagen);
 
                             <img src={this.state.imagen}
                               height="80px" width="80px" value={this.state.imagenNew}
-                              onChange={this.handleChangeImagen} 
-                              onError = {e => e.target.style.display = 'none'}
-                              />
+                              onChange={this.handleChangeImagen}
+                              onError={e => e.target.style.display = 'none'}
+                            />
 
                             <input type="file" id="file"
                               name="image" accept="image/*" capture="user" onChange={this.handleChangeImagen} />
@@ -1005,12 +1017,12 @@ console.log("imagen", imagen);
 
                           >
                             <TextField
-                              label="Observacion"
-                              id="Observacion"
+                              label="Codigo de barras"
+                              id="Codigo"
                               size="small"
                               margin="dense"
-                              value={this.state.editObservacion}
-                              onChange={this.handleChangeEditObservacion}
+                              value={this.state.CodigoEdit}
+                              onChange={this.handleChangeEditCodigo}
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
@@ -1059,7 +1071,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                         {/*  <FormControl
+                          {/*  <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
                             margin="dense"

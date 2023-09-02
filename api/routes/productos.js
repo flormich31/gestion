@@ -25,7 +25,8 @@ router.get("/", function (req, res, next) {
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL, 
     p.Detalle, p.Codigo, p.Categoria_Id,p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, 
     p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial,
-    p.FechaCreacion, p.FechaModificacion
+    p.FechaCreacion, p.FechaModificacion,
+    p.Busqueda, CONCAT(p.IdProducto, ' ', p.Busqueda) AS IdProductoBusqueda
     FROM \`productos\` as p 
     INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
