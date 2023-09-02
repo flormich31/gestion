@@ -731,7 +731,9 @@ console.log("imagen", imagen);
                             <img src={this.state.imagePreview}
                               height="100px" width="100px"
                               value={this.state.imagenedit}
-                              onChange={this.handleChangeImagen} />
+                              onChange={this.handleChangeImagen}
+                              onError = {e => e.target.style.display = 'none'}
+                               />
 
                           </FormControl>
                         </Grid>
@@ -855,7 +857,7 @@ console.log("imagen", imagen);
                             {item.IdProducto}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <img src={item.ImagenURL} width="80px" />
+                            <img src={item.ImagenURL} width="80px" onError = {e => e.target.style.display = 'none'} />
                           </TableCell>
                           <TableCell component="th" scope="row">
                             {item.Detalle}
@@ -953,7 +955,9 @@ console.log("imagen", imagen);
 
                             <img src={this.state.imagen}
                               height="80px" width="80px" value={this.state.imagenNew}
-                              onChange={this.handleChangeImagen} />
+                              onChange={this.handleChangeImagen} 
+                              onError = {e => e.target.style.display = 'none'}
+                              />
 
                             <input type="file" id="file"
                               name="image" accept="image/*" capture="user" onChange={this.handleChangeImagen} />
