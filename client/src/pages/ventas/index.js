@@ -371,8 +371,8 @@ class DashboardContent extends React.Component {
       .then(function (response) {
         console.log(response);
         console.log("datos de venta", ventaData);
-        alert("Se guardó correctamente");
-
+        alert("Se guardó correctamente #" + response.data.data.IdVenta);
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -777,7 +777,7 @@ class DashboardContent extends React.Component {
                                 id: "uncontrolled-native",
                               }}
                             >
-                              <option value={0}></option>
+                              {/* <option value={0}></option> */}
                               <option value={1}>Si</option>
                               <option value={2}>No</option>
                             </NativeSelect>
@@ -798,7 +798,7 @@ class DashboardContent extends React.Component {
                                 id: "uncontrolled-native",
                               }}
                             >
-                              <option value={0}></option>
+                              {/* <option value={0}></option> */}
                               <option value={1}>Si</option>
                               <option value={2}>No</option>
                             </NativeSelect>
