@@ -349,17 +349,18 @@ class DashboardContent extends React.Component {
   };
 
   handleGuardarVenta = () => {
+    console.log('this.state.Id:',this.state.Id)
     if (this.state.ventaProductos.length === 0) {
       return alert("No hay productos");
     }
     const ventaData = {
-      Usuario_Id: this.state.Id,
-      Cliente_Id: this.state.Cliente_Id,
-      FormaPago_Id: this.state.IdFormaPago,
+      Usuario_Id: this.state.Id === "" ? "1" : this.state.Usuario_Id,
+      Cliente_Id: this.state.Cliente_Id === "" ? "36478" : this.state.Usuario_Id,
+      FormaPago_Id: this.state.IdFormaPago === "" ? "1" : this.state.IdFormaPago,
       Total: this.state.Total,
       Subtotal: this.state.Subtotal,
-      Entregado: this.state.Entregado === "" ? "2" : this.state.Entregado,
-      Pagado: this.state.Pagado === "" ? "2" : this.state.Pagado,
+      Entregado: this.state.Entregado === "" ? "1" : this.state.Entregado,
+      Pagado: this.state.Pagado === "" ? "1" : this.state.Pagado,
       Observacion: this.state.Observacion === "" ? "ninguna" : this.state.Observacion,
       Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
       Interes: this.state.Interes === "" ? "0" : this.state.Interes,
@@ -675,8 +676,6 @@ class DashboardContent extends React.Component {
                             </InputLabel>
                             <NativeSelect
                               value={this.state.Id}
-
-
                               onChange={this.handleChangeIdUsuario}
                               inputProps={{
                                 id: "uncontrolled-native",
@@ -686,6 +685,9 @@ class DashboardContent extends React.Component {
                                 <option
                                   key={item.Id}
                                   value={item.Id}
+                               /*   value= {(item) => {
+                                    this.setState({ Id: item.Id });   
+                                   }} */
                                 >
                                   {item.Nombre}
                                 </option>

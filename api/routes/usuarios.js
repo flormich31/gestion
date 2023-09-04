@@ -8,14 +8,14 @@ router.get("/", function (req, res, next) {
     SELECT *
     FROM \`usuarios\`
     WHERE FechaEliminacion IS NULL 
-    ORDER BY Nombre ASC
+    ORDER BY Id ASC
   `:`
   SELECT *
   FROM \`usuarios\`
   WHERE FechaEliminacion IS NULL 
   AND
   Nombre LIKE "%${req.query.query}%"
-  ORDER BY Nombre ASC
+  ORDER BY Id ASC
 `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -76,7 +76,7 @@ router.put("/", function (req, res, next) {
   });
 });
 
-router.delete("/:IdVendedor", function (req, res, next) {
+router.delete("/:Id", function (req, res, next) {
   const sql = `
   UPDATE \`usuarios\`
   SET FechaEliminacion= now()

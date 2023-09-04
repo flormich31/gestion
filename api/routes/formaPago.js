@@ -6,7 +6,7 @@ router.get("/", function (req, res, next) {
     SELECT *
     FROM \`forma_pago\`
     WHERE FechaEliminacion IS NULL
-    ORDER BY FormaPago ASC
+    ORDER BY IdFormaPago ASC
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
