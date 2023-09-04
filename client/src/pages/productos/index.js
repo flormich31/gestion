@@ -47,7 +47,7 @@ class Productos extends React.Component {
       open: false,
       query: "",
       idedit: "",
-      imagenNew: "",
+      imagenNew: "test",
       imagen: "",
       imagePreview: "",
       imagenedit: "",
@@ -201,15 +201,15 @@ class Productos extends React.Component {
     axios
       .post(`${process.env.REACT_APP_API}productos`, {
         id: this.state.id,
-        ImagenURL: this.state.imagenedit,
+        ImagenURL: this.state.imagenNew,
         detalle: this.state.detalle,
         Codigo: this.state.Codigo,
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
-        costo: _preventUndefined(this.state.costo),
-        Descuento: this.state.Descuento === "" || "undefined" ? "0" : this.state.Descuento,
-        PrecioMenor: _preventUndefined(this.state.PrecioMenor),
-        PrecioMayor: _preventUndefined(this.state.PrecioMayor),
+        costo: this.state.costo,
+        Descuento: this.state.Descuento,
+        PrecioMenor: this.state.PrecioMenor,
+        PrecioMayor: this.state.PrecioMayor,
         Observacion: this.state.Observacion,
         IdProveedor: this.state.IdProveedor,
       })
@@ -230,7 +230,8 @@ class Productos extends React.Component {
       })
 
     const formData = new FormData();
-    formData.append('file', this.state.imageneditURL);
+    formData.append('file', this.state.imagenedit);
+    console.log('imagen uploadcarpeta', this.state.imagenedit)
 
     axios.post(`${process.env.REACT_APP_API}upload`, formData)
       .then(response => {
@@ -253,34 +254,33 @@ class Productos extends React.Component {
     this.setState({ CodigoEdit: event.target.value });
   };
   handleChangeImagen = async (event) => {
-    console.log("imagen:", event.target.files[0]);
 
     let file = event.target.files[0];
 
     if (file) {
       let reader = new FileReader();
-
       let ar = URL.createObjectURL(event.target.files[0])
-      console.log(ar);
+     
       reader.onloadend = async () => {
-        //await this.setState({ imagePreview: [reader.result] });
         await this.setState({ imagePreview: [URL.createObjectURL(event.target.files[0])] });
-        await console.log("imagePreview", this.state.imagePreview);
+        await this.setState({ imagenNew: event.target.files[0].name });
       };
 
       reader.readAsDataURL(file);
     }
 
-    let archivo = event.target.files[0];
-    let archivo2 = archivo.name
-    console.log("Nombre del archivo:", archivo);
-    await this.setState(() => ({ imageneditURL: archivo }));
-    await this.setState(() => ({ imagenNew: archivo2 }));
-    await console.log(this.imagenNew);
+    let filename = event.target.files[0].name;
 
-    /* 
-  console.log("Tipo de archivo:", archivo.type);
-  console.log("Tamaño del archivo:", archivo.size, "bytes"); */
+    console.log("Nombre del archivo:", file);
+    console.log("Nombre del archivo nuevo:", filename);
+
+     this.setState(() => ({ imagenedit: file }));
+     
+     await this.setState({ imagenNew: event.target.files[0].name });
+
+     console.log("imagenedit",this.state.imagenedit);
+     console.log("imagen nueva",this.state.imagenNew);
+
   };
   handleChangeEditIdCategoria = (event) => {
     this.setState({ IdCategoriaedit: event.target.value });
@@ -348,7 +348,7 @@ class Productos extends React.Component {
     let _this = this;
 
     let imagen = this.state.imagenNew;
-    console.log("imagen", imagen);
+console.log("imagen", imagen);
     if (imagen === '') {
       alert("No se ha seleccionado una nueva imagen");
       console.log("No se ha seleccionado una nueva imagen");
@@ -366,9 +366,10 @@ class Productos extends React.Component {
         .catch(function (error) {
           console.log(error);
         });
+
       const formData = new FormData();
-      formData.append('file', this.state.imageneditURL);
-      console.log('imageneditURL', this.state.imageneditURL);
+      formData.append('file', this.state.imagenedit);
+      console.log('imageneditURL', this.state.imagenedit);
 
       axios.post(`${process.env.REACT_APP_API}upload`, formData)
         .then(response => {
@@ -967,9 +968,7 @@ class Productos extends React.Component {
 
                             <img src={this.state.imagen}
                               height="80px" width="80px" value={this.state.imagenNew}
-                              onChange={this.handleChangeImagen}
-                              onError={e => e.target.style.display = 'none'}
-                            />
+                              onChange={this.handleChangeImagen} />
 
                             <input type="file" id="file"
                               name="image" accept="image/*" capture="user" onChange={this.handleChangeImagen} />
