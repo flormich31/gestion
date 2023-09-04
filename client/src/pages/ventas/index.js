@@ -38,6 +38,7 @@ import DataTableVenta from "../../components/DataTableVenta";
 import TextField from "@mui/material/TextField";
 import NativeSelect from "@mui/material/NativeSelect";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import TicketVenta from "../ticketVenta";
 
 const mdTheme = createTheme();
 
@@ -66,6 +67,7 @@ class DashboardContent extends React.Component {
       loading: false,
       open: false,
       selectedValues: []
+    
     };
   }
 
@@ -260,12 +262,12 @@ class DashboardContent extends React.Component {
 
   handleProductInputChange = async (event) => {
     if (
-      String(event.target.value).trim() === "" 
+      String(event.target.value).trim() === ""
       || String(event.target.value).trim().length < 2
       || !event.target.value
       || event.target.value === undefined
       || event.target.value === "undefined"
-      ) {
+    ) {
       return true;
     }
     await this.setState({ query: event.target.value });
@@ -349,7 +351,7 @@ class DashboardContent extends React.Component {
   };
 
   handleGuardarVenta = () => {
-    console.log('this.state.Id:',this.state.Id)
+    console.log('this.state.Id:', this.state.Id)
     if (this.state.ventaProductos.length === 0) {
       return alert("No hay productos");
     }
@@ -372,8 +374,16 @@ class DashboardContent extends React.Component {
       .then(function (response) {
         console.log(response);
         console.log("datos de venta", ventaData);
-        alert("Se guardó correctamente #" + response.data.data.IdVenta);
-        
+        //alert("Se guardó correctamente #" + response.data.data.IdVenta);
+        if (window.confirm("Venta realizada #" + response.data.data.IdVenta + "¿Desea imprimir el ticket?")) {
+          _this.setState()
+          // El usuario hizo clic en "Aceptar"
+          alert("Acción confirmada");
+        } else {
+          // El usuario hizo clic en "Cancelar" o cerró el cuadro de diálogo
+          alert("Acción cancelada");
+        };
+
       })
       .catch(function (error) {
         console.log(error);
@@ -685,9 +695,9 @@ class DashboardContent extends React.Component {
                                 <option
                                   key={item.Id}
                                   value={item.Id}
-                               /*   value= {(item) => {
-                                    this.setState({ Id: item.Id });   
-                                   }} */
+                                /*   value= {(item) => {
+                                     this.setState({ Id: item.Id });   
+                                    }} */
                                 >
                                   {item.Nombre}
                                 </option>
