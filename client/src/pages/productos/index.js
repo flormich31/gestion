@@ -52,6 +52,7 @@ class Productos extends React.Component {
       imagePreview: "",
       imagenedit: "",
       imageneditURL: "",
+      IdProveedor:"",
       detalleedit: "",
       Observacion: "",
       Codigo: "",
@@ -195,9 +196,10 @@ class Productos extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let _this = this;
-    function _preventUndefined(value) {
-      return value === "" || value === "undefined" || !value ? "" : value;
-    }
+   
+    /* function _preventUndefined(value) {
+      return value === "" || value === "undefined" || !value ? "68601" : value; 
+    } */
     axios
       .post(`${process.env.REACT_APP_API}productos`, {
         id: this.state.id,
@@ -206,14 +208,16 @@ class Productos extends React.Component {
         Codigo: this.state.Codigo,
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
-        costo: this.state.costo,
-        Descuento: this.state.Descuento,
+        //costo: this.state.costo,
+       // Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
         PrecioMenor: this.state.PrecioMenor,
-        PrecioMayor: this.state.PrecioMayor,
-        Observacion: this.state.Observacion,
-        IdProveedor: this.state.IdProveedor,
+       // PrecioMayor: this.state.PrecioMayor,
+      //  Observacion: this.state.Observacion,
+        IdProveedor: this.state.IdProveedor  === "" ? "68601" : this.state.IdProveedor,
+        
       })
       .then((res) => {
+        console.log('proveedor', this.state.IdProveedor)
         console.log(res);
         console.log(res.data);
         // console.log(JSON.stringify(response.data));
@@ -683,13 +687,11 @@ console.log("imagen", imagen);
                         </Grid>
 
                         <Grid item xs>
-                          <FormControl
-                            variant="standard"
-                            onSubmit={this.handleSubmit}
-                          >
+                          
                             <InputLabel
                               variant="standard"
                               htmlFor="uncontrolled-native"
+                               
                               required
                             >
                               Proveedor
@@ -710,7 +712,7 @@ console.log("imagen", imagen);
                                 </option>
                               ))}
                             </NativeSelect>
-                          </FormControl>
+                          
                         </Grid>
                         {/*  <Grid item xs>
                           <FormControl

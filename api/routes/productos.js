@@ -4,10 +4,10 @@ var router = express.Router();
 
 router.get("/", function (req, res, next) {
   console.log("Request", req.query);
-  const limit = req.query?.limit ? `LIMIT ${req.query.limit}`:'';
+  const limit = req.query?.limit ? `LIMIT ${req.query.limit}` : '';
   const sql = String(req.query.query).split(' ').join('')
-  == '' || req.query.query
-  == 'undefined' || !req.query || !req.query.query ?`
+    == '' || req.query.query
+    == 'undefined' || !req.query || !req.query.query ? `
   SELECT p.IdProducto, p.Imagen, 
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL,
     p.Detalle, p.Codigo, p.Categoria_Id, p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, 
@@ -20,7 +20,7 @@ router.get("/", function (req, res, next) {
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
     ${limit}
-  `:`
+  `: `
     SELECT p.IdProducto,  p.Imagen,  
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL, 
     p.Detalle, p.Codigo, p.Categoria_Id,p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, 
@@ -67,13 +67,12 @@ function makeid(length) {
 
 router.post("/", function (req, res, next) {
   const codigo = makeid(5);
-  console.log("BODY CREATE PROD",req.body);
+  console.log("BODY CREATE PROD", req.body);
   const sql = `
   INSERT INTO \`productos\`
-  ( IdProducto, ImagenURL, Detalle, Codigo, Categoria_Id, Marca_Id, Descuento, Costo, PrecioMenor, PrecioMayor, 
-    Observacion, Proveedor_Id, FechaCreacion) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}','${req.body.Codigo}', 
-    '${req.body.IdCategoria}','${req.body.IdMarca}', '${req.body.Descuento}','${req.body.costo}','${req.body.PrecioMenor}',
-    '${req.body.PrecioMayor}', '${req.body.Observacion}','${req.body.IdProveedor}', NOW());
+  ( IdProducto, ImagenURL, Detalle, Codigo, Categoria_Id, Marca_Id, PrecioMenor,
+ Proveedor_Id, FechaCreacion) values ('${codigo}', '${req.body.ImagenURL}','${req.body.detalle}','${req.body.Codigo}', 
+    '${req.body.IdCategoria}','${req.body.IdMarca}', '${req.body.PrecioMenor}','${req.body.IdProveedor}', NOW());
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
     console.log(sql);
@@ -86,8 +85,8 @@ router.post("/", function (req, res, next) {
 });
 
 router.delete("/:IdProducto", function (req, res, next) {
-  console.log("Request",req.params.IdProducto);
-  
+  console.log("Request", req.params.IdProducto);
+
   const sql = `
   UPDATE \`productos\`
   SET FechaEliminacion= now()
@@ -122,7 +121,7 @@ router.put("/", function (req, res, next) {
   WHERE IdProducto='${req.body.id}';
   `;
   global.dbConnection.query(sql, [], (err, regs) => {
-    console.log("sql",sql);
+    console.log("sql", sql);
     if (err) {
       res.send("Error editando producto");
     } else {
@@ -131,6 +130,6 @@ router.put("/", function (req, res, next) {
   });
 });
 
- 
+
 
 module.exports = router;
