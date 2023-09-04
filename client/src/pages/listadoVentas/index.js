@@ -560,7 +560,7 @@ console.log("E:",this.state.Entregado, "P:",this.state.Pagado,"O:",this.state.Ob
                             {this.state.datosVenta.map((item) =>
                               <Box
                                 sx={{
-                                  width: 500,
+                                  width: 900,
                                   bgcolor: "background.paper",
                                 }}
                               >
