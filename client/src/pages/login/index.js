@@ -40,7 +40,8 @@ export default function Login({ }) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    axios
+    history.push("/ventas")
+    /* axios
       .post(`${process.env.REACT_APP_API}login`, {
         usuario: usuario,
         clave: clave,
@@ -54,7 +55,7 @@ export default function Login({ }) {
       .catch((error) => {
         // Maneja el error en caso de fallo de autenticación
         alert("¡Combinación incorrecta de usuario/contraseña!")
-      });
+      }); */
   }
 
   return (
@@ -108,7 +109,7 @@ export default function Login({ }) {
 
                 autoComplete="email"
                 autoFocus
-                onChange={e => setUsuario(e.target.value)}
+                //onChange={e => setUsuario(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -119,7 +120,7 @@ export default function Login({ }) {
                 type="password"
                 id="clave "
                 autoComplete="current-password"
-                onChange={e => setClave(e.target.value)}
+               // onChange={e => setClave(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}

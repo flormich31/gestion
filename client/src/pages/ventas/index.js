@@ -39,6 +39,7 @@ import TextField from "@mui/material/TextField";
 import NativeSelect from "@mui/material/NativeSelect";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import TicketVenta from "../ticketVenta";
+import { withRouter } from 'react-router-dom';
 
 const mdTheme = createTheme();
 
@@ -47,6 +48,7 @@ class DashboardContent extends React.Component {
     super(props);
 
     this.state = {
+      redirect: false,
       productos: [],
       ventaProductos: [],
       usuarios: [],
@@ -63,11 +65,11 @@ class DashboardContent extends React.Component {
       Observacion: '',
       formaPago: [],
       clientes: [],
-      numeroVenta: "",
+      IdTicket: "",
       loading: false,
       open: false,
       selectedValues: []
-    
+
     };
   }
 
@@ -351,7 +353,7 @@ class DashboardContent extends React.Component {
   };
 
   handleGuardarVenta = () => {
-    console.log('this.state.Id:', this.state.Id)
+    
     if (this.state.ventaProductos.length === 0) {
       return alert("No hay productos");
     }
@@ -372,17 +374,20 @@ class DashboardContent extends React.Component {
     axios
       .post(`${process.env.REACT_APP_API}ventas`, ventaData)
       .then(function (response) {
+        _this.setState({ IdTicket: response.data.data.IdVenta })
         console.log(response);
         console.log("datos de venta", ventaData);
         //alert("Se guardó correctamente #" + response.data.data.IdVenta);
         if (window.confirm("Venta realizada #" + response.data.data.IdVenta + "¿Desea imprimir el ticket?")) {
-          _this.setState()
+          <TicketVenta variable={_this.state.IdTicket} />
+          console.log('ID TICKET', _this.state.IdTicket)
+          window.open('/ticketVenta' + _this.state.IdVenta , '_blank');
           // El usuario hizo clic en "Aceptar"
-          alert("Acción confirmada");
-        } else {
+          //alert("Acción confirmada");
+        }/*  else {
           // El usuario hizo clic en "Cancelar" o cerró el cuadro de diálogo
           alert("Acción cancelada");
-        };
+        }; */
 
       })
       .catch(function (error) {
@@ -402,9 +407,29 @@ class DashboardContent extends React.Component {
     this.setState({ ventaProductos: [] });
   };
 
+  redirectHandlerOpen = () => {
+    this.setState({ redirect: true });
+    this.renderRedirectOpen();
+  };
+  renderRedirectOpen = () => {
+    
+      return <Redirect to="/ticketVenta" />;
 
+  
+  }
+  clickRedirect = async ()=> {
+  /*  await this.setState({ redirect: true });
+    await this.renderRedirectOpen();
+    console.log('redirect', this.state.redirect)  */
+    window.open('/productos', '_blank');
+  }
 
   render() {
+    // Si redirectToPage es true, redirigir a la nueva página
+   /*  if (this.state.redirect) {
+      this.props.history.push('/ticketVenta'); // Reemplaza '/nueva-pagina' con la URL de destino
+      return null; // Opcionalmente puedes retornar null para evitar renderizar nada más
+    } */
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -845,6 +870,15 @@ class DashboardContent extends React.Component {
                             onClick={this.handleGuardarVenta}
                           >
                             {"Guardar"}
+                          </Button>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ mt: 1, mb: 1 }}
+                            size="small"
+                            onClick={this.clickRedirect}
+                          >
+                            {"Redirect"}
                           </Button>
                         </Grid>
                       </Grid>

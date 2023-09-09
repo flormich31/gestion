@@ -57,6 +57,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import TicketVenta from "../ticketVenta";
 
 const mdTheme = createTheme();
 
@@ -97,6 +98,7 @@ class ListadoVentas extends React.Component {
       formaPago: [],
       clientes: [],
       numeroVenta: "",
+      variable:"",
     };
   }
 
@@ -128,31 +130,6 @@ class ListadoVentas extends React.Component {
       });
 
   };
- 
-
- /*  getVentas = () => {
-    let _this = this;
-
-    axios
-      .get(`${process.env.REACT_APP_API}ventas`, {
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-      })
-      .then(function (response) {
-        // console.log(JSON.stringify(response.data));
-        if (response.data.ventas.length === 0) {
-          alert("No se encontraron ventas");
-        } else {
-          _this.setState(response.data);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    this.setState({ startDate: "" });
-    this.setState({ endDate: "" });
-  
-  }; */
 
   getDatosVenta = () => {
     let _this = this;
@@ -345,6 +322,17 @@ console.log("E:",this.state.Entregado, "P:",this.state.Pagado,"O:",this.state.Ob
 
   };
 
+  clickRedirect = async (IdVenta)=> {
+    /*  await this.setState({ redirect: true });
+      await this.renderRedirectOpen();
+      console.log('redirect', this.state.redirect)  */
+      //window.open('/productos', '_blank');
+     await this.setState({ IdVenta: IdVenta });
+      <TicketVenta variable={this.state.IdVenta} />
+          console.log('ID TICKET', this.state.IdVenta)
+          window.open('/ticketVenta/' + this.state.IdVenta , '_blank');
+    }
+
   render() {
     return (
       <ThemeProvider theme={mdTheme}>
@@ -512,7 +500,8 @@ console.log("E:",this.state.Entregado, "P:",this.state.Pagado,"O:",this.state.Ob
                               key={item.IdVenta}
                               value={this.state.query}
                               onClick={() => {
-                                this.showProductos(item.IdVenta);
+                                //this.showProductos(item.IdVenta);
+                                this.clickRedirect(item.IdVenta);
                               }}
                             />
                           </TableCell>
