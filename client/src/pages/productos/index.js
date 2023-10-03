@@ -714,21 +714,7 @@ console.log("imagen", imagen);
                             </NativeSelect>
                           
                         </Grid>
-                        {/*  <Grid item xs>
-                          <FormControl
-                            variant="standard"
-                            onSubmit={this.handleSubmit}
-                          >
-                            <TextField
-                              id="standard-read-only-input"
-                              value={this.state.Descuento}
-                              onChange={this.handleChangeDescuento}
-                              label="Descuento"
-                              variant="standard"
-
-                            />
-                          </FormControl>
-                        </Grid> */}
+                       
                       </Grid>
 
                       <Grid item xs container direction="column">
@@ -840,18 +826,9 @@ console.log("imagen", imagen);
                         <TableCell bgcolor="pink" align="right" >
                           <b>Categoria</b>
                         </TableCell>
-                        {/*  <TableCell bgcolor="pink" align="right" >
-                          <b>Porc-Desc</b>
-                        </TableCell> */}
-                        {/*  <TableCell bgcolor="pink" align="right" >
-                          <b>Costo</b>
-                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>P.Menor</b>
                         </TableCell>
-                        {/* <TableCell bgcolor="pink" align="right">
-                          <b>P.Mayor</b>
-                        </TableCell> */}
                         <TableCell bgcolor="pink" align="right">
                           <b>Prov</b>
                         </TableCell>
@@ -884,10 +861,7 @@ console.log("imagen", imagen);
                           <TableCell align="right">
                             {item.categoria}
                           </TableCell>
-                          {/* <TableCell align="right">{item.Descuento}%</TableCell> */}
-                          {/* <TableCell align="right">${item.Costo}</TableCell> */}
                           <TableCell align="right">${item.PrecioMenor}</TableCell>
-                          {/* <TableCell align="right">${item.PrecioMayor}</TableCell> */}
                           <TableCell align="right">
                             {item.RazonSocial}
                           </TableCell>
@@ -1027,36 +1001,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          {/* <FormControl
-                            variant="standard"
-                            onSubmit={this.handleEdit}
-                            margin="dense"
-                          >
-                            <TextField
-                              label="Descuento"
-                              id="Descuento"
-                              style={{ marginRight: 11 }}
-                              size="small"
-                              value={this.state.descuentoedit}
-                              onChange={this.handleChangeEditDescuento}
-                              inputProps={{ style: { fontSize: 12 } }}
-                            />
-                          </FormControl> */}
-                          {/* <FormControl
-                            variant="standard"
-                            onSubmit={this.handleEdit}
-                            margin="dense"
-                          >
-                            <TextField
-                              label="Costo"
-                              id="Costo"
-                              style={{ marginRight: 11 }}
-                              size="small"
-                              value={this.state.costoedit}
-                              onChange={this.handleChangeEditCosto}
-                              inputProps={{ style: { fontSize: 12 } }}
-                            />
-                          </FormControl> */}
+                       
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -1072,22 +1017,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                          {/*  <FormControl
-                            variant="standard"
-                            onSubmit={this.handleEdit}
-                            margin="dense"
-                          >
-                            <TextField
-                              label="Precio Mayorista"
-                              id="PrecioMayor"
-                              size="small"
-                              style={{ marginRight: 11 }}
-                              value={this.state.editPrecioMayor}
-                              onChange={this.handleChangeEditPrecioMayor}
-                              inputProps={{ style: { fontSize: 12 } }}
-                            />
-                          </FormControl> */}
-
+                         
                           <FormControl size="small" margin="dense">
                             <InputLabel id="edit-select-categoria-label">
                               Categoría

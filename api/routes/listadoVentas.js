@@ -25,6 +25,7 @@ AND IdVenta LIKE "%${req.query.query}%"
           res.send("Error recuperando detalle de venta");
       } else {
           res.json({ prodventas: regs });
+          console.log('LISTADO PROD regs:',regs);
       }
   });
 });

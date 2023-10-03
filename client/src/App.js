@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/ventas">
             <Ventas/>
           </Route>
-          <Route path="/ticketVenta">
+          <Route path="/ticketVenta/:IdVenta">
             <Ticket/>
           </Route>
           <Route path="/productos">

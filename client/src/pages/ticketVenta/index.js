@@ -1,8 +1,8 @@
-import { NativeSelect, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { Component } from 'react';
-import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
+import { withRouter } from 'react-router-dom';
 
 
 class TicketVenta extends React.Component {
@@ -30,8 +30,6 @@ class TicketVenta extends React.Component {
       Pagado: ' ',
       Descuento: ' ',
       Observacion: ' ',
-      // dateStart: dayjs('2022-04-17'),
-      // dateEnd: new Date(),
       startDate: '',
       startDateMysql: '',
       endDate: '',
@@ -46,33 +44,28 @@ class TicketVenta extends React.Component {
     };
   }
   componentDidMount() {
-    this.getUrl();
-    this.getDatosVenta();
-    this.getListadoVentas();
-    this.getTotalVentas();
+    this.GetID();
   }
 
   handleImprimir = () => {
     console.log(this.props.IdTicket);
     window.print();
   }
-  //numVenta = props.variable;
 
-  getUrl = async () => {
-    //Se obtiene el valor de la URL desde el navegador
-    let actual = window.location + '';
-    //Se realiza la división de la URL
-    let split = actual.split("/");
-    //Se obtiene el ultimo valor de la URL
-    let num = split[split.length - 1];
-    console.log("ID", num);
-    await this.setState({ IdVenta: num, query: num });
-    console.log("IDVENTA", this.state.IdVenta);
-    console.log("query", this.state.query);
+  GetID = async () => {
+    // Accede a los parámetros de la URL, incluido el "id" que definiste en la ruta
+    let { IdVenta } = this.props.match.params;
+    await this.setState({ query: IdVenta });
+    await this.setState({ IdVenta: IdVenta });
 
+    console.log('url', IdVenta)
+    await this.getDatosVenta();
+    await this.getListadoVentas();
+    await this.getTotalVentas();
   }
 
   getDatosVenta = () => {
+    console.log('getventaid', this.state.query)
     let _this = this;
     var config = {
       method: "get",
@@ -138,66 +131,81 @@ class TicketVenta extends React.Component {
   render() {
 
     return (
-      <div >
-      {this.state.datosVenta.map((item) =>
-      <Box
-      sx={{
-        width: 900,
-        bgcolor: "background.paper",
-      }}
-    >
 
-        {/* Contenido del ticket de venta */}
-        <h2>DIVA FOREVER</h2>
-        <p> Av. 9 de Julio 158, N3378 Pto Esperanza, Mnes</p>
-        <p>*************************************************</p>
-        <p>Ticket: {this.state.IdVenta}</p>
-       
-        <Typography color="#000000" variant="p">
-          <b>Fecha:</b>  {item.Fecha}<br />
-          <b> Vendedor:</b>  {item.Nombre}<br />
-          <b>Cliente:</b>  {item.Nombre_Cliente}<br />
-          <b>Forma de pago:</b>   {item.FormaPago}<br />
-          <b>Entregado:</b>  <FormControl o size="small" >
-            <NativeSelect
-              size="small"
-              value={this.state.Entregado}
-              onChange={this.onEntregadoChange}
-              inputProps={{
-                id: "uncontrolled-native",
-              }}
-            >
-              <option value={0}>{item.Entregado}</option>
-              <option value={1}>Si</option>
-              <option value={2}>No</option>
-            </NativeSelect>
-          </FormControl>
-          <b>Pagado:</b> <FormControl  size="small">
-            <NativeSelect
-              size="small"
-              value={this.state.Pagado}
-              inputProps={{
-                id: "uncontrolled-native",
-              }}
-            >
-              <option value={0}>{item.Pagado}</option>
-              <option value={1}>Si</option>
-              <option value={2}>No</option>
-            </NativeSelect>
+      <Container maxWidth="155px" width="155px" sx={{ mt: 4, mb: 4 }}>
+        <Grid >
+          <div >
+            {this.state.datosVenta.map((item) =>
+              <Box>
+                {/* Contenido del ticket de venta */}
+                <Typography color="#000000" variant="h6" align='inherit'>
+                  <b>DIVA FOREVER</b>
+                </Typography>
+                <ul type="none" color="#000000" variant="body2"
+                  style={{
+                    padding: 0,
+                    margin: 0,
+                  }} >
+                  <li>Av. 9 de Julio 158, 3378 Pto Esperanza, Mnes</li>
+                  <li>Contáctese: +54 9 3757 651761</li>
+                  <li>*************************************************</li>
+                  <li>Ticket: {this.state.IdVenta}</li>
 
-          </FormControl>
-          <br />
-          <b>Observacion:</b> {item.Observacion}
-          <br />      <br />
-        </Typography>
-        </Box>)}
-        {/* ... otros detalles ... */}
+                  <b>Fecha:</b>  {item.Fecha}<br />
+                  <b>Vendedor:</b>  {item.Nombre}<br />
+                  <b>Cliente:</b>  {item.Nombre_Cliente}<br />
+                  <b>Forma de pago:</b>   {item.FormaPago}<br />
+                  <br />
+                </ul>
+                  <table >
+                  <thead>
+        <tr>
+                        <th >
+                          <b>Cant.</b>
+                        </th>
+                        <th >
+                          <b>Descripcion</b>
+                        </th>
+                        <th >
+                          <b>Precio</b>
+                        </th>
+                        </tr>
+      </thead>
+      <tbody>
+                      {this.state.prodventas.map((item, index) => (
+                        <tr>
+                          <td>
+                            {item.cantidad}
+                          </td>
+                          <td>
+                            {item.Detalle}-{item.Marca}
+                          </td>
+                          <td>
+                            ${item.PrecioVenta}
+                          </td>
+                          </tr>
+                      ))}
+                    </tbody>
+    </table>
+             
+                <b>TOTAL:</b>  ${item.Total}
+                < ul type="none" color="#000000" variant="body2"
+                  style={{
+                    padding: 0,
+                    margin: 0,
+                  }} >
+                  <li>*************************************************</li>
+                  <li>¡GRACIAS POR SU COMPRA!</li>
+                </ul>
+              </Box>)}
+            {/* Botón para imprimir */}
+            <button class="oculto-impresion" onClick={this.handleImprimir}>Imprimir Ticket</button>
+          </div>
 
-        {/* Botón para imprimir */}
-        <button onClick={this.handleImprimir}>Imprimir Ticket</button>
-      </div>
+        </Grid>
+      </Container>
     );
   }
 }
 
-export default TicketVenta;
+export default withRouter(TicketVenta);

@@ -73,7 +73,7 @@ router.get("/", function (req, res, next) {
       res.send("Error recuperando ventas");
     } else {
       res.json({ datosVenta: regs });
-      console.log(regs);
+      console.log('datos venta regs:',regs);
     }
   });
 }); 

@@ -8,7 +8,7 @@ const fs = require('fs');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'c:/nginx/html/productos'); // Directorio donde se guardarán los archivos   cb(null, '../client/public/productos'  'c:/nginx/html/productos' '../nginx/html/productos'
+    cb(null, '../client/public/productos'); // Directorio donde se guardarán los archivos   cb(null, '../client/public/productos'  'c:/nginx/html/productos' '../nginx/html/productos'
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Nombre de archivo único
@@ -18,9 +18,60 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 // Rutas del server
-router.get("/", function (req, res) {
+/* router.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
   console.log("Esta es una prueba")
+}); */
+
+router.get("/", function (req, res, next) {
+  console.log("Request", req.query);
+  const limit = req.query?.limit ? `LIMIT ${req.query.limit}` : '';
+  const sql = String(req.query.query).split(' ').join('')
+    == '' || req.query.query
+    == 'undefined' || !req.query || !req.query.query ? `
+  SELECT p.IdProducto, p.Imagen, 
+    CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL,
+    p.Detalle, p.Codigo, p.Categoria_Id, p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, 
+    P.Observacion, p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial,
+    p.FechaCreacion, p.FechaModificacion
+    FROM \`productos\` as p 
+    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
+    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
+    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
+    WHERE p.FechaEliminacion IS NULL
+    ORDER BY p.Detalle ASC
+    ${limit}
+  `: `
+    SELECT p.IdProducto,  p.Imagen,  
+    CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL, 
+    p.Detalle, p.Codigo, p.Categoria_Id,p.Stock, p.Descuento, p.Costo, p.PrecioMenor, p.PrecioMayor, P.Observacion, 
+    p.Marca_Id, p.Proveedor_Id, m.marca, c.categoria, r.RazonSocial,
+    p.FechaCreacion, p.FechaModificacion,
+    p.Busqueda, CONCAT(p.IdProducto, ' ', p.Busqueda) AS IdProductoBusqueda
+    FROM \`productos\` as p 
+    INNER JOIN \`marcas\` as m on m.IdMarca = p.Marca_Id
+    INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
+    INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
+    WHERE 
+    p.FechaEliminacion IS NULL
+    AND
+     (
+      IdProducto LIKE "%${req.query.query}%"
+      OR
+			Busqueda LIKE "%${req.query.query}%"
+     )
+    ORDER BY p.Detalle ASC 
+    ${limit}
+  `;
+  console.log(sql);
+  global.dbConnection.query(sql, [], (err, regs) => {
+    if (err) {
+      console.log(err);
+      res.send("Error recuperando productos");
+    } else {
+      res.json({ productos: regs });
+    }
+  });
 });
 
 router.post("/", upload.single('file'), (req, res, err) => {
