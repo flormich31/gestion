@@ -50,11 +50,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -368,18 +363,7 @@ class ListadoCompras extends React.Component {
                     <button onClick={this.handleSearch}>Buscar</button>
                   </div>
                 </Paper>
-                {/*  
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker', 'DatePicker']}>
-                  <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2023-05-01')} />
-                    <DatePicker
-                      label="Controlled picker"
-                      value={this.state.dateEnd}
-                      onChange={(event) => this.onChangeDate()}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-  */}
+              
               </Grid>
 {/* 
               <Grid m={0} pt={1}>

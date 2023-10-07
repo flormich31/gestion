@@ -39,6 +39,7 @@ import TextField from "@mui/material/TextField";
 import NativeSelect from "@mui/material/NativeSelect";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import TicketVenta from "../ticketVenta";
+import { withRouter } from 'react-router-dom';
 
 const mdTheme = createTheme();
 
@@ -47,10 +48,11 @@ class DashboardContent extends React.Component {
     super(props);
 
     this.state = {
+      redirect: false,
       productos: [],
       ventaProductos: [],
       usuarios: [],
-      Id: '',
+      Usuario_Id: '',
       IdFormaPago: '',
       Entregado: '',
       Pagado: '',
@@ -63,11 +65,11 @@ class DashboardContent extends React.Component {
       Observacion: '',
       formaPago: [],
       clientes: [],
-      numeroVenta: "",
+      IdTicket: "",
       loading: false,
       open: false,
       selectedValues: []
-    
+
     };
   }
 
@@ -158,7 +160,7 @@ class DashboardContent extends React.Component {
     this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor * cantidad;
 
     //this.calcularSubtotal();
-    this.onDescuentoChange();
+   // this.onDescuentoChange();
     this.calcularTotal();
     //this.calcularDescInt();
 
@@ -166,10 +168,6 @@ class DashboardContent extends React.Component {
   };
 
   onDescuentoChange = async (index, descuento) => {
-    // await this.setState({ EditDescuento: e.target.value });
-    // await console.log("EditDescuento", event.target.value)
-
-    //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
     this.state.ventaProductos[index].Descuento = descuento;
     console.log("EditDescuento:", descuento)
 
@@ -184,17 +182,10 @@ class DashboardContent extends React.Component {
     let total = subtotal - precioVenta;
     console.log(" precio con des", total);
 
-    // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
-    //console.log("subt desc", total);
-    //await this.setState({ Subtotal: total });
     this.state.ventaProductos[index].PrecioVenta = total
     this.calcularSubtotal();
     this.calcularTotal();
     await this.setState({ ventaProductos: this.state.ventaProductos });
-
-    //await this.calcularDescInt();
-    //await this.calcularSubtotal();
-    // await this.calcularTotal();
 
   };
 
@@ -203,21 +194,15 @@ class DashboardContent extends React.Component {
     //console.log("PrecioVenta", this.state.ventaProductos[index].PrecioVenta)
     this.state.ventaProductos[index].Descuento = descuento;
     let DESCUENTO = this.state.EditDescuento / 100;
-    // this.state.ventaProductos[index].PrecioVenta = precioVenta;
-    // precioVenta = this.state.ventaProductos[index].PrecioMenor * DESCUENTO;
+    
     let subtotal = this.state.Subtotal * DESCUENTO;
     let total = this.state.Subtotal - subtotal;
-
-    // this.state.ventaProductos[index].PrecioVenta = this.state.ventaProductos[index].PrecioMenor - precioVenta;
-    //console.log("subt desc", total);
-    //await this.setState({ Subtotal: total });
+   
     total = this.state.ventaProductos[index].PrecioVenta
     this.calcularSubtotal();
     this.calcularTotal();
     await this.setState({ ventaProductos: this.state.ventaProductos });
   };
-
-
 
   calcularSubtotal = () => {
     let subtotal = 0;
@@ -230,26 +215,14 @@ class DashboardContent extends React.Component {
 
   calcularTotal = () => {
 
-    // if (this.state.Interes === 0 ) {
     let subtotal = 0;
     this.state.ventaProductos.map((item) => {
       subtotal += parseInt(item.PrecioVenta);
     });
     this.setState({ Total: subtotal });
     console.log("total es", subtotal);
-    //}
-
-    //else if (this.state.Interes > 0 ) {
-    // console.log(this.state.Interes);
-    // let INTERES = this.state.Interes / 100;
-    //  let subtotal = this.state.Subtotal * INTERES;
-    //  let total = this.state.Subtotal + subtotal;
-    //  this.setState({ Total: total });
-    //}
-
-
+ 
   };
-
 
   handleBorrarProducto = async (index) => {
     this.state.ventaProductos.splice(index, 1);
@@ -292,8 +265,6 @@ class DashboardContent extends React.Component {
     }
   };
 
-
-
   onInteresChange = async (event) => {
     await this.setState({ Interes: event.target.value });
     // this.calcularSubtotal();
@@ -326,7 +297,9 @@ class DashboardContent extends React.Component {
   };
 
   handleChangeIdUsuario = async (event) => {
-    this.setState({ Id: event.target.value });
+   await this.setState({ Usuario_Id: event.target.value });
+   await  console.log("id usuario es", this.state.Usuario_Id)
+   await  console.log("event.target.value ", event.target.value )
   };
   handleChangeIdFormaPago = async (event) => {
     this.setState({ IdFormaPago: event.target.value });
@@ -351,13 +324,13 @@ class DashboardContent extends React.Component {
   };
 
   handleGuardarVenta = () => {
-    console.log('this.state.Id:', this.state.Id)
+    
     if (this.state.ventaProductos.length === 0) {
       return alert("No hay productos");
     }
     const ventaData = {
-      Usuario_Id: this.state.Id === "" ? "1" : this.state.Usuario_Id,
-      Cliente_Id: this.state.Cliente_Id === "" ? "36478" : this.state.Usuario_Id,
+      Usuario_Id: this.state.Usuario_Id === "" ? "1" : this.state.Usuario_Id,
+      Cliente_Id: this.state.Cliente_Id === "" ? "36478" : this.state.Cliente_Id,
       FormaPago_Id: this.state.IdFormaPago === "" ? "1" : this.state.IdFormaPago,
       Total: this.state.Total,
       Subtotal: this.state.Subtotal,
@@ -372,24 +345,22 @@ class DashboardContent extends React.Component {
     axios
       .post(`${process.env.REACT_APP_API}ventas`, ventaData)
       .then(function (response) {
+        _this.setState({ IdTicket: response.data.data.IdVenta })
         console.log(response);
         console.log("datos de venta", ventaData);
         //alert("Se guardó correctamente #" + response.data.data.IdVenta);
         if (window.confirm("Venta realizada #" + response.data.data.IdVenta + "¿Desea imprimir el ticket?")) {
-          _this.setState()
-          // El usuario hizo clic en "Aceptar"
-          alert("Acción confirmada");
-        } else {
-          // El usuario hizo clic en "Cancelar" o cerró el cuadro de diálogo
-          alert("Acción cancelada");
-        };
-
+          <TicketVenta variable={_this.state.IdTicket} />
+          console.log('ID TICKET', _this.state.IdTicket)
+          window.open('/ticketVenta/' + _this.state.IdTicket , '_blank');
+         
+        }
       })
       .catch(function (error) {
         console.log(error);
         alert("No se guardo la venta");
       });
-    this.setState({ Id: "" });
+    this.setState({ Usuario_Id: "" });
     this.setState({ Cliente_Id: "" });
     this.setState({ IdFormaPago: "" });
     this.setState({ Subtotal: "" });
@@ -403,8 +374,8 @@ class DashboardContent extends React.Component {
   };
 
 
-
   render() {
+  
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -436,7 +407,6 @@ class DashboardContent extends React.Component {
                   }}
                 >
                   <Autocomplete
-                    // values={this.state.selectedValues}
                     options={this.state.productos}
                     autoHighlight
                     // isOptionEqualToValue={(option, value) => option.Detalle === value.Detalle}
@@ -479,18 +449,7 @@ class DashboardContent extends React.Component {
                     onInputChange={debounce(this.handleProductInputChange, 200)}
                   />
 
-                  {/*  <Autocomplete
-                    disablePortal
-                    id="combo-box-producto"
-                    size="small"
-                    options={this.state.productos}
-                    getOptionLabel={(option) => option.Detalle}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Buscar producto..." />
-                    )}
-                    onChange={this.handleProductChange}
-                    onInputChange={this.handleProductInputChange}
-                  /> */}
+                  
                 </Paper>
               </Grid>
 
@@ -542,16 +501,7 @@ class DashboardContent extends React.Component {
                             {item.Detalle}
                           </TableCell>
                           <TableCell align="right">{item.marca}</TableCell>
-                          {/* <TableCell align="right">
-                            <FormControl fullWidth sx={{ m: 1 }} size="small">
-                              <Input
-                                id="filled-adornment-amount"
-                                defaultValue={item.Descuento}
-                                onChange={(e) => {
-                                  this.onDescuentoChange(index, e.target.value);
-                                }}
-                              />
-                            </FormControl></TableCell> */}
+                         
                           <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <Input
@@ -598,20 +548,7 @@ class DashboardContent extends React.Component {
                       <TableRow>
                         <TableCell rowSpan={4} />
                       </TableRow>
-                      {/* <TableRow >
-                        <TableCell>
-                          <FormControl fullWidth sx={{ m: 1 }} size="small">
-                            Recargo:<Input
-                              id="filled-adornment-amount"
-                              value={this.state.Interes}
-                              label="Interes"
-                              size="small"
-                              onChange={this.onInteresChange}
-                            />
-                          </FormControl>
-
-                        </TableCell>
-                      </TableRow> */}
+                     
                       <TableRow>
                         <TableCell colSpan={2}>
                           <FormControl fullWidth sx={{ m: 1 }} size="small">
@@ -631,12 +568,6 @@ class DashboardContent extends React.Component {
                     </TableBody>
                   </Table>
 
-                  {/* <Pagination
-                    totalRecords={totalProductos}
-                    pageLimit={10}
-                    pageNeighbours={1}
-                    onPageChanged={this.onPageChanged}
-                  /> */}
                 </TableContainer>
               </Grid>
 
@@ -685,7 +616,7 @@ class DashboardContent extends React.Component {
                               Vendedor
                             </InputLabel>
                             <NativeSelect
-                              value={this.state.Id}
+                              value={this.state.Usuario_Id}
                               onChange={this.handleChangeIdUsuario}
                               inputProps={{
                                 id: "uncontrolled-native",
@@ -695,9 +626,7 @@ class DashboardContent extends React.Component {
                                 <option
                                   key={item.Id}
                                   value={item.Id}
-                                /*   value= {(item) => {
-                                     this.setState({ Id: item.Id });   
-                                    }} */
+                               
                                 >
                                   {item.Nombre}
                                 </option>
@@ -731,18 +660,7 @@ class DashboardContent extends React.Component {
                               ))}
                             </NativeSelect>
 
-                            {/* <Autocomplete
-                            disablePortal
-                            id="combo-box-demo"
-                            size="small"
                             
-                            onChange={this.handleChangeCliente_Id}
-                            options={this.state.clientes}
-                            getOptionLabel={(option) => option.Nombre}
-                            renderInput={(params) => (
-                              <TextField {...params}  value={this.state.Cliente_Id} label="Cliente" />
-                            )}
-                          /> */}
                           </Grid>
                         </Grid>
                         <Grid item xs container direction="column">
@@ -817,17 +735,7 @@ class DashboardContent extends React.Component {
                           </Grid>
                         </Grid>
                         <Grid item xs container direction="column">
-                          {/*    
-                          <Grid item xs>
-                            <TextField
-                              id="standard-basic"
-                              label="Recargo..%.."
-                              variant="standard"
-                              value={this.state.Interes}
-                              onChange={this.handleChangeInteres}
-                            />
-                          </Grid> */}
-
+                         
                           <Grid item xs>
                             <TextField
                               id="standard-basic"
@@ -846,6 +754,7 @@ class DashboardContent extends React.Component {
                           >
                             {"Guardar"}
                           </Button>
+                          
                         </Grid>
                       </Grid>
                     </Grid>
