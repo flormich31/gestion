@@ -20,6 +20,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from '@mui/material/TablePagination';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { pink } from "@mui/material/colors";
@@ -69,6 +70,9 @@ class Productos extends React.Component {
       editObservacion: "",
       razonsocialedit: "",
       IdProveedoredit: "",
+
+      page:0,
+      rowsPerPage:5,
     };
   }
 
@@ -79,6 +83,13 @@ class Productos extends React.Component {
     this.getTodosProveedores();
   }
 
+    handleChangePage = (event, newPage) => {
+      this.setState({ page: newPage })    
+    };
+
+    handleChangeRowsPerPage = (event) => {
+      this.setState({ page: parseInt(event.target.value, 10) })
+    }
   onPageChanged = (data) => {
     // const { productos } = this.state;
     // const { currentPage, totalPages, pageLimit } = data;
@@ -840,55 +851,59 @@ console.log("imagen", imagen);
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.productos.map((item, index) => (
+                      {/* {this.state.productos.map((item, index) => ( */}
+                        {(this.state.rowsPerPage > 0
+                          ? this.state.productos.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                          : this.state.productos
+                        ).map((row) => (
                         <TableRow
-                          key={item.IdProducto}
+                          key={row.IdProducto}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
                           <TableCell align="left" component="th" scope="row">
-                            {item.IdProducto}
+                            {row.IdProducto}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <img src={item.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
+                            <img src={row.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Detalle}
+                            {row.Detalle}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Stock}
+                            {row.Stock}
                           </TableCell>
-                          <TableCell align="right">{item.marca}</TableCell>
+                          <TableCell align="right">{row.marca}</TableCell>
                           <TableCell align="right">
-                            {item.categoria}
+                            {row.categoria}
                           </TableCell>
-                          <TableCell align="right">${item.PrecioMenor}</TableCell>
+                          <TableCell align="right">${row.PrecioMenor}</TableCell>
                           <TableCell align="right">
-                            {item.RazonSocial}
+                            {row.RazonSocial}
                           </TableCell>
                           <TableCell align="right">
                             <EditIcon
                               sx={{ color: pink[200] }}
-                              key={item.IdProducto}
+                              key={row.IdProducto}
                               value={this.state.idedit}
                               onClick={() => {
                                 this.showModal(
-                                  item.IdProducto,
-                                  item.Detalle,
-                                  item.Codigo,
-                                  item.categoria,
-                                  item.Categoria_Id,
-                                  item.marca,
-                                  item.Marca_Id,
-                                  item.Descuento,
-                                  item.Costo,
-                                  item.PrecioMenor,
-                                  item.PrecioMayor,
-                                  item.Observacion,
-                                  item.Proveedor_Id,
-                                  item.RazonSocial,
-                                  item.ImagenURL
+                                  row.IdProducto,
+                                  row.Detalle,
+                                  row.Codigo,
+                                  row.categoria,
+                                  row.Categoria_Id,
+                                  row.marca,
+                                  row.Marca_Id,
+                                  row.Descuento,
+                                  row.Costo,
+                                  row.PrecioMenor,
+                                  row.PrecioMayor,
+                                  row.Observacion,
+                                  row.Proveedor_Id,
+                                  row.RazonSocial,
+                                  row.ImagenURL
                                 );
                               }}
                             />
@@ -896,7 +911,7 @@ console.log("imagen", imagen);
                               sx={{ color: pink[600] }}
                               align="left"
                               onClick={() => {
-                                this.handleRemove(item.IdProducto);
+                                this.handleRemove(row.IdProducto);
                               }}
                             />
                           </TableCell>
@@ -1113,7 +1128,17 @@ console.log("imagen", imagen);
                     pageLimit={10}
                     pageNeighbours={1}
                     onPageChanged={this.onPageChanged}
+                  
                   /> */}
+ <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={this.state.productos.length}
+        rowsPerPage={this.state.rowsPerPage}
+        page={this.state.page}
+        onPageChange={this.handleChangePage}
+        onRowsPerPageChange={this.handleChangeRowsPerPage}
+      />
                 </TableContainer>
 
               </Grid>
