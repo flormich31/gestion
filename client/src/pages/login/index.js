@@ -40,7 +40,9 @@ export default function Login({ }) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    axios
+    history.push("/ventas")
+    
+   /*  axios
       .post(`${process.env.REACT_APP_API}login`, {
         usuario: usuario,
         clave: clave,
@@ -54,7 +56,7 @@ export default function Login({ }) {
       .catch((error) => {
         // Maneja el error en caso de fallo de autenticación
         alert("¡Combinación incorrecta de usuario/contraseña!")
-      });
+      }); */
   }
 
   return (
