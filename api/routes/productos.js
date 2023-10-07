@@ -19,7 +19,7 @@ router.get("/", function (req, res, next) {
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC
-    
+    ${limit}
   `: `
     SELECT p.IdProducto,  p.Imagen,  
     CONCAT('${process.env.FRONTOFFICE}productos/', p.ImagenURL) AS ImagenURL, 
