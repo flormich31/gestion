@@ -205,7 +205,7 @@ handleClickSearch = (event) => {
     } = this.state;
     const totalMarcas = this.state.marcas.length;
 
-    if (totalMarcas === 0) return null;
+   
 
     const headerClass = [
       "text-dark py-2 pr-4 m-0",
