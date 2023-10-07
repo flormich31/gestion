@@ -8,7 +8,7 @@ const fs = require('fs');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'c:/nginx/html/productos'); // Directorio donde se guardarán los archivos   cb(null, '../client/public/productos'  'c:/nginx/html/productos' '../nginx/html/productos'
+    cb(null, '../client/public/productos'); // Directorio donde se guardarán los archivos  opcion vscode cb(null, '../client/public/productos'  opcion servidor: 'c:/nginx/html/productos' 
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Nombre de archivo único

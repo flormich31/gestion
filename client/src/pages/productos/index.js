@@ -52,7 +52,8 @@ class Productos extends React.Component {
       imagePreview: "",
       imagenedit: "",
       imageneditURL: "",
-      IdProveedor:"",
+      IdCategoria:"",
+      IdProveedor:"68601",
       detalleedit: "",
       Observacion: "",
       Codigo: "",
@@ -213,7 +214,8 @@ class Productos extends React.Component {
         PrecioMenor: this.state.PrecioMenor,
        // PrecioMayor: this.state.PrecioMayor,
       //  Observacion: this.state.Observacion,
-        IdProveedor: this.state.IdProveedor  === "" ? "68601" : this.state.IdProveedor,
+     // IdProveedor: this.state.IdProveedor  === "" ? "68601" : this.state.IdProveedor,
+      IdProveedor: "68601" ,
         
       })
       .then((res) => {
@@ -225,7 +227,7 @@ class Productos extends React.Component {
           alert("No se encontraron productos, complete los campos: ");
         } else {
           _this.getProductos();
-          alert("Producto agregado exitosamente");
+         // alert("Producto agregado exitosamente");
         }
       })
       .catch((err) => {
