@@ -20,6 +20,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from '@mui/material/TablePagination';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { pink } from "@mui/material/colors";
@@ -52,12 +53,12 @@ class Productos extends React.Component {
       imagePreview: "",
       imagenedit: "",
       imageneditURL: "",
-      IdCategoria:"",
-      IdProveedor:"68601",
+      IdCategoria: "",
+      IdProveedor: "68601",
       detalleedit: "",
       Observacion: "",
       Codigo: "",
-      CodigoEdit:"",
+      CodigoEdit: "",
       categoriaedit: "",
       IdCategoriaedit: "",
       marcaedit: "",
@@ -69,6 +70,9 @@ class Productos extends React.Component {
       editObservacion: "",
       razonsocialedit: "",
       IdProveedoredit: "",
+
+      page: 0,
+      rowsPerPage: 5,
     };
   }
 
@@ -79,13 +83,14 @@ class Productos extends React.Component {
     this.getTodosProveedores();
   }
 
-  onPageChanged = (data) => {
-    // const { productos } = this.state;
-    // const { currentPage, totalPages, pageLimit } = data;
-    // const offset = (currentPage - 1) * pageLimit;
-    // const currentProductos = productos.slice(offset, offset + pageLimit);
-    // this.setState({ currentPage, currentProductos, totalPages });
+  
+  handleChangePage = (event, newPage) => {
+    this.setState({ page: newPage })
   };
+
+  handleChangeRowsPerPage = async (event) => {
+    await this.setState({ rowsPerPage: parseInt(event.target.value, 10) })
+  }
 
   getProductos = () => {
     let _this = this;
@@ -197,7 +202,7 @@ class Productos extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let _this = this;
-   
+
     /* function _preventUndefined(value) {
       return value === "" || value === "undefined" || !value ? "68601" : value; 
     } */
@@ -210,13 +215,13 @@ class Productos extends React.Component {
         IdCategoria: this.state.IdCategoria,
         IdMarca: this.state.IdMarca,
         //costo: this.state.costo,
-       // Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
+        // Descuento: this.state.Descuento === "" ? "0" : this.state.Descuento,
         PrecioMenor: this.state.PrecioMenor,
-       // PrecioMayor: this.state.PrecioMayor,
-      //  Observacion: this.state.Observacion,
-     // IdProveedor: this.state.IdProveedor  === "" ? "68601" : this.state.IdProveedor,
-      IdProveedor: "68601" ,
-        
+        // PrecioMayor: this.state.PrecioMayor,
+        //  Observacion: this.state.Observacion,
+        // IdProveedor: this.state.IdProveedor  === "" ? "68601" : this.state.IdProveedor,
+        IdProveedor: "68601",
+
       })
       .then((res) => {
         console.log('proveedor', this.state.IdProveedor)
@@ -227,7 +232,7 @@ class Productos extends React.Component {
           alert("No se encontraron productos, complete los campos: ");
         } else {
           _this.getProductos();
-         // alert("Producto agregado exitosamente");
+          // alert("Producto agregado exitosamente");
         }
       })
       .catch((err) => {
@@ -266,7 +271,7 @@ class Productos extends React.Component {
     if (file) {
       let reader = new FileReader();
       let ar = URL.createObjectURL(event.target.files[0])
-     
+
       reader.onloadend = async () => {
         await this.setState({ imagePreview: [URL.createObjectURL(event.target.files[0])] });
         await this.setState({ imagenNew: event.target.files[0].name });
@@ -280,12 +285,12 @@ class Productos extends React.Component {
     console.log("Nombre del archivo:", file);
     console.log("Nombre del archivo nuevo:", filename);
 
-     this.setState(() => ({ imagenedit: file }));
-     
-     await this.setState({ imagenNew: event.target.files[0].name });
+    this.setState(() => ({ imagenedit: file }));
 
-     console.log("imagenedit",this.state.imagenedit);
-     console.log("imagen nueva",this.state.imagenNew);
+    await this.setState({ imagenNew: event.target.files[0].name });
+
+    console.log("imagenedit", this.state.imagenedit);
+    console.log("imagen nueva", this.state.imagenNew);
 
   };
   handleChangeEditIdCategoria = (event) => {
@@ -354,7 +359,7 @@ class Productos extends React.Component {
     let _this = this;
 
     let imagen = this.state.imagenNew;
-console.log("imagen", imagen);
+    console.log("imagen", imagen);
     if (imagen === '') {
       alert("No se ha seleccionado una nueva imagen");
       console.log("No se ha seleccionado una nueva imagen");
@@ -478,15 +483,7 @@ console.log("imagen", imagen);
     const { productos, currentProductos, currentPage, totalPages } = this.state;
     const totalProductos = this.state.productos.length;
 
-    // if (totalProductos === 0) return null;
-
-    const headerClass = [
-      "text-dark py-2 pr-4 m-0",
-      currentPage ? "border-gray border-right" : "",
-    ]
-      .join(" ")
-      .trim();
-
+   
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -544,21 +541,7 @@ console.log("imagen", imagen);
                             />
                           </FormControl>
                         </Grid>
-                        {/* <Grid item xs>
-                          <FormControl
-                            variant="standard"
-                            onSubmit={this.handleEdit}
-
-                          >
-                            <TextField
-                              id="standard-basic"
-                              label="Observaciones"
-                              variant="standard"
-                              value={this.state.Observacion}
-                              onChange={this.handleChangeObservacion}
-                            />
-                          </FormControl>
-                        </Grid> */}
+                      
                         <Grid item xs>
                           <FormControl
                             variant="standard"
@@ -575,19 +558,7 @@ console.log("imagen", imagen);
                           </FormControl>
                         </Grid>
                         <Grid item xs>
-                          {/* <FormControl
-                            onSubmit={this.handleSubmit}
-
-                          >
-                            <TextField
-                              label="Costo"
-                              id="standard-basic"
-                              variant="standard"
-
-                              value={this.state.costo}
-                              onChange={this.handleChangeCosto}
-                            />
-                          </FormControl> */}
+                        
                         </Grid>
 
                       </Grid>
@@ -608,21 +579,6 @@ console.log("imagen", imagen);
                             />
                           </FormControl>
                         </Grid>
-
-                        {/* <Grid item xs>
-                          <FormControl
-                            variant="standard"
-                            onSubmit={this.handleSubmit}
-                          >
-                            <TextField
-                              id="standard-read-only-input"
-                              value={this.state.PrecioMayor}
-                              onChange={this.handleChangePrecioMayor}
-                              label="Precio Mayorista del producto"
-                              variant="standard"
-                            />
-                          </FormControl>
-                        </Grid> */}
 
                         <Grid item xs>
                           <FormControl
@@ -689,34 +645,34 @@ console.log("imagen", imagen);
                         </Grid>
 
                         <Grid item xs>
-                          
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="uncontrolled-native"
-                               
-                              required
-                            >
-                              Proveedor
-                            </InputLabel>
-                            <NativeSelect
-                              value={this.state.IdProveedor}
-                              onChange={this.handleChangeProveedor}
-                              inputProps={{
-                                id: "uncontrolled-native",
-                              }}
-                            >
-                              {this.state.proveedores.map((item, index) => (
-                                <option
-                                  key={item.IdProveedor}
-                                  value={item.IdProveedor}
-                                >
-                                  {item.RazonSocial}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          
+
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="uncontrolled-native"
+
+                            required
+                          >
+                            Proveedor
+                          </InputLabel>
+                          <NativeSelect
+                            value={this.state.IdProveedor}
+                            onChange={this.handleChangeProveedor}
+                            inputProps={{
+                              id: "uncontrolled-native",
+                            }}
+                          >
+                            {this.state.proveedores.map((item, index) => (
+                              <option
+                                key={item.IdProveedor}
+                                value={item.IdProveedor}
+                              >
+                                {item.RazonSocial}
+                              </option>
+                            ))}
+                          </NativeSelect>
+
                         </Grid>
-                       
+
                       </Grid>
 
                       <Grid item xs container direction="column">
@@ -800,12 +756,16 @@ console.log("imagen", imagen);
                       overflow: "auto",
                     }}
                   >
-                    <Typography variant="body" component="div">
-                      <b>{totalProductos} Productos</b>
-                      <br />
-                      {/* <b>Pagina:{currentPage}</b> */}
-                      <b>{totalPages}</b>
-                    </Typography>
+                   
+                    <TablePagination
+                    rowsPerPageOptions={[5, 10, 25, 100]}
+                    component="div"
+                    count={this.state.productos.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onPageChange={this.handleChangePage}
+                    onRowsPerPageChange={this.handleChangeRowsPerPage}
+                  />
                   </div>
                   <Table sx={{ minWidth: 650 }} aria-label="a dense table">
                     <TableHead>
@@ -840,55 +800,59 @@ console.log("imagen", imagen);
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.productos.map((item, index) => (
+                      {/* {this.state.productos.map((item, index) => ( */}
+                      {(this.state.rowsPerPage > 0
+                        ? this.state.productos.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                        : this.state.productos
+                      ).map((row) => (
                         <TableRow
-                          key={item.IdProducto}
+                          key={row.IdProducto}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
                           <TableCell align="left" component="th" scope="row">
-                            {item.IdProducto}
+                            {row.IdProducto}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <img src={item.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
+                            <img src={row.ImagenURL} width="80px" onError={e => e.target.style.display = 'none'} />
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Detalle}
+                            {row.Detalle}
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            {item.Stock}
+                            {row.Stock}
                           </TableCell>
-                          <TableCell align="right">{item.marca}</TableCell>
+                          <TableCell align="right">{row.marca}</TableCell>
                           <TableCell align="right">
-                            {item.categoria}
+                            {row.categoria}
                           </TableCell>
-                          <TableCell align="right">${item.PrecioMenor}</TableCell>
+                          <TableCell align="right">${row.PrecioMenor}</TableCell>
                           <TableCell align="right">
-                            {item.RazonSocial}
+                            {row.RazonSocial}
                           </TableCell>
                           <TableCell align="right">
                             <EditIcon
                               sx={{ color: pink[200] }}
-                              key={item.IdProducto}
+                              key={row.IdProducto}
                               value={this.state.idedit}
                               onClick={() => {
                                 this.showModal(
-                                  item.IdProducto,
-                                  item.Detalle,
-                                  item.Codigo,
-                                  item.categoria,
-                                  item.Categoria_Id,
-                                  item.marca,
-                                  item.Marca_Id,
-                                  item.Descuento,
-                                  item.Costo,
-                                  item.PrecioMenor,
-                                  item.PrecioMayor,
-                                  item.Observacion,
-                                  item.Proveedor_Id,
-                                  item.RazonSocial,
-                                  item.ImagenURL
+                                  row.IdProducto,
+                                  row.Detalle,
+                                  row.Codigo,
+                                  row.categoria,
+                                  row.Categoria_Id,
+                                  row.marca,
+                                  row.Marca_Id,
+                                  row.Descuento,
+                                  row.Costo,
+                                  row.PrecioMenor,
+                                  row.PrecioMayor,
+                                  row.Observacion,
+                                  row.Proveedor_Id,
+                                  row.RazonSocial,
+                                  row.ImagenURL
                                 );
                               }}
                             />
@@ -896,7 +860,7 @@ console.log("imagen", imagen);
                               sx={{ color: pink[600] }}
                               align="left"
                               onClick={() => {
-                                this.handleRemove(item.IdProducto);
+                                this.handleRemove(row.IdProducto);
                               }}
                             />
                           </TableCell>
@@ -1003,7 +967,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                       
+
                           <FormControl
                             variant="standard"
                             onSubmit={this.handleEdit}
@@ -1019,7 +983,7 @@ console.log("imagen", imagen);
                               inputProps={{ style: { fontSize: 12 } }}
                             />
                           </FormControl>
-                         
+
                           <FormControl size="small" margin="dense">
                             <InputLabel id="edit-select-categoria-label">
                               Categoría
@@ -1107,7 +1071,15 @@ console.log("imagen", imagen);
                       </Modal>
                     </TableBody>
                   </Table>
-
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25, 100]}
+                    component="div"
+                    count={this.state.productos.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onPageChange={this.handleChangePage}
+                    onRowsPerPageChange={this.handleChangeRowsPerPage}
+                  />
                   {/* <Pagination
                     totalRecords={totalProductos}
                     pageLimit={10}
