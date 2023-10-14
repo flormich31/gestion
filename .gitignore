@@ -105,3 +105,5 @@ dist
 /client/package-lock.json
 /api/package-lock.json
 teacher/package-lock.json
+/api/daemon/*
+

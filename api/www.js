@@ -4,7 +4,7 @@ require('dotenv').config();
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('api:server');
 var http = require('http');
 const PORT = process.env.API_PORT || '9000';
