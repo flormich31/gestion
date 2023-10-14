@@ -5,7 +5,7 @@ var createError = require("http-errors");
 var express = require("express");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var cors = require("cors"); 
+var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var uploadRouter = require("./routes/upload");
@@ -16,7 +16,7 @@ var imagenesRouter = require("./routes/imagenes");
 var comprasRouter = require("./routes/compras");
 var ventasRouter = require("./routes/ventas");
 var categoriasRouter = require("./routes/categorias");
-var marcasRouter = require("./routes/marcas"); 
+var marcasRouter = require("./routes/marcas");
 var clientesRouter = require("./routes/clientes");
 var proveedoresRouter = require("./routes/proveedores");
 var datosVentaRouter = require("./routes/datosVenta");
@@ -31,22 +31,28 @@ var testAPIRouter = require("./routes/testAPI");
 
 /* Conexión a mysql */
 var mysql = require("mysql");
-var dbConnection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-});
+var dbConnection = null;
 
-dbConnection.connect(function (err) {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
-  console.log("MySql connected as id " + dbConnection.threadId);
-});
-
-global.dbConnection = dbConnection;
+function connectDatabase() {
+  setTimeout(function () {
+    dbConnection = mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+    });
+    dbConnection.connect(function (err) {
+      if (err) {
+        console.error("error connecting: " + err.stack);
+        connectDatabase();
+        return;
+      }
+      console.log("MySql connected as id " + dbConnection.threadId);
+    });
+    global.dbConnection = dbConnection;
+  }, 5000);
+}
+connectDatabase();
 
 var app = express();
 
