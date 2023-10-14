@@ -514,14 +514,9 @@ class DashboardContent extends React.Component {
                             </FormControl>
                           </TableCell>
                           <TableCell align="right">
-                            ${item.PrecioMenor}
-
-                          </TableCell>
-
-                          <TableCell align="right">
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <FilledInput
-                                value={item.PrecioVenta}
+                                value={item.PrecioMenor}
                                 onChange={(e) => {
                                   this.onPrecioChange(index, e.target.value);
                                 }}
@@ -532,6 +527,10 @@ class DashboardContent extends React.Component {
                                 }
                               />
                             </FormControl>
+                          </TableCell>
+
+                          <TableCell align="right">
+                           ${item.PrecioVenta} 
                           </TableCell>
                           <TableCell align="right">
                             <DeleteIcon
