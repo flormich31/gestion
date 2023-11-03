@@ -72,7 +72,7 @@ class Productos extends React.Component {
       IdProveedoredit: "",
 
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 25,
     };
   }
 
