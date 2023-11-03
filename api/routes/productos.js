@@ -32,13 +32,8 @@ router.get("/", function (req, res, next) {
     INNER JOIN \`categorias\` as c on c.IdCategoria = p.Categoria_Id
     INNER JOIN \`proveedores\` as r on r.IdProveedor = p.Proveedor_Id
     WHERE 
-    p.FechaEliminacion IS NULL
-    AND
-     (
-      IdProducto LIKE "%${req.query.query}%"
-      OR
-			Busqueda LIKE "%${req.query.query}%"
-     )
+	  concat_ws(p.IdProducto, p.Codigo, p.Detalle, '%', m.marca) LIKE "%${req.query.query}%"
+    AND p.FechaEliminacion IS NULL
     ORDER BY p.Detalle ASC 
     ${limit}
   `;
