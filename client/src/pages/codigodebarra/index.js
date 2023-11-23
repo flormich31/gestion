@@ -3,9 +3,9 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import Box from "@mui/material/Box";
 import { withRouter } from 'react-router-dom';
+import Barcode from 'react-barcode';
 
-
-class Etiqueta extends React.Component {
+class CodigoB extends React.Component {
     constructor(props) {
         super(props);
 
@@ -67,24 +67,14 @@ class Etiqueta extends React.Component {
                                     }} >
 
                                     {this.state.productos.map((item, index) => (
-                                        <li>{item.Detalle}-{ item.marca} #
-                                            {item.IdProducto}</li>
+                                        <Barcode value={item.Codigo} />
+                                        //<li>{item.Codigo}</li>
                                     ))}
                                 </ul>
-                                <ul type="none" color="#000000" variant="h6" align="center"
-                                    style={{
-                                        padding: 0,
-                                        margin: 0,
-                                    }} >
-
-                                    {this.state.productos.map((item, index) => (
-                                        <li><b>${item.PrecioMenor}</b></li>
-                                    ))}
-                                </ul>
-
+                              
                             </Box>)}
                         {/* Botón para imprimir */}
-                        <button class="oculto-impresion" onClick={this.handleImprimir}>Imprimir etiqueta</button>
+                        <button class="oculto-impresion" onClick={this.handleImprimir}>Imprimir Codigo</button>
                     </div>
 
                 </Grid>
@@ -93,4 +83,4 @@ class Etiqueta extends React.Component {
     }
 }
 
-export default withRouter(Etiqueta);
+export default withRouter(CodigoB);

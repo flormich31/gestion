@@ -31,6 +31,8 @@ import Stack from '@mui/material/Stack';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AdfScannerIcon from '@mui/icons-material/AdfScanner';
 import Etiqueta from "../etiqueta";
+import CalendarViewDayIcon from '@mui/icons-material/CalendarViewDay';
+import CodigoB from "../codigodebarra";
 const mdTheme = createTheme();
 
 class Productos extends React.Component {
@@ -487,6 +489,12 @@ class Productos extends React.Component {
           window.open('/etiqueta/' + this.state.IdProducto , '_blank');
     }
 
+    printCode= async (IdProducto)=> {
+      await this.setState({ IdProducto: IdProducto });
+       <Etiqueta variable={this.state.IdProducto} />
+           console.log('ID PROD', this.state.IdProducto)
+           window.open('/codigoB/' + this.state.IdProducto , '_blank');
+     }
 
   render() {
     const { productos, currentProductos, currentPage, totalPages } = this.state;
@@ -847,6 +855,12 @@ class Productos extends React.Component {
                               onClick={() => {
                                 this.clickRedirect(row.IdProducto);
                               }}/>
+                              <CalendarViewDayIcon
+                              x={{ color: pink[450] }}
+                              align="left"
+                                  onClick={() => {
+                                    this.printCode(row.IdProducto);
+                                  }}/>
                             <EditIcon
                               sx={{ color: pink[200] }}
                               key={row.IdProducto}

@@ -15,6 +15,7 @@ import ProductoNuevo from "./pages/productoNuevo";
 import Usuarios from "./pages/usuarios";
 import Ticket from "./pages/ticketVenta";
 import Etiqueta from "./pages/etiqueta";
+import Codigodebarra from "./pages/codigodebarra";
 
 export default function App() {
   document.title = "Diva Forever";
@@ -42,7 +43,10 @@ export default function App() {
             </Route>
             <Route path="/etiqueta/:IdProducto">
             <Etiqueta/>
-          </Route>
+            </Route>
+            <Route path="/codigoB/:IdProducto">
+            <Codigodebarra/>
+            </Route>
             <Route path="/productoNuevo">
             <ProductoNuevo />
           </Route>
