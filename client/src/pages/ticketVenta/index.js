@@ -167,7 +167,7 @@ class TicketVenta extends React.Component {
                           <b>Descripcion</b>
                         </th>
                         <th >
-                          <b>Precio</b>
+                          <b>Subtotal</b>
                         </th>
                         </tr>
       </thead>
@@ -178,7 +178,7 @@ class TicketVenta extends React.Component {
                             {item.cantidad}
                           </td>
                           <td>
-                            {item.Detalle}-{item.Marca}
+                            {item.Detalle}-{item.Marca}-${item.PrecioMenor}
                           </td>
                           <td>
                             ${item.PrecioVenta}
