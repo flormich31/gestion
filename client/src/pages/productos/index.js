@@ -29,6 +29,8 @@ import Pagination from "../../components/Pagination";
 import NativeSelect from "@mui/material/NativeSelect";
 import Stack from '@mui/material/Stack';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AdfScannerIcon from '@mui/icons-material/AdfScanner';
+import Etiqueta from "../etiqueta";
 const mdTheme = createTheme();
 
 class Productos extends React.Component {
@@ -478,6 +480,13 @@ class Productos extends React.Component {
     }
   };
 
+  clickRedirect = async (IdProducto)=> {
+     await this.setState({ IdProducto: IdProducto });
+      <Etiqueta variable={this.state.IdProducto} />
+          console.log('ID PROD', this.state.IdProducto)
+          window.open('/etiqueta/' + this.state.IdProducto , '_blank');
+    }
+
 
   render() {
     const { productos, currentProductos, currentPage, totalPages } = this.state;
@@ -832,6 +841,12 @@ class Productos extends React.Component {
                             {row.RazonSocial}
                           </TableCell>
                           <TableCell align="right">
+                          <AdfScannerIcon 
+                          sx={{ color: pink[450] }}
+                          align="left"
+                              onClick={() => {
+                                this.clickRedirect(row.IdProducto);
+                              }}/>
                             <EditIcon
                               sx={{ color: pink[200] }}
                               key={row.IdProducto}
