@@ -228,8 +228,8 @@ class DashboardContent extends React.Component {
     this.state.ventaProductos.splice(index, 1);
     await this.setState({ ventaProductos: this.state.ventaProductos });
     console.log(this.state.ventaProductos);
-    //this.calcularTotal();
-    this.handleProductChange();
+    this.calcularTotal();
+   // this.handleProductChange();
 
   };
 
@@ -506,7 +506,7 @@ class DashboardContent extends React.Component {
                             <FormControl fullWidth sx={{ m: 1 }} size="small">
                               <Input
                                 id="filled-adornment-amount"
-                                defaultValue={item.Cantidad}
+                                value={item.Cantidad}
                                 onChange={(e) => {
                                   this.onCantidadChange(index, e.target.value);
                                 }}
