@@ -40,7 +40,7 @@ class Etiqueta extends React.Component {
         // const limit = String(this.state.query).trim() !== "" ? "" : "&limit=15";
         var config = {
             method: "get",
-            url: `${process.env.REACT_APP_API}productos?query=${this.state.query}`,
+            url: `${process.env.REACT_APP_API}etiqueta?query=${this.state.query}`,
             headers: {},
         };
         axios(config)
